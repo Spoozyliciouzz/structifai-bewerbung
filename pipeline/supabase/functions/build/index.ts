@@ -21,12 +21,12 @@ const MODEL_EXTRACT = Deno.env.get("LLM_MODEL_EXTRACT") ?? "claude-haiku-4-5-202
 const MODEL_GENERATE = Deno.env.get("LLM_MODEL_GENERATE") ?? "claude-sonnet-4-6";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const RESEND_FROM = Deno.env.get("RESEND_FROM") ?? "Dennis Benter <bewerbung@structifai.de>";
-const RESULT_BASE = Deno.env.get("PUBLIC_RESULT_BASE") ?? "https://structifai.de/b";
+const RESULT_BASE = Deno.env.get("PUBLIC_RESULT_BASE") ?? "https://bewerbung.structifai.de/b";
 const DENNIS_PHONE = Deno.env.get("DENNIS_PHONE") ?? "";
 const TARGET_JOB_ID = Deno.env.get("TARGET_JOB_ID") ?? "4428605958";
 const TARGET_DOMAIN = Deno.env.get("TARGET_DOMAIN") ?? "strategyframe.ai";
 
-const ALLOWED_ORIGINS = ["https://structifai.de", "https://www.structifai.de"];
+const ALLOWED_ORIGINS = ["https://bewerbung.structifai.de", "https://structifai.de", "https://www.structifai.de"];
 const POW_DIFFICULTY = 4; // führende Hex-Nullen in sha256(email:ts:nonce)
 const POW_MAX_AGE_MS = 5 * 60_000;
 

@@ -1,4 +1,4 @@
-# Netlify — Landing unter structifai.de/bewerbung, generierte Seiten unter /b/*.
+# Netlify — Landing unter bewerbung.structifai.de, generierte Seiten unter /b/*.
 # /b/<slug>  → SPA build.html (Live-Build-Ansicht; holt JSON selbst aus dem Bucket).
 # Projekt-Ref: qpxoggvbkbjluxkorgrp
 

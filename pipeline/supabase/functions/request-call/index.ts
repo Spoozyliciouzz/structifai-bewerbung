@@ -15,7 +15,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 const SHARED_SECRET = Deno.env.get("TRIGGER_SHARED_SECRET") ?? "";
 
-const ALLOWED_ORIGINS = ["https://structifai.de", "https://www.structifai.de"];
+const ALLOWED_ORIGINS = ["https://bewerbung.structifai.de", "https://structifai.de", "https://www.structifai.de"];
 
 interface RequestCallInput {
   jobId?: string;
