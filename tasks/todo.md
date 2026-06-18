@@ -1,6 +1,6 @@
 # Build-Plan — „Bewerbung als Maschine"
 
-Master-Spec: `BRIEFING.md`. Profil-Wahrheit: `profile/dennis.json` (verifiziert, §13).
+Profil-Wahrheit: `profile/dennis.json` (verifiziert).
 Status: **Code vollständig, lokal verifiziert.** Live-Deploy + reale Seeds brauchen Credentials (s.u.).
 
 ## M0 — Scaffold ✅

@@ -1,6 +1,6 @@
 # Plan — Voice-Agent (Twilio ConversationRelay)
 
-Quelle: Voice-BRIEFING (vom User). **Integriert** in `structifai-bewerbung` (kein Extra-Repo),
+Voice-Teilprojekt. **Integriert** in `structifai-bewerbung` (kein Extra-Repo),
 **selbes Supabase-Projekt** `qpxoggvbkbjluxkorgrp`. Ersetzt den Vapi-Schritt (§11).
 Architektur: Claude = nur Text-Reasoning; STT/TTS = ConversationRelay; ElevenLabs = DE-Stimme.
 

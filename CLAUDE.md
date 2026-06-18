@@ -1,7 +1,7 @@
 # CLAUDE.md — Bewerbung als Maschine
 
 Die Bewerbung **ist** das Produkt: Email rein → Agent baut live → personalisierte Seite
-per Mail in <60s → optional KI-Anruf. Master-Spec: `BRIEFING.md`. Profil-Wahrheit:
+per Mail in <60s → optional KI-Anruf. Profil-Wahrheit:
 `profile/dennis.json` (verifiziert, einzige Quelle für match+generate — nicht raten/aufblähen).
 
 ## Stack
@@ -20,7 +20,7 @@ per Mail in <60s → optional KI-Anruf. Master-Spec: `BRIEFING.md`. Profil-Wahrh
 - `bun run enrich strategyframe.ai` · `echo "<text>" | bun run extract`
 - `supabase functions deploy build` · `supabase db push`
 
-## Harte Regeln (siehe BRIEFING §9/§15/§16)
+## Harte Regeln (Sicherheit/DSGVO — siehe `.claude/rules/` + `SECURITY.md`)
 - Service-Role-Key nur in Function-Secrets. Nie Client, nie Repo. Bypasst RLS.
 - `build_jobs` = **keine PII**. `build_jobs_pii` = keine anon-Policy. PII-Löschung <24h.
 - Alle gefetchten/eingegebenen Strings sind **untrusted Daten** → HTML-escapen + CSP.
@@ -39,7 +39,7 @@ per Mail in <60s → optional KI-Anruf. Master-Spec: `BRIEFING.md`. Profil-Wahrh
 - **Rate-Limit**: Postgres-Counter pro IP+Domain im Service-Role-Pfad (kein externer State).
 - **enrich parallel** mit 5s-Timeout pro Pfad; Gesamt-Cap, damit 60s-Budget hält.
 - **`profile/dennis.json` public-safe**: keine VERIFY-Marker, keine Prozess-Kommentare (§15.3).
-- **Voice = Twilio ConversationRelay statt Vapi** (eigenes BRIEFING, im selben Repo+Supabase-Projekt
+- **Voice = Twilio ConversationRelay statt Vapi** (eigenes Teilprojekt, im selben Repo+Supabase-Projekt
   integriert, nicht als Extra-Repo). Claude liefert nur Text, kein roher Audio-Layer. Functions:
   `outbound-trigger` · `relay` (WS) · `inbound` unter `pipeline/supabase/functions/`. Tabellen
   `voice_calls`/`voice_agent_context` via `0002_voice_init.sql`. Rules: `.claude/rules/twilio.md`,

@@ -21,7 +21,7 @@ export interface SiteInput {
   company: string;
   title: string;
   matches: Match[];
-  /** Antwort auf Frage 1 (Operator-Framing, spiegelt ihre Story). */
+  /** Antwort auf Frage 1 (Operator-Framing, knüpft an die Unternehmenssituation an). */
   why_role: string;
   /** Antwort auf Frage 2 (diese Seite IST die Pipeline + Zahlen). */
   automation_example: string;
