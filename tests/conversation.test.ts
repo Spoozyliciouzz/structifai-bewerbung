@@ -6,9 +6,12 @@ test("normalize: lowercase, Satzzeichen weg", () => {
   expect(normalize("Tschüss!! Alles, klar.")).toBe("tschüss alles klar");
 });
 
-test("detectEndOfTalk: Closing-Marker erkannt", () => {
-  expect(detectEndOfTalk("Ok, danke das wars.")).toBe(true);
-  expect(detectEndOfTalk("Nein danke, kein Interesse")).toBe(true);
+test("detectEndOfTalk: klare Verabschiedung + bloße Absage erkannt", () => {
+  expect(detectEndOfTalk("Nein.")).toBe(true);            // Absage auf „sonst noch Fragen?"
+  expect(detectEndOfTalk("Nö")).toBe(true);
+  expect(detectEndOfTalk("Nein danke")).toBe(true);
+  expect(detectEndOfTalk("Danke für das Gespräch")).toBe(true);
+  expect(detectEndOfTalk("Kein Interesse")).toBe(true);
   expect(detectEndOfTalk("Auf Wiederhören")).toBe(true);
   expect(detectEndOfTalk("Tschüss")).toBe(true);
 });
@@ -17,6 +20,8 @@ test("detectEndOfTalk: laufendes Gespräch NICHT als Ende", () => {
   expect(detectEndOfTalk("Was genau hat er bei StrategyFrame gebaut?")).toBe(false);
   expect(detectEndOfTalk("Erzähl mir mehr über die Pipeline")).toBe(false);
   expect(detectEndOfTalk("Ja, klingt spannend")).toBe(false);
+  expect(detectEndOfTalk("Nein, das hat er nicht studiert")).toBe(false); // „nein" eingebettet ≠ Ende
+  expect(detectEndOfTalk("Ok, danke — und was baut er noch?")).toBe(false);
 });
 
 test("buildSystemPrompt enthält Persona, Regeln, Kontext", () => {
@@ -39,9 +44,9 @@ test("buildSystemPrompt ohne pronunciation kein leerer Anhang", () => {
   expect(sp).not.toContain("AUSSPRACHE-HILFEN");
 });
 
-test("INTRO macht KI-Disclosure, CLOSING verweist auf Mail-Nummer", () => {
+test("INTRO macht KI-Disclosure, CLOSING verweist auf Email-Nummer", () => {
   expect(INTRO).toContain("KI-Assistent von Dennis Benter");
-  expect(CLOSING).toContain("Mail");
+  expect(CLOSING.toLowerCase()).toContain("email");
   expect(CLOSING.toLowerCase()).toContain("nummer");
 });
 
