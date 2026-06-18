@@ -175,7 +175,7 @@ async function callClaude(system: string, user: string, model: string, jsonOnly 
           messages: [{ role: "system", content: system }, { role: "user", content: user }],
           ...(jsonOnly ? { response_format: { type: "json_object" } } : {}),
         }),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(60_000),
       });
       if (!res.ok) throw new Error(`LiteLLM ${res.status}`);
       const d = await res.json();
@@ -192,7 +192,7 @@ async function callClaude(system: string, user: string, model: string, jsonOnly 
       model, max_tokens: 2000, system,
       messages: [{ role: "user", content: user }],
     }),
-    signal: AbortSignal.timeout(30_000),
+    signal: AbortSignal.timeout(60_000),
   });
   if (!res.ok) throw new Error(`Anthropic ${res.status}: ${await res.text()}`);
   const d = await res.json();

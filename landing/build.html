@@ -92,6 +92,22 @@
   .sk-row{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
   @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
 
+  /* Live stage progress (replaces skeleton while ② waits for fit data) */
+  .progress{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;
+    transition:opacity .45s ease}
+  .progress.fade{opacity:0}
+  .progress .phead{font-family:"Playfair Display",serif;font-size:1.15rem;margin:0 0 14px}
+  .progress .ptrack{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+  .progress .pfill{height:100%;width:6%;border-radius:99px;background:var(--gold);
+    transition:width .6s cubic-bezier(.22,.61,.36,1)}
+  .progress .prow{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-top:14px}
+  .progress .pstep{color:var(--ink);font-size:.98rem;min-height:1.4em}
+  .progress .ppct{font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--muted);flex:0 0 auto}
+  .progress .pengine{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--gold);margin-top:8px;min-height:1.1em;opacity:.85}
+  .progress.err{border-color:#e08a8a55}
+  .progress .perr{color:var(--err);font-size:.98rem;line-height:1.55}
+
   /* ── ③ Gallery ─────────────────────────────────────────────────────────── */
   .gallery{position:relative;margin:0 -4px}
   .gallery-viewport{overflow:hidden;border-radius:16px;padding:6px 4px}
@@ -353,6 +369,118 @@ function animateCount(node, to, ms, suffix){
   }
   if(REDUCED){ node.textContent = (dec ? to.toFixed(1) : Math.round(to)) + (suffix || ""); return; }
   requestAnimationFrame(frame);
+}
+
+// ── Live stage progress (drives ② while waiting for fit data) ────────────────
+// Wired to Supabase Realtime UPDATEs on build_jobs. Monotonic, with a gentle
+// auto-creep so it never looks frozen between stage events. On status="error"
+// it shows a clear, terminal message instead of the endless skeleton.
+const STAGES = {
+  queued:   { pct: 6,  label: "In der Warteschlange" },
+  enrich:   { pct: 18, label: "Öffentlichen Kontext über das Unternehmen sammeln" },
+  scrape:   { pct: 32, label: "Stellenanzeige laden" },
+  extract:  { pct: 48, label: "Anforderungen aus der Anzeige strukturieren", engine: "Claude Haiku" },
+  match:    { pct: 62, label: "Profil gegen die Anforderungen abgleichen" },
+  generate: { pct: 84, label: "Claude Sonnet bewertet den Fit und textet die Seite …", engine: "Claude Sonnet" },
+  deploy:   { pct: 96, label: "Seite finalisieren" },
+};
+// Ordered percent ceilings so auto-creep never crosses into the next stage.
+const STAGE_ORDER = ["queued","enrich","scrape","extract","match","generate","deploy"];
+
+const progress = {
+  el:null, fill:null, step:null, pct:null, engine:null,
+  cur:6, target:6, ceiling:18, creepTimer:0, done:false, mounted:false,
+};
+
+function nextStageCeiling(pct){
+  for(const k of STAGE_ORDER){ if(STAGES[k].pct > pct) return STAGES[k].pct; }
+  return 100;
+}
+
+function mountProgress(){
+  if(progress.mounted) return;
+  const host = $("fit-host");
+  host.textContent = "";
+  const box = el("div","progress");
+  const head = el("p","phead"); head.textContent = "Deine Bewertung wird live berechnet";
+  const track = el("div","ptrack");
+  const fill = el("div","pfill");
+  track.appendChild(fill);
+  const row = el("div","prow");
+  const step = el("div","pstep"); step.setAttribute("role","status"); step.setAttribute("aria-live","polite");
+  step.textContent = "In der Warteschlange";
+  const pct = el("div","ppct"); pct.textContent = "6 %";
+  row.appendChild(step); row.appendChild(pct);
+  const engine = el("div","pengine"); engine.textContent = "";
+  box.appendChild(head); box.appendChild(track); box.appendChild(row); box.appendChild(engine);
+  host.appendChild(box);
+  progress.el = box; progress.fill = fill; progress.step = step; progress.pct = pct; progress.engine = engine;
+  progress.mounted = true;
+  startCreep();
+}
+
+function setProgressPct(pct){
+  // monotonic: never go backwards
+  if(pct <= progress.cur && pct <= progress.target) return;
+  progress.target = Math.max(progress.target, pct);
+  progress.cur = Math.max(progress.cur, pct);
+  if(progress.fill) progress.fill.style.width = progress.cur + "%";
+  if(progress.pct)  progress.pct.textContent = Math.round(progress.cur) + " %";
+}
+
+function startCreep(){
+  if(REDUCED || progress.creepTimer) return;
+  progress.creepTimer = setInterval(()=>{
+    if(progress.done) return;
+    // creep toward (ceiling - 2) without ever reaching the next stage's percent
+    const cap = Math.max(progress.target, progress.ceiling - 2);
+    if(progress.cur < cap){
+      progress.cur = Math.min(cap, progress.cur + 0.4);
+      if(progress.fill) progress.fill.style.width = progress.cur + "%";
+      if(progress.pct)  progress.pct.textContent = Math.round(progress.cur) + " %";
+    }
+  }, 600);
+}
+function stopCreep(){ if(progress.creepTimer){ clearInterval(progress.creepTimer); progress.creepTimer = 0; } }
+
+// Drive from a Realtime row. Prefers the real stage_note; falls back to mapping.
+function applyStage(stage, note){
+  if(progress.done) return;
+  const meta = STAGES[stage];
+  if(!meta) return;                       // ignore unknown / error here (handled separately)
+  if(!progress.mounted) mountProgress();  // mount on demand so early events aren't dropped
+  setProgressPct(meta.pct);
+  progress.ceiling = nextStageCeiling(meta.pct);
+  const label = (typeof note === "string" && note.trim()) ? note.trim() : meta.label;
+  if(progress.step) progress.step.textContent = label;
+  if(progress.engine) progress.engine.textContent = meta.engine || "";
+}
+
+function setProgressError(){
+  if(progress.done) return;
+  progress.done = true; stopCreep();
+  if(!progress.mounted) mountProgress();
+  const box = progress.el; if(!box) return;
+  box.classList.add("err"); box.classList.remove("fade");
+  box.textContent = "";
+  const head = el("p","phead"); head.textContent = "Build fehlgeschlagen";
+  const msg = el("p","perr");
+  msg.textContent = "Da ist beim Bauen etwas schiefgelaufen. Bitte lade die Seite neu oder versuch es gleich nochmal.";
+  box.appendChild(head); box.appendChild(msg);
+}
+
+// fit data arrived → snap to 100%, fade progress out, then run the dashboard.
+function finishProgressInto(data, animate){
+  if(progress.done){ renderFit(data, animate); return; }
+  progress.done = true; stopCreep();
+  if(!progress.mounted){ renderFit(data, animate); return; }
+  setProgressPct(100);
+  if(progress.step) progress.step.textContent = "Fertig";
+  if(progress.engine) progress.engine.textContent = "";
+  const swap = ()=> renderFit(data, animate);
+  if(REDUCED){ swap(); return; }
+  if(progress.el) progress.el.classList.add("fade");
+  setTimeout(swap, 480);
 }
 
 function renderFit(data, animate){
@@ -684,26 +812,37 @@ async function runTimeline(getData){
   let d = getData();
   if(d){ renderHeader(d); if(!aboutRendered) renderAbout(d); }
 
-  // t≈1.3s: ② skeleton shimmer
+  // t≈1.3s: ② live progress bar (replaces the anonymous skeleton)
   await sleep(900);
-  revealNow($("sec-fit"));   // skeleton already in DOM, now visible
+  mountProgress();           // swap skeleton → progress UI before revealing
+  revealNow($("sec-fit"));
+  if(progress.cur <= 6) applyStage("queued");   // baseline until first Realtime event
 
-  // t≈2.3s: populate dashboard — but wait for fit data, keep skeleton min ~1s
-  const skeletonShownAt = performance.now();
+  // t≈2.3s: populate dashboard — but wait for fit data, keep progress min ~1s
+  const progressShownAt = performance.now();
   await sleep(1000);
   d = getData();
-  if(!hasFit(d)){
-    // keep skeleton until fit arrives
+  if(!hasFit(d) && !progress.done){
+    // keep the progress bar (creeping) until fit arrives or an error is signalled
     d = await pollUntilFit();
   }
-  const elapsed = performance.now() - skeletonShownAt;
-  if(elapsed < 1000) await sleep(1000 - elapsed);  // min skeleton time
+  if(progress.done) return;  // error state already rendered; stop the timeline here
+  const elapsed = performance.now() - progressShownAt;
+  if(elapsed < 1000) await sleep(1000 - elapsed);  // min progress time
   if(d){
     renderHeader(d);
     if(!aboutRendered) renderAbout(d);
-    renderFit(d, /*animate*/ true);
+    finishProgressInto(d, /*animate*/ true);
   } else {
-    const ln = $("fit-loading"); if(ln) ln.textContent = "Bewertung folgt in Kürze.";
+    // poll timed out with no fit and no error event — surface a soft message.
+    const box = progress.el;
+    if(box){
+      box.textContent = "";
+      const head = el("p","phead"); head.textContent = "Deine Bewertung wird live berechnet";
+      const msg = el("p","perr"); msg.style.color = "var(--muted)";
+      msg.textContent = "Bewertung folgt in Kürze.";
+      box.appendChild(head); box.appendChild(msg);
+    }
   }
 
   // t≈3.4s: ③ gallery + icon cards
@@ -740,6 +879,13 @@ async function runTimeline(getData){
               { event:"UPDATE", schema:"public", table:"build_jobs", filter:"id=eq."+jobId },
               ({ new: row })=>{
                 if(!row) return;
+                // Drive the live progress bar from the real pipeline stage.
+                if(row.status === "error" || row.stage === "error"){
+                  sb.removeChannel(chan);
+                  setProgressError();
+                  return;
+                }
+                applyStage(row.stage, row.stage_note);
                 const reached = row.status === "done"
                   || (row.stage === "deploy" && row.stage_done)
                   || (row.stage === "generate" && row.stage_done)
