@@ -402,7 +402,7 @@ function mountProgress(){
   const host = $("fit-host");
   host.textContent = "";
   const box = el("div","progress");
-  const head = el("p","phead"); head.textContent = "Deine Bewertung wird live berechnet";
+  const head = el("p","phead"); head.textContent = "Stellenmatching-Berechnung gestartet";
   const track = el("div","ptrack");
   const fill = el("div","pfill");
   track.appendChild(fill);
@@ -838,7 +838,7 @@ async function runTimeline(getData){
     const box = progress.el;
     if(box){
       box.textContent = "";
-      const head = el("p","phead"); head.textContent = "Deine Bewertung wird live berechnet";
+      const head = el("p","phead"); head.textContent = "Stellenmatching-Berechnung gestartet";
       const msg = el("p","perr"); msg.style.color = "var(--muted)";
       msg.textContent = "Bewertung folgt in Kürze.";
       box.appendChild(head); box.appendChild(msg);

@@ -410,5 +410,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // @ts-ignore EdgeRuntime ist im Supabase-Deno-Kontext vorhanden.
   EdgeRuntime.waitUntil(runPipeline(jobId, slug, email, firstName, role));
 
-  return json({ jobId, slug, callToken }, 202, origin);
+  // callToken nur ausliefern, wenn Consent erteilt wurde — sonst erscheint kein (brechender)
+  // Anruf-Button auf der Live-Seite, sondern der Mail-Rückruf-Hinweis.
+  return json({ jobId, slug, callToken: callConsent ? callToken : null }, 202, origin);
 });
