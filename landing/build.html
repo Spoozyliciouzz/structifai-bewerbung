@@ -783,13 +783,15 @@ function renderGallery(data){
   const voice  = cases.filter(c=> c && c.kind === "voice");
   const visual = cases.filter(c=> c && c.kind === "visual");
   const icons  = cases.filter(c=> c && c.kind === "icon");
-  // ONE unified gallery — voice first, then visual cards, then icon cases (array order).
-  const slides = [...voice, ...visual, ...icons];
+  // ONE unified gallery — Voice-KI-Assistent ZENTRIERT (CTA, sofort im Blick), flankiert vom
+  // stärksten Visual (GartenAIden) links und den übrigen Visuals + Icon-Cases rechts.
+  const lead   = visual.slice(0, 1);                              // GartenAIden links
+  const slides = [...lead, ...voice, ...visual.slice(1), ...icons]; // Voice in der Mitte
 
   const track = $("gtrack"); track.textContent = "";
   const dots  = $("gdots");  dots.textContent  = "";
   gallery.count = slides.length;
-  gallery.voiceIndex = voice.length ? 0 : -1;
+  gallery.voiceIndex = voice.length ? lead.length : -1;
 
   slides.forEach((c,i)=>{
     const slideEl = el("div","slide");
@@ -805,8 +807,8 @@ function renderGallery(data){
 
   if(gallery.count){
     $("gallery").hidden = false;
-    // start focused on first VISUAL slide = GartenAIden (index right after voice cards)
-    const initial = voice.length; // first visual sits after the voice card(s)
+    // Start auf dem Voice-Assistenten (zentriert, CTA sofort sichtbar); ohne Voice auf 1. Card.
+    const initial = voice.length ? lead.length : 0;
     gallery.index = Math.min(initial, gallery.count - 1);
   }
 
