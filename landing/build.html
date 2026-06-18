@@ -181,6 +181,24 @@
     transition:background .2s ease,transform .2s ease}
   .gdot.on{background:var(--gold);transform:scale(1.25)}
 
+  /* ── ④ Tech-Stack ──────────────────────────────────────────────────────── */
+  .stack-intro{color:var(--muted);font-size:1rem;margin:0 0 18px;max-width:60ch}
+  .stack-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .tcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:13px;
+    padding:15px 16px;display:flex;flex-direction:column;gap:5px;overflow:hidden;
+    transition:border-color .15s ease,transform .12s ease}
+  .tcard:hover{border-color:#cead6055;transform:translateY(-1px)}
+  .tcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);opacity:.55}
+  .tcard .tcat{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--gold);opacity:.75}
+  .tcard .tname{font-family:"Playfair Display",serif;font-size:1.02rem;line-height:1.2;color:var(--ink)}
+  .tcard .tone{color:var(--muted);font-size:.86rem;line-height:1.45}
+  .stack-foot{margin-top:18px;color:var(--gold);opacity:.85;font-family:"IBM Plex Mono",monospace;
+    font-size:.74rem;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+  .stack-foot::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);flex:0 0 auto}
+  @media (min-width:560px){ .stack-grid{grid-template-columns:repeat(3,1fr)} }
+  @media (min-width:900px){ .stack-grid{grid-template-columns:repeat(4,1fr)} }
+
   input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
   footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
@@ -273,6 +291,75 @@
         <div class="gdots" id="gdots" role="tablist" aria-label="Projekte"></div>
       </div>
     </div>
+  </section>
+
+  <!-- ④ Gebaut mit -->
+  <section class="block reveal" id="sec-stack" data-reveal>
+    <div class="label"><span class="n">④</span> Gebaut mit</div>
+    <p class="stack-intro">Unter der Haube dieser Bewerbung — die Bausteine, die aus einer Email in unter einer Minute diese Seite gemacht haben.</p>
+    <div class="stack-grid">
+      <div class="tcard">
+        <span class="tcat">Reasoning</span>
+        <span class="tname">Claude Sonnet 4.6</span>
+        <span class="tone">Stellen-Matching, Seitentexte &amp; Voice-Gespräch</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Extraktion</span>
+        <span class="tname">Claude Haiku</span>
+        <span class="tone">Extraktion der Anforderungen aus der Anzeige</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Orchestrierung</span>
+        <span class="tname">Supabase Edge Functions (Deno)</span>
+        <span class="tone">Orchestrierung der Pipeline im Request-Pfad</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Daten</span>
+        <span class="tname">Postgres + Row-Level-Security</span>
+        <span class="tone">Daten &amp; DSGVO-Trennung (PII isoliert)</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Realtime</span>
+        <span class="tname">Supabase Realtime</span>
+        <span class="tone">Live-Fortschritt dieser Seite</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Telefonie</span>
+        <span class="tname">Twilio ConversationRelay</span>
+        <span class="tone">Telefonie + STT/TTS für den KI-Anruf</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Stimme</span>
+        <span class="tname">ElevenLabs / Google TTS</span>
+        <span class="tone">deutsche Sprachsynthese</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Zustellung</span>
+        <span class="tname">Resend</span>
+        <span class="tone">Zustellung der Bewerbungs-Mail</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Hosting</span>
+        <span class="tname">Netlify</span>
+        <span class="tone">Hosting (bewerbung.structifai.de)</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Runtime</span>
+        <span class="tname">Bun · TypeScript · Deno</span>
+        <span class="tone">Runtime &amp; strikt typisierter Code</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Scraping</span>
+        <span class="tname">Playwright</span>
+        <span class="tone">Scraping der echten Stellenanzeige</span>
+      </div>
+      <div class="tcard">
+        <span class="tcat">Schutz</span>
+        <span class="tname">Proof-of-Work · CORS · Rate-Limits</span>
+        <span class="tone">Missbrauchsschutz am Endpoint</span>
+      </div>
+    </div>
+    <p class="stack-foot">Diese Seite hat sich gerade selbst gebaut — in unter einer Minute.</p>
   </section>
 
   <footer>
@@ -376,7 +463,7 @@ function animateCount(node, to, ms, suffix){
 // auto-creep so it never looks frozen between stage events. On status="error"
 // it shows a clear, terminal message instead of the endless skeleton.
 const STAGES = {
-  queued:   { pct: 6,  label: "In der Warteschlange" },
+  queued:   { pct: 6,  label: "API connection established" },
   enrich:   { pct: 18, label: "Öffentlichen Kontext über das Unternehmen sammeln" },
   scrape:   { pct: 32, label: "Stellenanzeige laden" },
   extract:  { pct: 48, label: "Anforderungen aus der Anzeige strukturieren", engine: "Claude Haiku" },
@@ -850,6 +937,10 @@ async function runTimeline(getData){
   d = getData() || d;
   if(d && !casesRendered){ renderGallery(d); bindGalleryNav(); }
   revealNow($("sec-cases"));
+
+  // t≈4.0s: ④ tech-stack (static content) reveals as the final timeline step
+  await sleep(600);
+  revealNow($("sec-stack"));
 }
 
 // ── Boot ─────────────────────────────────────────────────────────────────────
@@ -904,7 +995,7 @@ async function runTimeline(getData){
 
   // ── Static mode (or reduced motion): final state instantly, no animation ─────
   const data = await dataReady;
-  [ $("sec-about"), $("sec-fit"), $("sec-cases") ].forEach(revealNow);
+  [ $("sec-about"), $("sec-fit"), $("sec-cases"), $("sec-stack") ].forEach(revealNow);
   if(!data){
     const ln = $("fit-loading"); if(ln) ln.textContent = "Diese Seite ist noch nicht verfügbar.";
     return;
