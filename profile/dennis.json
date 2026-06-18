@@ -1,0 +1,103 @@
+{
+  "identity": {
+    "name": "Dennis Benter",
+    "role": "Operating Partner / Interim-COO — structifai",
+    "base": "Düsseldorf",
+    "work_authorization_de": true
+  },
+  "experience": {
+    "years_digital": 15,
+    "summary": "15 Jahre durchgehend digitale Rollen — mehrere parallele Operator-/GF-Mandate, eigene Gründungen, AdTech/Media. Generalist, der baut und ownt, nicht berät.",
+    "note_degree": "Kein Top-Hochschulabschluss. In der Anzeige 'von Vorteil', nicht Pflicht — und sie gewichten Hunger/Tempo/Erfahrung explizit höher. 15 Jahre Praxis statt Zertifikat."
+  },
+  "systems": [
+    {
+      "name": "GartenAIden",
+      "icon": "🌿",
+      "kind": "visual",
+      "url": "https://www.gartenaiden.de",
+      "image": "gartenaiden.jpg",
+      "one": "Lead-Qualifizierer für Garten- & Landschaftsbau: Interessent durchläuft geführten Dialog → erhält eigene Projektseite (KI-Bilder, Kostenrahmen, Bepflanzung); der Betrieb bekommt einen qualifizierten Lead mit Projektbriefing (Grundstücksgröße, Hanglage, Zufahrt, Boden) und spart die manuelle Nachqualifizierung.",
+      "stack": "geführter Dialog · KI-Bildgenerierung · automatische Seitenerstellung"
+    },
+    {
+      "name": "Content-Pipeline · live auf gartendesign-fricke.de",
+      "icon": "📰",
+      "kind": "visual",
+      "url": "https://www.gartendesign-fricke.de",
+      "image": "fricke.jpg",
+      "one": "Agent liest SEO/AEO-Signale → identifiziert Themen → generiert quellenbelegte Artikel → rendert HTML → publiziert automatisch (eigenes Hosting oder WordPress-Connector). Multi-tenant, Datenschutz mit Einwilligung. Läuft live auf gartendesign-fricke.de — von Dennis gebaut.",
+      "stack": "Bun · Deno Edge · Supabase RLS · Agenten · WordPress-Connector"
+    },
+    {
+      "name": "Automatisierte Bewerbung mit KI-Assistent",
+      "icon": "📞",
+      "kind": "voice",
+      "one": "Meine vollautomatische Bewerbung: Website-Build mit real-live-data, Twilio ConversationRelay macht STT/TTS, Claude das Reasoning, ElevenLabs die deutsche Stimme. Klick auf den Hörer oben und sprich mit meinem Assistenten.",
+      "stack": "Twilio ConversationRelay · Claude Sonnet · ElevenLabs (DE) · Supabase Edge"
+    },
+    {
+      "name": "Reisekosten-Automatisierung",
+      "icon": "🧾",
+      "kind": "visual",
+      "image": "reisekosten.jpg",
+      "one": "Mitarbeiter laden Belege hoch → erkennt Reisezeitraum, Kosten und Buchungskonten → erzeugt ein fertiges PDF, das direkt in sevDesk verbucht wird. Kein Hinterherlaufen mehr.",
+      "stack": "Beleg-OCR · automatische Kontierung · sevDesk"
+    },
+    {
+      "name": "Financial KPI Dashboard · Live-BWA",
+      "icon": "📊",
+      "kind": "visual",
+      "image": "financial.jpg",
+      "one": "Live-BWA aus Plan- und Ist-Werten, automatische Zuordnung zu Kreditorenkonten, daraus abgeleiteter Cashflow — ein Finanz-Dashboard, das mit Live-Daten lebt.",
+      "stack": "finanznaher Kontext · Automatisierung der Buchungslogik"
+    },
+    {
+      "name": "Beleg-Finder v4",
+      "icon": "🗂️",
+      "kind": "visual",
+      "image": "beleg.jpg",
+      "one": "Multi-Directory-Rechnungssuche über M365/SharePoint, Fuzzy-Match, PDF-Volltext, OCR (DE).",
+      "stack": "Python · M365/SharePoint · DATEV-naher Finanzkontext"
+    },
+    {
+      "name": "Outreach-Audit-Pipeline",
+      "icon": "🎯",
+      "kind": "visual",
+      "image": "audit.jpg",
+      "one": "Playwright-Crawl + Suche + Claude-Audit pro Interessent, rund achtzig Cent pro zweihundert Audits, personalisierte Report-Seite, Auslieferung via Resend.",
+      "stack": "Bun · TypeScript · Supabase · Playwright · Claude · eigener Gateway"
+    }
+  ],
+  "personal": {
+    "facts": ["Golfer", "frischgebackener Papa eines acht Wochen alten Jungen", "gebürtiger Allgäuer"]
+  },
+  "bullets": [
+    "15 Jahre operativ, mehrere parallele GF-Mandate",
+    "Generalist: Finanzen, HR, Marketing, Gesellschaftsrecht",
+    "Baut KI-Pipelines in Produktion — Architekt, kein Entwickler",
+    "Düsseldorf, flexibel: Vollzeit oder projektbasiert"
+  ],
+  "coverage": [
+    { "req": "Laden zusammenhalten (Agenda, Beirat/Investoren, Reporting)", "level": "stark",
+      "evidence": "Mehrere parallele GF-Mandate operativ gehalten — Agenda, Finance/HR, Gesellschafter-Reporting. Fäden zusammenhalten ist der Tagesjob." },
+    { "req": "AI-first / Prozesse automatisieren (HubSpot, M365, DATEV)", "level": "solide",
+      "evidence": "Backoffice/Sales-Ops automatisiert (M365/SharePoint, DATEV-naher Finanzkontext), eigene agentische Pipelines in Produktion. HubSpot kenne ich, aber noch nicht produktiv eingesetzt — Einarbeitung von Tagen, kein struktureller Gap." },
+    { "req": "Substanz (ISO 27001, Datenschutz operativ, Förderanträge, Awards)", "level": "solide",
+      "evidence": "Datenschutz als Bauprinzip (Supabase RLS, quote_consent, getrennte PII). Förderanträge bisher nur begleitend mit Agenturen und sporadisch — ehrliche Lücke, die ich aufbaue, kein Kernskill." },
+    { "req": "≥1 Jahr agentische Automatisierung", "level": "stark",
+      "evidence": "Agentische Crawl→Extract→Act-Pipelines in Produktion, kostengerechnet." },
+    { "req": "≥1 Jahr agentische KI-Entwicklung", "level": "stark",
+      "evidence": "Eigene KI-Pipelines: strukturierte Extraktion, Zod-Validierung, Cost-Routing über eigenen Gateway." },
+    { "req": "Generalistische Erfahrung", "level": "stark",
+      "evidence": "15 Jahre durchgehend digital, mehrere Operator-Rollen parallel. Die geforderten 2–4 Jahre sind übererfüllt." },
+    { "req": "Berechtigung in DE", "level": "stark", "evidence": "Düsseldorf, deutsche Entities." }
+  ],
+  "honest_gaps": [
+    "HubSpot: bekannt, noch nicht produktiv eingesetzt.",
+    "Förderanträge: bisher nur agenturbegleitet und sporadisch.",
+    "Kein Top-Hochschulabschluss (in der Anzeige 'von Vorteil', nicht Pflicht)."
+  ],
+  "tone": "kollegial-direkt, kurze Sätze, konkrete Pain Points, keine Marketing-Floskeln, Operator der baut/ownt — kein Berater. Lücken souverän benennen, nicht entschuldigen.",
+  "contact": "d.benter@djwcapitalmanagement.de"
+}

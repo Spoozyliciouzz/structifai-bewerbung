@@ -1,0 +1,21 @@
+{
+  "name": "bewerbung-maschine",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "scraper",
+    "pipeline"
+  ],
+  "scripts": {
+    "typecheck": "bun --filter '*' typecheck",
+    "test": "bun test",
+    "scrape:auth": "bun scraper/src/auth.ts",
+    "scrape:job": "bun scraper/src/scrapeJob.ts",
+    "enrich": "bun scraper/src/enrich.ts",
+    "extract": "bun scraper/src/extract.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/bun": "latest"
+  }
+}

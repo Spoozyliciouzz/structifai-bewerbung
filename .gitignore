@@ -1,0 +1,35 @@
+# Secrets — never commit (§15.1)
+.env
+.env.*
+!.env.example
+*.local
+
+# LinkedIn session = active credential. Public leak = account takeover (§15.1)
+scraper/.auth/
+scraper/cache/*.json
+!scraper/cache/.gitkeep
+
+# Runtime cache w/ cookies
+cache/
+
+# Deps / build
+node_modules/
+dist/
+.bun/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local Netlify folder
+.netlify
+
+# Claude Code local settings (enthält ggf. Befehls-Snippets mit Keys) + Brainstorm-Mockups
+.claude/settings.local.json
+.superpowers/
+.remember/
+
+# Wegwerf-/Tool-Scripts (lokal, keine Secrets)
+voice-ask.ts
+_preview.mjs

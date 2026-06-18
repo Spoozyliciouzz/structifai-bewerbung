@@ -1,0 +1,13 @@
+{
+  "name": "@bewerbung/scraper",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p ../tsconfig.json"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0",
+    "playwright-core": "1.61.0",
+    "zod": "^3.23.8"
+  }
+}

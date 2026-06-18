@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://qpxoggvbkbjluxkorgrp.supabase.co wss://qpxoggvbkbjluxkorgrp.supabase.co">
+<title>Bewerbung — Dennis Benter</title>
+<meta name="description" content="Personalisierte Bewerbungsseite — live gebaut.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0e121b;--navy-2:#141a26;--gold:#cead60;--ink:#e8eaf0;--muted:#9aa3b2;
+    --line:#222a38;--ok:#7fd1a3;--err:#e08a8a;--card:#141a26;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#16203200,#0e121b),var(--navy);
+    color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto;padding:48px 22px 90px}
+  .mono{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+  h1{font-family:"Playfair Display",serif;font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.1;margin:.2em 0 .1em}
+  h2{font-family:"Playfair Display",serif;font-size:clamp(1.3rem,4vw,1.7rem);margin:0 0 4px}
+  .measure{max-width:70ch}
+
+  /* Header */
+  .head{display:flex;align-items:center;gap:18px}
+  .avatar{width:96px;height:96px;border-radius:50%;object-fit:cover;flex:0 0 auto;
+    border:2px solid var(--line);background:var(--navy-2)}
+  .head .who{min-width:0}
+  .head .name{font-family:"Playfair Display",serif;font-size:clamp(1.5rem,5vw,2rem);line-height:1.05}
+  .head .role{color:var(--muted);font-size:1rem;margin-top:2px}
+  .pill{display:inline-flex;align-items:center;gap:7px;margin-top:9px;
+    font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.05em;
+    color:var(--gold);border:1px solid var(--line);border-radius:99px;padding:4px 11px;background:#cead600d}
+  .pill .live{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 #cead6066;
+    animation:pulse 1.8s ease-out infinite}
+  .pill.static{color:var(--muted)}
+  .pill.static .live{background:var(--muted);animation:none;box-shadow:none}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 #cead6066}70%{box-shadow:0 0 0 7px #cead6000}100%{box-shadow:0 0 0 0 #cead6000}}
+
+  /* Sections */
+  section.block{margin-top:40px}
+  .label{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:.74rem;letter-spacing:.08em;
+    text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .label .n{color:var(--gold);opacity:.7}
+
+  /* Photos row */
+  .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .photos img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;border:1px solid var(--line);
+    background:var(--navy-2)}
+  .facts{margin:16px 0 14px;color:var(--ink);font-size:1.04rem}
+  .facts .sep{color:var(--gold);margin:0 6px}
+  ul.bullets{list-style:none;margin:0;padding:0}
+  ul.bullets li{position:relative;padding:8px 0 8px 22px;border-bottom:1px solid var(--line);color:var(--ink)}
+  ul.bullets li:last-child{border-bottom:0}
+  ul.bullets li::before{content:"";position:absolute;left:2px;top:16px;width:7px;height:7px;
+    border-radius:50%;background:var(--gold)}
+
+  /* Dashboard */
+  .fit-grid{display:block}
+  .gauge-wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .gauge{position:relative;width:140px;height:140px;flex:0 0 auto;border-radius:50%;
+    background:conic-gradient(var(--gold) 0deg, var(--line) 0deg)}
+  .gauge::after{content:"";position:absolute;inset:12px;border-radius:50%;background:var(--card)}
+  .gauge .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;z-index:1}
+  .gauge .num{font-family:"Playfair Display",serif;font-size:2.3rem;line-height:1;color:var(--ink)}
+  .gauge .den{font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--muted);margin-top:3px}
+  .gauge-cap{min-width:160px;flex:1 1 180px}
+  .gauge-cap .big{font-family:"Playfair Display",serif;font-size:1.15rem;margin-bottom:2px}
+  .gauge-cap .sm{color:var(--muted);font-size:.92rem}
+
+  .dims{margin-top:18px;display:flex;flex-direction:column;gap:14px}
+  .dim .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:10px}
+  .dim .dlabel{font-size:.95rem;color:var(--ink)}
+  .dim .dscore{font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--muted);flex:0 0 auto}
+  .track{height:9px;border-radius:99px;background:var(--line);overflow:hidden}
+  .fill{height:100%;width:0;border-radius:99px;background:var(--gold);transition:width .9s cubic-bezier(.22,.61,.36,1)}
+  .fill.low{background:var(--muted)}
+  .fill.mid{background:var(--gold);opacity:.8}
+
+  /* Skeleton */
+  .skeleton{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .sk{background:linear-gradient(90deg,#1b2230 25%,#222b3b 37%,#1b2230 63%);background-size:400% 100%;
+    border-radius:8px;animation:shimmer 1.4s ease infinite}
+  .sk.circle{width:140px;height:140px;border-radius:50%}
+  .sk.line{height:12px;margin:10px 0}
+  .sk-row{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  @keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+
+  /* ── ③ Gallery ─────────────────────────────────────────────────────────── */
+  .gallery{position:relative;margin:0 -4px}
+  .gallery-viewport{overflow:hidden;border-radius:16px;padding:6px 4px}
+  .gallery-track{display:flex;gap:18px;will-change:transform;
+    transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+  .slide{flex:0 0 100%;min-width:0}
+  .gcard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    height:100%;display:flex;flex-direction:column}
+  .gcard .shot{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top center;
+    background:var(--navy-2);border-bottom:1px solid var(--line);display:block}
+  .gcard .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .gcard .gname{font-family:"Playfair Display",serif;font-size:1.25rem;line-height:1.2}
+  .gcard .gicon{font-size:1.5rem;line-height:1}
+  .gcard .gone{color:var(--muted);font-size:.95rem;line-height:1.55}
+  .gcard .glink{margin-top:auto;align-self:flex-start;text-decoration:none;color:var(--gold);
+    font-family:"IBM Plex Mono",monospace;font-size:.82rem;letter-spacing:.04em;
+    border:1px solid var(--gold);border-radius:99px;padding:9px 16px;background:#cead600d;
+    transition:background .15s ease,transform .12s ease}
+  .gcard .glink:hover{background:#cead6022}
+  .gcard .glink:active{transform:translateY(1px)}
+
+  /* voice card */
+  .gcard.voice{background:linear-gradient(160deg,#1a2030,#141a26);border-color:#cead6055}
+  .voice-hero{position:relative;aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid #cead6033;overflow:hidden;background:
+      radial-gradient(120px 120px at 50% 45%,#cead6022,transparent)}
+  /* big pulsing phone = the call trigger */
+  .voice-hero .ring{width:92px;height:92px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:2.6rem;background:#cead601a;border:2px solid var(--gold);color:var(--ink);padding:0;
+    box-shadow:0 0 0 0 #cead6055;animation:vpulse 2.2s ease-out infinite;z-index:1;
+    transition:transform .12s ease,background .15s ease}
+  .voice-hero button.ring{cursor:pointer;font-family:inherit}
+  .voice-hero button.ring:hover{background:#cead6033;transform:scale(1.04)}
+  .voice-hero button.ring:active{transform:scale(.97)}
+  .voice-hero button.ring:disabled{cursor:default;animation:none;opacity:.85}
+  @keyframes vpulse{0%{box-shadow:0 0 0 0 #cead6055}70%{box-shadow:0 0 0 22px #cead6000}100%{box-shadow:0 0 0 0 #cead6000}}
+  .voice-hero .ring.nopulse{animation:none}
+
+  /* icon-style slide (folded into gallery) */
+  .gcard.iconcard{background:var(--card);border-color:var(--line);position:relative}
+  .gcard.iconcard::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(140px 120px at 18% 0%,#cead6014,transparent 70%)}
+  .gcard.iconcard .icon-hero{position:relative;aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid var(--line);
+    background:radial-gradient(120px 120px at 50% 45%,#cead6014,transparent)}
+  .gcard.iconcard .icon-hero .bigicon{width:96px;height:96px;border-radius:22px;display:flex;align-items:center;
+    justify-content:center;font-size:3rem;line-height:1;background:#cead600f;border:1px solid #cead6033}
+  .gcard.iconcard .body{gap:6px}
+  .gcard.iconcard .gname{font-family:"Playfair Display",serif;font-size:1.2rem;line-height:1.2}
+  .wave{position:absolute;bottom:0;left:0;right:0;height:46px;display:flex;align-items:flex-end;
+    justify-content:center;gap:5px;opacity:.5}
+  .wave i{width:4px;border-radius:3px;background:var(--gold);animation:wv 1.1s ease-in-out infinite}
+  .wave i:nth-child(2){animation-delay:.12s}.wave i:nth-child(3){animation-delay:.24s}
+  .wave i:nth-child(4){animation-delay:.36s}.wave i:nth-child(5){animation-delay:.48s}
+  .wave i:nth-child(6){animation-delay:.30s}.wave i:nth-child(7){animation-delay:.18s}
+  @keyframes wv{0%,100%{height:8px}50%{height:34px}}
+  .cta-note{color:var(--muted);font-size:.88rem;min-height:1.1em}
+  .voice-hint{color:var(--muted);font-size:.9rem;margin-top:auto;
+    border:1px dashed var(--line);border-radius:10px;padding:10px 13px;background:#0e121b66}
+
+  /* gallery nav */
+  .gnav{display:flex;align-items:center;justify-content:space-between;margin-top:16px;gap:14px}
+  .garrows{display:flex;gap:10px}
+  .garrow{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--navy-2);
+    color:var(--ink);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:border-color .15s ease,color .15s ease,opacity .15s ease}
+  .garrow:hover:not(:disabled){border-color:var(--gold);color:var(--gold)}
+  .garrow:disabled{opacity:.35;cursor:not-allowed}
+  .gdots{display:flex;gap:8px;align-items:center}
+  .gdot{width:8px;height:8px;border-radius:50%;background:var(--line);border:0;padding:0;cursor:pointer;
+    transition:background .2s ease,transform .2s ease}
+  .gdot.on{background:var(--gold);transform:scale(1.25)}
+
+  input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+  footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+  footer a{color:var(--muted)}
+
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(10px)}
+  .reveal.in{opacity:1;transform:none;transition:.5s}
+
+  .loading-note{color:var(--muted);font-size:.92rem;font-family:"IBM Plex Mono",monospace}
+
+  /* ── Desktop ───────────────────────────────────────────────────────────── */
+  @media (min-width:900px){
+    .wrap{max-width:1040px;padding:64px 32px 110px}
+    .fit-grid{display:grid;grid-template-columns:300px 1fr;gap:26px;align-items:start}
+    .gauge-wrap{flex-direction:column;text-align:center;align-items:center;gap:18px}
+    .gauge-cap{flex:0 0 auto;min-width:0}
+    .dims{margin-top:0}
+    .slide{flex-basis:78%}                 /* peek of neighbours */
+  }
+
+  @media (max-width:560px){
+    .photos{grid-template-columns:1fr;gap:10px}
+    .photos img{aspect-ratio:16/10}
+    .gauge-wrap{justify-content:center;text-align:center}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<main class="wrap" id="root">
+  <!-- Header (immediate) -->
+  <header class="head">
+    <img class="avatar" id="avatar" src="/assets/profile.jpg" alt="Dennis Benter" width="96" height="96">
+    <div class="who">
+      <div class="name">Dennis Benter</div>
+      <div class="role" id="role">Bewerbung</div>
+      <span class="pill static" id="pill"><span class="live"></span><span id="pill-text">Bewerbung</span></span>
+    </div>
+  </header>
+
+  <!-- ① Wer bin ich -->
+  <section class="block reveal" id="sec-about" data-reveal>
+    <div class="label"><span class="n">①</span> Wer bin ich</div>
+    <div class="photos">
+      <img src="/assets/golf.jpg" alt="Golf" loading="lazy">
+      <img src="/assets/baby.jpg" alt="Frischgebackener Papa" loading="lazy">
+      <img src="/assets/allgaeu.jpg" alt="Allgäu" loading="lazy">
+    </div>
+    <p class="facts measure" id="facts"></p>
+    <ul class="bullets measure" id="bullets"></ul>
+  </section>
+
+  <!-- ② Wie ich zur Stelle passe -->
+  <section class="block reveal" id="sec-fit" data-reveal>
+    <div class="label"><span class="n">②</span> Wie ich zur Stelle passe</div>
+    <div id="fit-host">
+      <!-- skeleton injected here until data ready -->
+      <div class="skeleton" id="fit-skeleton">
+        <div class="sk-row">
+          <div class="sk circle"></div>
+          <div style="flex:1 1 180px">
+            <div class="sk line" style="width:70%"></div>
+            <div class="sk line" style="width:45%"></div>
+          </div>
+        </div>
+        <div class="sk line" style="width:100%;margin-top:18px"></div>
+        <div class="sk line" style="width:90%"></div>
+        <div class="sk line" style="width:95%"></div>
+        <p class="loading-note" id="fit-loading">Bewertung wird berechnet…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ Was ich gebaut habe -->
+  <section class="block reveal" id="sec-cases" data-reveal>
+    <div class="label"><span class="n">③</span> Was ich gebaut habe</div>
+
+    <div class="gallery" id="gallery" hidden>
+      <div class="gallery-viewport" id="gviewport">
+        <div class="gallery-track" id="gtrack"></div>
+      </div>
+      <div class="gnav">
+        <div class="garrows">
+          <button class="garrow" id="gprev" type="button" aria-label="Vorheriges Projekt">‹</button>
+          <button class="garrow" id="gnext" type="button" aria-label="Nächstes Projekt">›</button>
+        </div>
+        <div class="gdots" id="gdots" role="tablist" aria-label="Projekte"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Dennis Benter · <a href="mailto:d.benter@djwcapitalmanagement.de">d.benter@djwcapitalmanagement.de</a></p>
+    <p>Web · Mail · Telefon — eine Pipeline, solo gebaut.</p>
+  </footer>
+</main>
+
+<script>
+// ── CONFIG ───────────────────────────────────────────────────────────────────
+const CONFIG = {
+  supabaseUrl: "https://qpxoggvbkbjluxkorgrp.supabase.co",
+  anonKey:     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFweG9nZ3Zia2JqbHV4a29yZ3JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2Njk4MTQsImV4cCI6MjA5NzI0NTgxNH0.vw8ygS3mMzCUkSpGiwvFhnt4v34pc6yoL-SJ4BbC00w",   // ← Anon/Publishable-Key wird beim Deploy eingetragen ⇒ schaltet Realtime frei.
+                     //   Leer ⇒ Realtime aus, JSON-Polling-Fallback übernimmt (Build wird trotzdem fertig).
+  storageBase: "https://qpxoggvbkbjluxkorgrp.supabase.co/storage/v1/object/public/sites",
+  callEndpoint:"https://qpxoggvbkbjluxkorgrp.supabase.co/functions/v1/request-call",
+};
+const SUPABASE_JS = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
+
+const $ = (id) => document.getElementById(id);
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Hide broken images gracefully (CSP-clean: no inline onerror handlers).
+function guardImg(img){
+  img.addEventListener("error", ()=>{ img.style.visibility = "hidden"; });
+  if(img.complete && img.naturalWidth === 0) img.style.visibility = "hidden";
+}
+document.querySelectorAll("img").forEach(guardImg);
+
+// ── Routing / params ─────────────────────────────────────────────────────────
+const parts = location.pathname.split("/").filter(Boolean);
+const slug  = parts.length ? parts[parts.length - 1].replace(/\.html$/, "") : "";
+const qp    = new URLSearchParams(location.search);
+const isLive= qp.get("live") === "1";
+const jobId = qp.get("job") || "";
+const LIVE  = isLive && !!jobId && !REDUCED;   // animated first view only when truly live + motion ok
+
+function dataUrl(){ return `${CONFIG.storageBase}/${encodeURIComponent(slug)}.json`; }
+
+// ── Untrusted-data helpers (NEVER innerHTML with data) ───────────────────────
+function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e; }
+function txt(node, s){ node.textContent = (s == null ? "" : String(s)); return node; }
+function clamp10(n){ const x = Number(n); if(!isFinite(x)) return 0; return Math.max(0, Math.min(10, x)); }
+function safeUrl(u){ return (typeof u === "string" && /^https?:\/\//i.test(u)) ? u : ""; }
+function sleep(ms){ return new Promise(r=> setTimeout(r, ms)); }
+
+// ── Reveal helpers ─────────────────────────────────────────────────────────
+function revealNow(elm){ if(elm) elm.classList.add("in"); }
+function staggerReveal(nodes){
+  if(REDUCED){ nodes.forEach(revealNow); return; }
+  nodes.forEach((n,i)=> setTimeout(()=> revealNow(n), 60 + i*150));
+}
+
+// ── Header ───────────────────────────────────────────────────────────────────
+function renderHeader(data){
+  const role = [data && data.title, data && data.company].filter(Boolean).join(" · ");
+  if(role) txt($("role"), role);
+  const pill = $("pill");
+  if(LIVE){
+    pill.classList.remove("static");
+    txt($("pill-text"), "live im Aufbau");
+  } else {
+    pill.classList.add("static");
+    txt($("pill-text"), "Bewerbung");
+  }
+}
+
+// ── ① About ──────────────────────────────────────────────────────────────────
+let aboutRendered = false;
+function renderAbout(data){
+  const facts = (data && data.personal && Array.isArray(data.personal.facts)) ? data.personal.facts : [];
+  const fhost = $("facts"); fhost.textContent = "";
+  facts.forEach((f,i)=>{
+    if(i>0){ const s=el("span","sep"); s.textContent="·"; fhost.appendChild(s); }
+    fhost.appendChild(txt(el("span"), f));
+  });
+  const bhost = $("bullets"); bhost.textContent = "";
+  const bullets = (data && Array.isArray(data.bullets)) ? data.bullets : [];
+  bullets.forEach(b => bhost.appendChild(txt(el("li"), b)));
+  aboutRendered = true;
+}
+
+// ── ② Fit dashboard ──────────────────────────────────────────────────────────
+function fillClass(score){ if(score >= 8) return "fill"; if(score <= 5) return "fill low"; return "fill mid"; }
+function animateCount(node, to, ms, suffix){
+  const start = performance.now(); const dec = (to % 1 !== 0);
+  function frame(now){
+    const t = Math.min(1, (now - start) / ms);
+    const e = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    const v = to * e;
+    node.textContent = (dec ? v.toFixed(1) : Math.round(v)) + (suffix || "");
+    if(t < 1) requestAnimationFrame(frame);
+    else node.textContent = (dec ? to.toFixed(1) : Math.round(to)) + (suffix || "");
+  }
+  if(REDUCED){ node.textContent = (dec ? to.toFixed(1) : Math.round(to)) + (suffix || ""); return; }
+  requestAnimationFrame(frame);
+}
+
+function renderFit(data, animate){
+  const fit = (data && data.fit) || {};
+  const overall = clamp10(fit.overall);
+  const dims = Array.isArray(fit.dimensions) ? fit.dimensions : [];
+
+  const host = $("fit-host");
+  host.textContent = "";
+
+  const grid = el("div","fit-grid");
+
+  // Gauge
+  const wrap = el("div","gauge-wrap");
+  const gauge = el("div","gauge");
+  const val = el("div","val");
+  const num = el("span","num"); num.textContent = "0";
+  const den = el("span","den"); den.textContent = "/ 10";
+  val.appendChild(num); val.appendChild(den); gauge.appendChild(val);
+  const cap = el("div","gauge-cap");
+  const big = el("div","big"); big.textContent = "Gesamt-Fit";
+  const sm  = el("div","sm");  sm.textContent = "Ehrliche Selbsteinschätzung gegen die Anforderungen.";
+  cap.appendChild(big); cap.appendChild(sm);
+  wrap.appendChild(gauge); wrap.appendChild(cap);
+  grid.appendChild(wrap);
+
+  // Dimensions
+  const dimsHost = el("div","dims");
+  const fills = [];
+  dims.forEach(d=>{
+    const score = clamp10(d && d.score);
+    const row = el("div","dim");
+    const top = el("div","top");
+    top.appendChild(txt(el("span","dlabel"), d && d.label));
+    const sc = el("span","dscore"); sc.textContent = "0/10";
+    top.appendChild(sc);
+    const track = el("div","track");
+    const fill = el("div", fillClass(score));
+    track.appendChild(fill);
+    row.appendChild(top); row.appendChild(track);
+    dimsHost.appendChild(row);
+    fills.push({ fill, sc, score });
+  });
+  grid.appendChild(dimsHost);
+  host.appendChild(grid);
+
+  // Animate (or set final)
+  const ringDeg = (overall / 10) * 360;
+  if(animate && !REDUCED){
+    animateCount(num, overall, 900, "");
+    const startTs = performance.now();
+    (function sweep(now){
+      const t = Math.min(1, (now - startTs) / 900);
+      const e = 1 - Math.pow(1 - t, 3);
+      gauge.style.background = `conic-gradient(var(--gold) ${ringDeg*e}deg, var(--line) 0deg)`;
+      if(t<1) requestAnimationFrame(sweep);
+      else gauge.style.background = `conic-gradient(var(--gold) ${ringDeg}deg, var(--line) 0deg)`;
+    })(startTs);
+    fills.forEach((f,i)=> setTimeout(()=>{
+      f.fill.style.width = (f.score*10) + "%";
+      animateCount(f.sc, f.score, 900, "/10");
+    }, 120 + i*120));
+  } else {
+    num.textContent = (overall % 1 ? overall.toFixed(1) : String(overall));
+    gauge.style.background = `conic-gradient(var(--gold) ${ringDeg}deg, var(--line) 0deg)`;
+    fills.forEach(f=>{
+      f.fill.style.transition = "none";
+      f.fill.style.width = (f.score*10) + "%";
+      f.sc.textContent = (f.score % 1 ? f.score.toFixed(1) : String(f.score)) + "/10";
+    });
+  }
+}
+
+// ── ③ Gallery + icon cards ───────────────────────────────────────────────────
+let casesRendered = false;
+const gallery = { index:0, count:0, voiceIndex:-1 };
+
+function buildVisualSlide(c){
+  const card = el("div","gcard");
+  const img = el("img","shot");
+  img.src = "/assets/" + encodeURIComponent(String((c && c.image) || ""));
+  img.alt = (c && c.name) ? String(c.name) : "Projekt";
+  img.loading = "lazy"; guardImg(img);
+  card.appendChild(img);
+  const body = el("div","body");
+  const head = el("div"); head.style.display="flex"; head.style.alignItems="center"; head.style.gap="10px";
+  head.appendChild(txt(el("span","gicon"), (c && c.icon) || "•"));
+  head.appendChild(txt(el("span","gname"), c && c.name));
+  body.appendChild(head);
+  body.appendChild(txt(el("p","gone"), c && c.one));
+  const url = safeUrl(c && c.url);
+  if(url){
+    const a = el("a","glink"); a.href=url; a.target="_blank"; a.rel="noopener";
+    a.textContent = "Live ansehen →";
+    body.appendChild(a);
+  }
+  card.appendChild(body);
+  return card;
+}
+
+function buildVoiceSlide(c){
+  const card = el("div","gcard voice");
+  const hero = el("div","voice-hero");
+  const wave = el("div","wave");
+  for(let i=0;i<7;i++) wave.appendChild(el("i"));
+
+  const body = el("div","body");
+  const head = el("div"); head.style.display="flex"; head.style.alignItems="center"; head.style.gap="10px";
+  head.appendChild(txt(el("span","gicon"), (c && c.icon) || "📞"));
+  head.appendChild(txt(el("span","gname"), c && c.name));
+  body.appendChild(head);
+  body.appendChild(txt(el("p","gone"), c && c.one));
+
+  // The phone IS the trigger when a call token is present in live mode.
+  const callToken = (LIVE && jobId) ? localStorage.getItem("ct:" + jobId) : null;
+  const ring = el(callToken ? "button" : "div", "ring");
+  if(REDUCED) ring.classList.add("nopulse");
+  ring.textContent = "📞";
+  hero.appendChild(ring);
+  hero.appendChild(wave);
+  card.appendChild(hero);
+
+  if(LIVE && callToken){
+    // clickable / keyboard-activatable phone trigger
+    ring.type = "button";
+    ring.setAttribute("aria-label","Rückruf auslösen — Dennis' KI ruft dich an");
+    const note = el("div","cta-note"); note.setAttribute("role","status");
+    const label = el("div","voice-hint");
+    label.textContent = "Jetzt live ausprobieren — tippen, und Dennis' KI ruft dich an.";
+    ring.addEventListener("click", ()=> triggerCall(ring, label, note, callToken));
+    body.appendChild(note);
+    body.appendChild(label);
+  } else if(LIVE){
+    // live but no token: pulsing phone, no call action — just the hint
+    const hint = el("div","voice-hint");
+    hint.textContent = "Tipp: Dennis Rückrufnummer steht in der Email, die du gerade erhalten hast.";
+    body.appendChild(hint);
+  }
+  // static mode: phone + name + one only, no action/hint (handled by LIVE checks above)
+  card.appendChild(body);
+  return card;
+}
+
+async function triggerCall(ring, label, note, callToken){
+  ring.disabled = true; ring.classList.add("nopulse"); note.textContent = "";
+  label.textContent = "Verbinde…";
+  try{
+    const res = await fetch(CONFIG.callEndpoint, {
+      method:"POST", headers:{"content-type":"application/json"},
+      body: JSON.stringify({ jobId, callToken })
+    });
+    if(res.ok){
+      const body = await res.json().catch(()=>({}));
+      if(body && body.ok){
+        ring.textContent = "📞";
+        label.textContent = "📞 Dein Telefon klingelt gleich…";
+        localStorage.removeItem("ct:" + jobId);
+        return;
+      }
+      throw new Error("notok");
+    }
+    if(res.status === 429){
+      ring.disabled=false; ring.classList.remove("nopulse");
+      label.textContent = "Schon ausgelöst."; return;
+    }
+    throw new Error("http"+res.status);
+  }catch(_){
+    ring.disabled = false; ring.classList.remove("nopulse");
+    label.textContent = "Hat nicht geklappt — ruf die Nummer aus der Mail an.";
+  }
+}
+
+function buildIconSlide(c){
+  const card = el("div","gcard iconcard");
+  const hero = el("div","icon-hero");
+  const big = el("div","bigicon");
+  big.textContent = (c && c.icon) || "•";
+  hero.appendChild(big);
+  card.appendChild(hero);
+  const body = el("div","body");
+  body.appendChild(txt(el("div","gname"), c && c.name));
+  body.appendChild(txt(el("p","gone"), c && c.one));
+  card.appendChild(body);
+  return card;
+}
+
+function buildSlide(c){
+  if(c && c.kind === "voice") return buildVoiceSlide(c);
+  if(c && c.kind === "icon")  return buildIconSlide(c);
+  return buildVisualSlide(c);   // default: visual
+}
+
+function goTo(i){
+  if(gallery.count === 0) return;
+  gallery.index = Math.max(0, Math.min(gallery.count - 1, i));
+  const track = $("gtrack");
+  const slide = track.children[0];
+  // width of one slide incl. gap
+  const step = slide ? (slide.getBoundingClientRect().width + 18) : 0;
+  // center the active slide when neighbours peek (desktop), else flush left
+  const vpw = $("gviewport").clientWidth;
+  const sw  = slide ? slide.getBoundingClientRect().width : vpw;
+  const centerPad = Math.max(0, (vpw - sw) / 2);
+  track.style.transform = `translateX(${centerPad - gallery.index*step}px)`;
+  // dots + arrows
+  Array.from($("gdots").children).forEach((d,di)=> d.classList.toggle("on", di===gallery.index));
+  $("gprev").disabled = gallery.index === 0;
+  $("gnext").disabled = gallery.index === gallery.count - 1;
+}
+
+function renderGallery(data){
+  const cases  = (data && Array.isArray(data.cases)) ? data.cases : [];
+  const voice  = cases.filter(c=> c && c.kind === "voice");
+  const visual = cases.filter(c=> c && c.kind === "visual");
+  const icons  = cases.filter(c=> c && c.kind === "icon");
+  // ONE unified gallery — voice first, then visual cards, then icon cases (array order).
+  const slides = [...voice, ...visual, ...icons];
+
+  const track = $("gtrack"); track.textContent = "";
+  const dots  = $("gdots");  dots.textContent  = "";
+  gallery.count = slides.length;
+  gallery.voiceIndex = voice.length ? 0 : -1;
+
+  slides.forEach((c,i)=>{
+    const slideEl = el("div","slide");
+    slideEl.setAttribute("role","group");
+    slideEl.appendChild(buildSlide(c));
+    track.appendChild(slideEl);
+
+    const dot = el("button","gdot"); dot.type="button";
+    dot.setAttribute("role","tab"); dot.setAttribute("aria-label","Projekt "+(i+1));
+    dot.addEventListener("click", ()=> goTo(i));
+    dots.appendChild(dot);
+  });
+
+  if(gallery.count){
+    $("gallery").hidden = false;
+    // start focused on first VISUAL slide = GartenAIden (index right after voice cards)
+    const initial = voice.length; // first visual sits after the voice card(s)
+    gallery.index = Math.min(initial, gallery.count - 1);
+  }
+
+  // nav handlers (idempotent: replace via cloning to avoid dup listeners on re-render)
+  const prev = $("gprev"), next = $("gnext");
+  prev.onclick = ()=> goTo(gallery.index - 1);
+  next.onclick = ()=> goTo(gallery.index + 1);
+
+  // position after layout settles
+  requestAnimationFrame(()=> goTo(gallery.index));
+  casesRendered = true;
+}
+
+// keyboard + touch nav (bound once)
+let galleryNavBound = false;
+function bindGalleryNav(){
+  if(galleryNavBound) return; galleryNavBound = true;
+  document.addEventListener("keydown", (e)=>{
+    if($("gallery").hidden) return;
+    if(e.key === "ArrowLeft"){ goTo(gallery.index - 1); }
+    else if(e.key === "ArrowRight"){ goTo(gallery.index + 1); }
+  });
+  // touch swipe
+  const vp = $("gviewport");
+  let x0=null, dx=0;
+  vp.addEventListener("touchstart", (e)=>{ x0 = e.touches[0].clientX; dx=0; }, {passive:true});
+  vp.addEventListener("touchmove",  (e)=>{ if(x0!=null) dx = e.touches[0].clientX - x0; }, {passive:true});
+  vp.addEventListener("touchend",   ()=>{
+    if(x0!=null && Math.abs(dx) > 45){ goTo(gallery.index + (dx<0?1:-1)); }
+    x0=null; dx=0;
+  }, {passive:true});
+  // pointer drag (desktop)
+  let px=null, pdx=0, dragging=false;
+  vp.addEventListener("pointerdown",(e)=>{ if(e.pointerType==="mouse"){ px=e.clientX; pdx=0; dragging=true; } });
+  window.addEventListener("pointermove",(e)=>{ if(dragging){ pdx = e.clientX - px; } });
+  window.addEventListener("pointerup", ()=>{
+    if(dragging && Math.abs(pdx) > 60){ goTo(gallery.index + (pdx<0?1:-1)); }
+    dragging=false; px=null; pdx=0;
+  });
+  // keep centered on resize
+  window.addEventListener("resize", ()=>{ if(!$("gallery").hidden) goTo(gallery.index); });
+}
+
+// ── Render all (non-fit) content ─────────────────────────────────────────────
+function renderShell(data){
+  renderHeader(data);
+  renderAbout(data);
+  renderGallery(data);
+  bindGalleryNav();
+}
+
+// ── Data fetch ───────────────────────────────────────────────────────────────
+async function fetchData(){
+  const res = await fetch(dataUrl(), { cache: "no-store" });
+  if(!res.ok) throw new Error("fetch "+res.status);
+  return await res.json();
+}
+function hasFit(d){ return !!(d && d.fit && (typeof d.fit.overall === "number" || Array.isArray(d.fit.dimensions))); }
+
+async function pollUntilFit({ intervalMs=1500, maxMs=60000 }={}){
+  const start = Date.now();
+  for(;;){
+    try{ const d = await fetchData(); if(hasFit(d)) return d; }
+    catch(_){ /* not ready yet */ }
+    if(Date.now() - start > maxMs) return null;
+    await sleep(intervalMs);
+  }
+}
+
+// ── supabase-js loader (live only) ───────────────────────────────────────────
+function loadSupabase(){
+  return new Promise((resolve,reject)=>{
+    if(window.supabase) return resolve();
+    const s=document.createElement("script"); s.src=SUPABASE_JS;
+    s.onload=resolve; s.onerror=()=>reject(new Error("supabase-js load failed"));
+    document.head.appendChild(s);
+  });
+}
+
+// ── Choreographed build timeline (live mode) ─────────────────────────────────
+// The timeline PACES the reveal; data is fetched/polled independently.
+let timelineRan = false;
+async function runTimeline(getData){
+  if(timelineRan) return; timelineRan = true;
+
+  // t≈0: header already visible. ① reveals.
+  await sleep(400);
+  revealNow($("sec-about"));
+  // fill ① if data present, then small internal stagger handled by CSS reveal
+  let d = getData();
+  if(d){ renderHeader(d); if(!aboutRendered) renderAbout(d); }
+
+  // t≈1.3s: ② skeleton shimmer
+  await sleep(900);
+  revealNow($("sec-fit"));   // skeleton already in DOM, now visible
+
+  // t≈2.3s: populate dashboard — but wait for fit data, keep skeleton min ~1s
+  const skeletonShownAt = performance.now();
+  await sleep(1000);
+  d = getData();
+  if(!hasFit(d)){
+    // keep skeleton until fit arrives
+    d = await pollUntilFit();
+  }
+  const elapsed = performance.now() - skeletonShownAt;
+  if(elapsed < 1000) await sleep(1000 - elapsed);  // min skeleton time
+  if(d){
+    renderHeader(d);
+    if(!aboutRendered) renderAbout(d);
+    renderFit(d, /*animate*/ true);
+  } else {
+    const ln = $("fit-loading"); if(ln) ln.textContent = "Bewertung folgt in Kürze.";
+  }
+
+  // t≈3.4s: ③ gallery + icon cards
+  await sleep(1100);
+  d = getData() || d;
+  if(d && !casesRendered){ renderGallery(d); bindGalleryNav(); }
+  revealNow($("sec-cases"));
+}
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+(async function boot(){
+  // shared mutable data holder so the timeline always sees the freshest fetch
+  let latest = null;
+  const getData = ()=> latest;
+
+  // kick off data acquisition immediately (independent of timeline)
+  const dataReady = (async ()=>{
+    try{ latest = await fetchData(); }catch(_){}
+    if(!hasFit(latest)){
+      const polled = await pollUntilFit();
+      if(polled) latest = polled;
+    }
+    return latest;
+  })();
+
+  if(LIVE){
+    // Realtime path (only if anonKey present) — purely to hurry the fetch along
+    if(CONFIG.anonKey){
+      loadSupabase().then(()=>{
+        try{
+          const sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.anonKey);
+          const chan = sb.channel("build-"+jobId)
+            .on("postgres_changes",
+              { event:"UPDATE", schema:"public", table:"build_jobs", filter:"id=eq."+jobId },
+              ({ new: row })=>{
+                if(!row) return;
+                const reached = row.status === "done"
+                  || (row.stage === "deploy" && row.stage_done)
+                  || (row.stage === "generate" && row.stage_done)
+                  || row.stage === "email";
+                if(reached){ sb.removeChannel(chan); fetchData().then(d=>{ if(d) latest = d; }).catch(()=>{}); }
+              })
+            .subscribe();
+        }catch(_){}
+      }).catch(()=>{});
+    }
+
+    // Run the choreographed reveal. The timeline awaits fit data where needed.
+    await runTimeline(getData);
+    return;
+  }
+
+  // ── Static mode (or reduced motion): final state instantly, no animation ─────
+  const data = await dataReady;
+  [ $("sec-about"), $("sec-fit"), $("sec-cases") ].forEach(revealNow);
+  if(!data){
+    const ln = $("fit-loading"); if(ln) ln.textContent = "Diese Seite ist noch nicht verfügbar.";
+    return;
+  }
+  renderShell(data);
+  if(hasFit(data)) renderFit(data, /*animate*/ false);
+  else { const ln=$("fit-loading"); if(ln) ln.textContent = "Bewertung nicht verfügbar."; }
+})();
+</script>
+</body>
+</html>

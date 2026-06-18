@@ -1,0 +1,141 @@
+{
+  "_note": "Public-safe Dennis-Kontext für den Voice-Reasoning-Loop. Abgeleitet aus profile/dennis.json (verifiziert) + Interview-Ergänzungen. Fallback, wenn voice_agent_context (DB) leer/unerreichbar ist. KEINE unverifizierten Fakten — der Agent gibt das wörtlich am Telefon wieder.",
+  "profile": {
+    "name": "Dennis Benter",
+    "role": "Operating Partner / Interim-COO — structifai",
+    "base": "Düsseldorf",
+    "years_digital": 15,
+    "summary": "15 Jahre durchgehend digitale Rollen — mehrere parallele Operator-/GF-Mandate, eigene Gründungen, AdTech/Media. Generalist, der baut und ownt, statt zu beraten.",
+    "tone": "kollegial-direkt, kurze Sätze, konkrete Pain Points, keine Marketing-Floskeln. Operator der baut/ownt — kein Berater. Lücken souverän benennen, nicht entschuldigen."
+  },
+  "projects": [
+    {
+      "name": "Outreach-Audit-Pipeline",
+      "one": "Playwright-Crawl plus Suche plus Claude-Audit pro Interessent, rund achtzig Cent pro zweihundert Audits, personalisierte Report-Seite, Auslieferung per Mail.",
+      "stack": "Bun, TypeScript, Supabase, Playwright, Claude, eigener Gateway"
+    },
+    {
+      "name": "structifai Content-Pipeline",
+      "one": "Vollautomatisch: ein Agent liest SEO- und AEO-Signale aus, verdichtet sie, identifiziert Themen und generiert quellenbelegte Artikel, rendert daraus vollständiges HTML und veröffentlicht automatisch — entweder über eigenes Hosting oder per Connector zu WordPress. Mehrmandantenfähig, Datenschutz mit Einwilligung eingebaut. Läuft live auf gartendesign-fricke.de, einer Garten- und Landschaftsbau-Website, die Dennis selbst gebaut hat.",
+      "stack": "Bun, Deno Edge, Supabase mit Row-Level-Security, Agenten, WordPress-Connector"
+    },
+    {
+      "name": "GartenAIden",
+      "one": "Lead-Qualifizierer für den Garten- und Landschaftsbau, zweiseitig: Der Interessent läuft auf der Website eines GaLaBau-Betriebs durch einen geführten Dialog und bekommt eine komplette eigene Seite zu seinem Gartenprojekt — mit KI-generierten Bildern, Kostenrahmen, was im Garten wächst und was gepflanzt wird. Der Betrieb wiederum erhält daraus einen qualifizierten Lead mit vollständigem Projektbriefing: Grundstücksgröße, Hanglage, Zufahrtsbeschränkungen, Bodenqualität und weitere Eckdaten. Das spart dem Betrieb massiv Zeit — keine manuelle Nachqualifizierung mehr: Er sieht sofort, worum es geht, und entscheidet direkt, ob er einen persönlichen Termin macht oder von vornherein absagt, weil es sich betriebswirtschaftlich nicht rechnet.",
+      "stack": "geführter Dialog, KI-Bildgenerierung, automatische Seitenerstellung"
+    },
+    {
+      "name": "Diese Bewerbung",
+      "one": "Web-Seite, Mail und dieser Anruf sind eine einzige Pipeline, von Dennis solo gebaut. In unter einer Minute generiert und zugestellt.",
+      "stack": "Supabase Edge, Twilio ConversationRelay, Claude, ElevenLabs"
+    },
+    {
+      "name": "Beleg-Finder",
+      "one": "Rechnungssuche über mehrere Verzeichnisse, unscharfer Abgleich, PDF-Volltext und Texterkennung auf Deutsch.",
+      "stack": "Python, Microsoft 365, SharePoint, finanznaher Kontext"
+    },
+    {
+      "name": "Financial Dashboard / Live-BWA",
+      "one": "Eine Live-BWA aus Plan- und Ist-Werten, automatische Zuordnung zu den Kreditorenkonten, daraus abgeleiteter Cashflow — ein Finanz-Dashboard, das mit Live-Daten lebt.",
+      "stack": "finanznaher Kontext, Automatisierung der Buchungslogik"
+    }
+  ],
+  "faq": [
+    {
+      "q": "Was kann Dennis konkret?",
+      "a": "Agentische Automatisierung und KI-Pipelines in Produktion bringen, mehrere Operator-Rollen parallel halten, Finance, HR und Reporting operativ steuern. Generalist, der selbst baut."
+    },
+    {
+      "q": "Kennt er HubSpot?",
+      "a": "Ja, kennt er — aber noch nicht produktiv eingesetzt. Einarbeitung von Tagen, kein struktureller Gap. Ehrlich gesagt, kein Kernskill bisher."
+    },
+    {
+      "q": "Und der Hochschulabschluss?",
+      "a": "Keinen Top-Abschluss. In der Anzeige von Vorteil, nicht Pflicht. Statt Zertifikat fünfzehn Jahre Praxis."
+    },
+    {
+      "q": "Erfahrung mit Förderanträgen?",
+      "a": "Bisher nur agenturbegleitet und sporadisch. Ehrliche Lücke, die er aufbaut, kein Kernskill."
+    },
+    {
+      "q": "Warum der Anruf?",
+      "a": "Web, Mail und Anruf sind dieselbe Pipeline. Der Anruf zeigt sie zu Ende gedacht — und die Nummer ist direkt erreichbar, ein Rückruf landet bei Dennis selbst."
+    },
+    {
+      "q": "Verfügbarkeit und Anstellungsmodell?",
+      "a": "Dennis ist kein angestellter Geschäftsführer, sondern rechnet Geschäftsführer-Dienstleistungen über seine eigene Firma ab, per normalem Dienstleistungsvertrag und zeitlich flexibel. Vollzeit oder erst mal projektbasiert ist beides denkbar. Eine feste Anstellung sucht er nicht zwingend, schließt sie aber nicht aus — es hängt davon ab, wie man am besten zusammenkommt."
+    },
+    {
+      "q": "Was kostet das, Gehalt oder Honorar?",
+      "a": "Das bespricht Dennis am liebsten persönlich — es hängt vom Auftrag ab und davon, wie viel Zeit hineinfließt. Er ist immer offen für ein Gespräch, und eine Lösung findet sich sicher."
+    },
+    {
+      "q": "Führungserfahrung, hat er Teams geführt?",
+      "a": "Ja, durchgehend. Als Geschäftsführer hat Dennis Teams geführt — von drei Leuten bis mittlerweile fünfzehn, disziplinarisch und fachlich. Auch Unangenehmes gehört dazu: Er hat schon Leute wegen schwacher Leistung entlassen. Macht keinen Spaß, ist aber Teil des Unternehmerlebens."
+    },
+    {
+      "q": "Was für ein Führungsstil?",
+      "a": "Offen und wertschätzend. Dennis läuft niemandem hinterher und kontrolliert nicht — er ist Sparringspartner, unterstützt und gibt Impulse. Er erwartet, dass Leute ihren Job eigenständig machen; der Antrieb muss von den Menschen selbst kommen."
+    },
+    {
+      "q": "Warum jetzt wechseln, warum diese Rolle?",
+      "a": "Es geht weniger ums Weg-Wollen als um den Fokus: Dennis verschiebt sich klar Richtung KI und Automatisierung — das macht ihm richtig Spaß und steckt voller Potenzial für Unternehmen. Er ist lange in einer investorenfinanzierten Gruppe tätig; jetzt reizt ihn ein Tapetenwechsel mit neuen Gesichtern und anderer Verantwortung, über den Tellerrand hinaus."
+    },
+    {
+      "q": "Wie technisch bist du, wie setzt du KI konkret ein?",
+      "a": "Ehrlich: kein Entwickler, nie selbst eine Zeile Code geschrieben. Aber Dennis lebt seit einem halben Jahr im Command-Line-Interface und baut komplette Systeme — Edge-Functions, Supabase-Datenbanken, Scraper, Python-Skripte — mit KI-Agenten im Hintergrund, Cronjobs und Benachrichtigungen. Sein Ansatz ist Software-Architekt statt Entwickler: erst Spec und Architektur, dann iterativ durch die Bausteine, mit Blick auf Sicherheit und saubere Kapselung, statt einzelne Codezeilen zu lesen."
+    },
+    {
+      "q": "Was bringt ein Nicht-Entwickler dem Team?",
+      "a": "Genau die Business-Perspektive, die reinen Entwicklern oft fehlt. Wenn Dennis ein Financial Dashboard oder eine Cashflow-Analyse baut, denkt er Umsatzsteuer, Zahlungsziele und operative Realität mit — statt eleganten Code zu schreiben, der an der Praxis scheitert. Er verbindet beide Welten, weil er beide kennt."
+    },
+    {
+      "q": "Was treibt dich an, was ist dein Warum?",
+      "a": "Sein Antrieb: Unternehmen lassen sich heute durch Automatisierung spürbar entlasten — weg vom stumpfen Daten-von-A-nach-B-Schieben, von Word nach Excel. Dennis will diese Zeit freiräumen, damit Menschen wieder miteinander reden, bessere Entscheidungen treffen und ins Tun kommen, statt sie mit sinnlosen Aufgaben zu verbrennen."
+    },
+    {
+      "q": "Bist du auf ein bestimmtes Tool festgelegt, Claude oder so?",
+      "a": "Nein, das ist für Dennis tool-agnostisch — ob Claude Code, HubSpot oder etwas anderes ist zweitrangig. Es geht ums Prinzip: eine saubere Datenbasis schaffen, die Daten sinnvoll verknüpfen und darauf bessere Entscheidungen treffen. Da steckt riesiges Potenzial, Menschen von Routine zu entlasten — sich damit nicht zu befassen wäre fast fahrlässig."
+    },
+    {
+      "q": "Kannst du den Nutzen mal ganz konkret machen?",
+      "a": "Klar: Nimm einem Handwerker eine Stunde Büro-Verwaltung am Tag ab — und er nutzt sie beim Kunden. Ein Bier mit dem wichtigsten Kunden, oder beim mäkeligen noch mal vorbeischauen. Wertschöpfung passiert nicht im Büro, sondern am Kunden. Das nimmt keine KI je ganz ab — es geht darum, den Menschen in diesen Beziehungen mehr Zeit dafür zu geben."
+    },
+    {
+      "q": "Wie hält Dennis es mit Datenschutz und DSGVO?",
+      "a": "Datenschutz ist für Dennis Bauprinzip, nicht Nachgedanke: personenbezogene Daten getrennt gespeichert, strikte Zugriffsregeln direkt auf Datenbankebene, Einwilligung als Pflicht und feste Löschfristen. Bei diesem Anruf heißt das: nur mit deinem Opt-in, der Assistent nennt sich sofort als KI, deine Nummer wird einmalig genutzt und zügig gelöscht. Die rechtliche Feinprüfung lässt Dennis fachlich machen — er gibt sich nicht als Jurist aus."
+    },
+    {
+      "q": "Welche Websites hat Dennis selbst gebaut?",
+      "a": "Mehrere, die live sind: QMN als Vermarkter- und Mediapartner-Plattform, Upsidecode als technische Seite, und PINEA. Dazu gartendesign-fricke.de, eine Garten- und Landschaftsbau-Website, auf der seine Content-Pipeline produktiv läuft. Alles selbst gebaut, von der Architektur bis zum Deployment."
+    }
+  ],
+  "stories": [
+    {
+      "title": "Reisekostenabrechnung automatisiert",
+      "situation": "Das ständige Hinterherlaufen hinter Belegen hat ihn immer genervt — Reisekosten wurden mühsam manuell abgerechnet.",
+      "action": "Er hat ein Tool gebaut: Mitarbeiter laden ihre Belege hoch, das Tool erkennt automatisch den Reisezeitraum, die enthaltenen Kosten und die passenden Buchungskonten und erzeugt ein fertiges PDF, das sich direkt in sevDesk hochladen lässt.",
+      "result": "Die Belege landen automatisch auf den richtigen Auffangkonten, das manuelle Hinterherlaufen entfällt. Eine kleine Lösung mit direktem Alltagsnutzen — und der Einstieg in ein größeres Financial Dashboard."
+    }
+  ],
+  "objections": [
+    { "objection": "HubSpot nicht produktiv genutzt", "answer": "Stimmt, kennt er aber. Einarbeitung Tage, kein struktureller Gap." },
+    { "objection": "Kein Top-Hochschulabschluss", "answer": "Richtig. In der Anzeige von Vorteil, nicht Pflicht. Statt Zertifikat fünfzehn Jahre Praxis." },
+    { "objection": "Förderanträge nur sporadisch", "answer": "Ehrlich: bisher nur agenturbegleitet. Baut er auf, kein Kernskill." },
+    { "objection": "Kann nicht selbst programmieren", "answer": "Stimmt, er schreibt keinen Code von Hand. Er baut mit KI-Agenten ganze Produktionssysteme — spec- und architekturgetrieben, mit Blick auf Sicherheit und Kapselung. Eher Architekt als Entwickler." },
+    { "objection": "Ist so ein KI-Anruf oder die ganze Datenverarbeitung überhaupt DSGVO- und UWG-konform?", "answer": "Berechtigte Frage. Der Anruf läuft nur mit ausdrücklichem Opt-in, der Assistent nennt sich sofort als KI im Auftrag von Dennis, deine Daten werden nur einmalig genutzt und gelöscht. Die rechtliche Seite — DSGVO und UWG — lässt Dennis fachlich prüfen, statt sie selbst zu behaupten." }
+  ],
+  "the_role": {
+    "company": "StrategyFrame.AI",
+    "role": "Chief of Staff",
+    "why_them": "Die Rolle trifft genau das, was Dennis schon operativ macht — Strategie und KI zusammenbringen. Der Ansatz, Strategie wirklich mit KI zu leben, reizt ihn; dazu die spannenden Kunden und das junge Team. Eine Rolle, die er sich sehr gut vorstellen kann.",
+    "why_me": "Dennis kennt jeden Funktionsbereich eines Mittelständlers aus eigener Praxis — Finanz-Dashboards und KPIs, HR-Software, Gesellschaftsrecht, Google-Kampagnen und Performance-Marketing. Echter Generalist mit technischem Hintergrund, der die Prozesse schon erlebt hat und weiß, wo die Stolpersteine liegen und wie man sie organisiert. Genau das braucht ein Chief of Staff."
+  },
+  "personal": { "hobby": "Golf", "family": "frischgebackener Vater eines acht Wochen alten Sohnes", "origin": "gebürtiger Allgäuer", "tone_anchor": "warm und selbstironisch — dreht Persönliches zurück auf Dennis' Bau-Drive, z. B.: die durch wenig Schlaf gewonnene Wachzeit nutzt er, um nachts noch kurz einen Prompt abzusetzen" },
+  "pronunciation": {
+    "StrategyFrame": "Strättädschi-Frejm",
+    "Benter": "Bénter",
+    "structifai": "strakt-if-ai",
+    "GartenAIden": "Garten-Eden"
+  }
+}

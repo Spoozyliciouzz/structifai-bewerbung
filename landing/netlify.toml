@@ -1,0 +1,40 @@
+# Netlify — Landing unter structifai.de/bewerbung, generierte Seiten unter /b/*.
+# /b/<slug>  → SPA build.html (Live-Build-Ansicht; holt JSON selbst aus dem Bucket).
+# Projekt-Ref: qpxoggvbkbjluxkorgrp
+
+[build]
+  publish = "."
+
+# /b/<slug> rendert die SPA build.html (Live-Build + statische Ansicht). build.html
+# liest den Slug aus dem Pfad und holt die Daten aus dem öffentlichen sites-Bucket.
+[[redirects]]
+  from = "/b/*"
+  to = "/build.html"
+  status = 200
+
+# Landing selbst unter /bewerbung erreichbar.
+[[redirects]]
+  from = "/bewerbung"
+  to = "/index.html"
+  status = 200
+
+# Defense-in-Depth: CSP + Hardening-Header auf die Build-Ansicht.
+# build.html ist eine SPA mit Inline-JS, lädt supabase-js vom gepinnten CDN und
+# verbindet sich (fetch + Realtime-WS) zu Supabase. Header-CSP muss dazu passen,
+# sonst greift die strengere Schnittmenge mit der CSP-Meta in build.html und blockt
+# alles. (build.html setzt zusätzlich eine eigene CSP-Meta — §16.1)
+[[headers]]
+  for = "/b/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https://qpxoggvbkbjluxkorgrp.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://qpxoggvbkbjluxkorgrp.supabase.co wss://qpxoggvbkbjluxkorgrp.supabase.co; base-uri 'none'; form-action 'none'"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-Frame-Options = "DENY"
+
+# Landing selbst: erlaubt Inline-Style + den gepinnten supabase-js-CDN-Host.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
