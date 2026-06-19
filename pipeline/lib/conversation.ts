@@ -22,8 +22,10 @@ export function normalize(text: string): string {
 /** Kurze, alleinstehende Absagen — NUR als GANZE Äußerung (exakt). So beendet ein „nein" auf
  * „sonst noch Fragen?" das Gespräch, ein „nein" mitten in einem Inhalts-Satz aber NICHT. */
 const END_EXACT = [
-  "nein", "nö", "noe", "nee", "ne", "nope", "ne danke", "nee danke",
-  "nein danke", "no danke", "passt danke", "nein das wars", "nein das war es",
+  // KEINE bloßen Füllwörter ("ne","nö","nee") — die transkribiert STT aus normalem Gerede
+  // und würde das Gespräch mitten im Satz beenden. Nur eindeutige Absagen.
+  "nein", "nein danke", "nee danke", "ne danke", "no danke",
+  "passt danke", "nein das wars", "nein das war es",
 ];
 
 /** true = Anrufer ist fertig → Relay leitet zum Closing über. */

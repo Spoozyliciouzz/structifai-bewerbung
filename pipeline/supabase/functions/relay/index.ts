@@ -12,6 +12,8 @@ import { loadContext } from "../../../voice/context.ts";
 import { streamReply, type ChatMessage } from "../../../voice/claude.ts";
 
 const MAX_TURNS = 8; // Telefonat kurz halten (Budget/UWG: kein Dauergespräch)
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
 function send(socket: WebSocket, msg: CROutbound): void {
   if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(msg));
@@ -34,9 +36,34 @@ Deno.serve((req: Request): Response => {
   // Per-Connection-State (Closure lebt für die WS-Verbindung).
   let system = "";
   let iceCream: string | undefined; // aus setup, fürs Closing (Eis-Einladung)
+  let callId: string | undefined;   // voice_calls.id, aus setup-customParameters
   const history: ChatMessage[] = [];
   let userTurns = 0;
+  let promptEvents = 0;             // ALLE prompt-Events (auch ignorierte) — zeigt STT-Echo/Spam
   let busy = false;
+  let recorded = false;
+
+  // M4/DEBUG: Abbruch-Grund + Transkript nach voice_calls (Service-Role). Best-effort, blockiert nie.
+  // status "closed:end_of_talk…"/"closed:max_turns…" = WIR schließen; "closed:ws_closed…" = Twilio/Hangup.
+  async function recordClose(reason: string): Promise<void> {
+    if (!callId || recorded || !SUPABASE_URL) return;
+    recorded = true;
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/voice_calls?id=eq.${encodeURIComponent(callId)}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json", apikey: SERVICE_KEY,
+          authorization: `Bearer ${SERVICE_KEY}`, Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          status: ("closed:" + reason).slice(0, 250),
+          turns: history,
+          transcript: history.map((h) => `${h.role}: ${h.content}`).join("\n").slice(0, 8000),
+          ended_at: new Date().toISOString(),
+        }),
+      });
+    } catch (_) { /* best-effort */ }
+  }
 
   socket.onmessage = async (ev: MessageEvent) => {
     let msg: CRInbound;
@@ -48,6 +75,7 @@ Deno.serve((req: Request): Response => {
         const firstName = msg.customParameters?.firstName?.trim() || undefined;
         const role = msg.customParameters?.role?.trim() || undefined;
         iceCream = msg.customParameters?.iceCream?.trim() || undefined;
+        callId = msg.customParameters?.callId?.trim() || undefined;
         const ctx = await loadContext();
         system = buildSystemPrompt(ctx, firstName, role, iceCream);
         const intro = buildIntro(firstName);
@@ -57,6 +85,7 @@ Deno.serve((req: Request): Response => {
       }
 
       case "prompt": {
+        promptEvents++; // jedes prompt-Event zählen (auch ignorierte) — entlarvt STT-Echo/Doppelungen
         if (!msg.last || busy) return; // auf Ende der Äußerung warten; keine Überlappung
         const userText = msg.voicePrompt?.trim() ?? "";
         if (!userText) return;
@@ -64,7 +93,11 @@ Deno.serve((req: Request): Response => {
         userTurns++;
 
         // End-of-Talk → Closing (Verweis auf Nummer in der Mail) → Call beenden.
-        if (detectEndOfTalk(userText) || userTurns >= MAX_TURNS) {
+        const eot = detectEndOfTalk(userText);
+        if (eot || userTurns >= MAX_TURNS) {
+          await recordClose(
+            `${eot ? "end_of_talk" : "max_turns"} turns=${userTurns} prompts=${promptEvents} last="${userText.slice(0, 80)}"`,
+          );
           sayFinal(socket, buildClosing(iceCream));
           send(socket, { type: "end" });
           break;
@@ -78,6 +111,7 @@ Deno.serve((req: Request): Response => {
           history.push({ role: "assistant", content: reply || acc });
         } catch (e) {
           console.error(`[relay] LLM-Fehler: ${(e as Error).message}`);
+          await recordClose(`llm_error: ${(e as Error).message}`);
           sayFinal(socket,
             "Entschuldige, da hakt gerade die Technik. Ruf am besten die Nummer aus der Mail an, dann hast du Dennis direkt.");
           send(socket, { type: "end" });
@@ -99,7 +133,11 @@ Deno.serve((req: Request): Response => {
     }
   };
 
-  socket.onclose = () => console.log("[relay] closed");
+  socket.onclose = (e: CloseEvent) => {
+    console.log("[relay] closed");
+    // Falls WIR noch nicht geschlossen haben, kam der Close von Twilio/Hangup/Plattform → festhalten.
+    void recordClose(`ws_closed code=${e.code} turns=${userTurns} prompts=${promptEvents}`);
+  };
   socket.onerror = (e: Event | ErrorEvent) =>
     console.error(`[relay] ws error: ${(e as ErrorEvent).message ?? "unknown"}`);
 

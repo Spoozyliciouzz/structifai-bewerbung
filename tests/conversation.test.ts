@@ -8,8 +8,9 @@ test("normalize: lowercase, Satzzeichen weg", () => {
 
 test("detectEndOfTalk: klare Verabschiedung + bloße Absage erkannt", () => {
   expect(detectEndOfTalk("Nein.")).toBe(true);            // Absage auf „sonst noch Fragen?"
-  expect(detectEndOfTalk("Nö")).toBe(true);
   expect(detectEndOfTalk("Nein danke")).toBe(true);
+  expect(detectEndOfTalk("Nö")).toBe(false);              // bloßes Füllwort beendet NICHT
+  expect(detectEndOfTalk("Ne")).toBe(false);
   expect(detectEndOfTalk("Danke für das Gespräch")).toBe(true);
   expect(detectEndOfTalk("Kein Interesse")).toBe(true);
   expect(detectEndOfTalk("Auf Wiederhören")).toBe(true);
