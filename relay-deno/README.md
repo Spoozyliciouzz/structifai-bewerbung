@@ -4,18 +4,22 @@ Das ConversationRelay-WebSocket-Herzstück als eigenständiger **Deno-Deploy**-S
 
 **Warum hier statt Supabase:** Supabase Edge Functions kappen lang laufende WebSockets bei
 ~75 s (Close-Code 1006, reproduziert) → der Anruf brach mitten im Satz ab. Deno Deploy hat kein
-solches Limit. Die Reasoning-/Gesprächs-Logik (`conversation.ts`, `claude.ts`, `context.ts`) wird
-DRY aus `../pipeline/` importiert — nur der WS-/Server-Teil lebt hier.
+solches Limit. Die Reasoning-/Gesprächs-Logik liegt **self-contained in `./lib/`** (Kopie aus
+`pipeline/`; `tests/conversation.test.ts` prüft diese Live-Kopie) — kein Import außerhalb von
+`relay-deno/`, damit der Ordner als eigenes Deploy-Verzeichnis funktioniert.
 
 `build`, Mail, Landing, Galerie bleiben auf Supabase. Nur der Relay zieht um.
 
 ## Deploy (Deno Deploy)
 
-1. **dash.deno.com** → mit GitHub einloggen → **New Project** → **Deploy from GitHub repository**.
-2. Repo **`Spoozyliciouzz/structifai-bewerbung`** wählen.
-   - **Production branch:** `main`
-   - **Entry point:** `relay-deno/main.ts`
-   - (Kein Build-Step nötig — Deno führt TS direkt aus.)
+1. **dash.deno.com** → mit GitHub einloggen → **New App** → Repo **`Spoozyliciouzz/structifai-bewerbung`**.
+2. Konfig:
+   - **App directory / root:** `relay-deno`  ← self-contained, alle Imports lokal
+   - **Entry point:** `main.ts`
+   - **Production branch:** `main` · Install-/Build-Command **leer** (Deno braucht keinen Build).
+   - *Alternativ ohne Dashboard-Picker (CLI):* `deno install -gArf jsr:@deno/deployctl` dann aus
+     dem Repo-Root `deployctl deploy --entrypoint=relay-deno/main.ts` (deployt das ganze Repo,
+     `relay-deno/main.ts` als Einstieg).
 3. **Environment Variables** setzen (Project → Settings → Environment Variables):
 
    | Variable | Wert | Pflicht |

@@ -1,6 +1,6 @@
 import { test, expect } from "bun:test";
-import { normalize, detectEndOfTalk, buildSystemPrompt, buildIntro, buildClosing, INTRO, CLOSING } from "../pipeline/lib/conversation.ts";
-import type { AgentContext } from "../pipeline/voice/types.ts";
+import { normalize, detectEndOfTalk, buildSystemPrompt, buildIntro, buildClosing, INTRO, CLOSING } from "../relay-deno/lib/conversation.ts";
+import type { AgentContext } from "../relay-deno/lib/types.ts";
 
 test("normalize: lowercase, Satzzeichen weg", () => {
   expect(normalize("Tschüss!! Alles, klar.")).toBe("tschüss alles klar");

@@ -5,7 +5,7 @@
 // (Code 1006, reproduziert). Deno Deploy hat kein solches Limit → der Anruf läuft
 // voll durch.
 //
-// Geteilte Logik (conversation/claude/context/types) wird DRY aus pipeline/ importiert,
+// Geteilte Logik (conversation/claude/context/types) liegt self-contained in ./lib/ (Kopie aus pipeline/; Tests prüfen die Live-Kopie),
 // nur der WS-/Server-Teil lebt hier. Entry-Point für Deno Deploy: relay-deno/main.ts.
 //
 // ENV (Deno-Deploy-Dashboard → Settings → Environment Variables):
@@ -15,10 +15,10 @@
 //   SUPABASE_URL                (optional — für Transkript-Log + DB-Kontext)
 //   SUPABASE_SERVICE_ROLE_KEY   (optional — dito; ohne ⇒ Fallback-Kontext, kein Log)
 // ════════════════════════════════════════════════════════════════════════════
-import type { CRInbound, CROutbound } from "../pipeline/voice/types.ts";
-import { buildIntro, buildClosing, detectEndOfTalk, buildSystemPrompt } from "../pipeline/lib/conversation.ts";
-import { loadContext } from "../pipeline/voice/context.ts";
-import { streamReply, type ChatMessage } from "../pipeline/voice/claude.ts";
+import type { CRInbound, CROutbound } from "./lib/types.ts";
+import { buildIntro, buildClosing, detectEndOfTalk, buildSystemPrompt } from "./lib/conversation.ts";
+import { loadContext } from "./lib/context.ts";
+import { streamReply, type ChatMessage } from "./lib/claude.ts";
 
 const MAX_TURNS = 8; // Telefonat kurz halten (Budget/UWG: kein Dauergespräch)
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
