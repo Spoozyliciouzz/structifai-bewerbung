@@ -299,7 +299,8 @@ async function sendEmail(
 ): Promise<void> {
   if (!RESEND_API_KEY) { console.warn("[email] RESEND_API_KEY fehlt — übersprungen."); return; }
   const safeUrl = esc(url);
-  const phone = esc(DENNIS_PHONE);             // aus Secret — NIE hardcoden (public Repo)
+  const phoneHref = esc(DENNIS_PHONE);                                        // E.164 für tel:-Link (wählbar)
+  const phoneShow = esc(Deno.env.get("DENNIS_PHONE_DISPLAY") || DENNIS_PHONE); // hübsche Anzeige (Leerzeichen)
   const rolle = esc(title.replace(/\s+/g, " ").trim());
   const greeting = firstName ? `Hallo ${esc(firstName)},` : "Hallo,";
   // Telefongerecht für Mail: navy/gold-Design wie die Website, Tabellen-Layout + Inline-Styles (Client-Kompat).
@@ -320,7 +321,7 @@ async function sendEmail(
         <p style="margin:4px 0 18px"><a href="${REPO_URL}" style="display:inline-block;font-family:Arial,sans-serif;font-size:14px;font-weight:600;color:#cead60;text-decoration:none;border:1px solid #cead60;border-radius:8px;padding:11px 20px">&#8594; GitHub-Repo ansehen</a></p>
         <p style="${p}">Unabhängig davon hoffe ich, dass du nach dem Telefonat mit meinem Assistenten jetzt tatsächlich Lust auf ein Eis bekommen hast&nbsp;;-)</p>
         <p style="${p}">Ich würde mich freuen, mich mehr mit dir &amp; deinen Kollegen zu dieser coolen Aufgabe auszutauschen — meldet euch gerne jederzeit.</p>
-        <p style="${p}">Meine Telefonnummer: <a href="tel:${phone}" style="color:#cead60;font-weight:600;text-decoration:none">${phone}</a></p>
+        <p style="${p}">Meine Telefonnummer: <a href="tel:${phoneHref}" style="color:#cead60;font-weight:600;text-decoration:none">${phoneShow}</a></p>
         <p style="${p};margin-top:18px">Danke und viele Grüße,<br><span style="font-family:Georgia,serif;color:#e8eaf0;font-size:18px">Dennis</span></p>
       </td></tr>
       <tr><td style="padding:16px 6px 0">
