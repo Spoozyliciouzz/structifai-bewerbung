@@ -292,25 +292,47 @@ function coerceGenerated(raw: unknown): Generated {
   return { matches: cleaned, why_role: why, automation_example: auto, fitDimensions };
 }
 
+const REPO_URL = "https://github.com/Spoozyliciouzz/structifai-bewerbung";
+
 async function sendEmail(
-  to: string, url: string, company: string, firstName: string | null,
+  to: string, url: string, _company: string, firstName: string | null, title: string,
 ): Promise<void> {
   if (!RESEND_API_KEY) { console.warn("[email] RESEND_API_KEY fehlt — übersprungen."); return; }
   const safeUrl = esc(url);
-  const greeting = firstName ? `Lieber ${esc(firstName)},` : "Hallo,";
-  const html = `<div style="font-family:Inter,Arial,sans-serif;max-width:520px;margin:0 auto;color:#0e121b">
-    <p>${greeting}</p>
-    <p>Sie haben gerade einen ersten Eindruck davon bekommen, wie Dennis zu ${esc(company)} passt —
-    keine PDF, sondern eine Seite, die in unter 60 Sekunden von einer agentischen Pipeline gebaut wurde.</p>
-    <p>Dennis würde sich über ein persönliches Gespräch freuen. Einfach die Nummer wählen:
-    <a href="tel:${esc(DENNIS_PHONE)}" style="color:#0e121b;font-weight:600">${esc(DENNIS_PHONE)}</a></p>
-    <p style="color:#9aa3b2;font-size:13px">Die Bewerbungsseite gibt es hier: <a href="${safeUrl}" style="color:#9aa3b2">${safeUrl}</a></p>
-    <p style="color:#9aa3b2;font-size:12px">Ihre Daten werden nur zur einmaligen Auslieferung verwendet und innerhalb von 24 Stunden gelöscht.</p>
-  </div>`;
+  const phone = esc(DENNIS_PHONE);             // aus Secret — NIE hardcoden (public Repo)
+  const rolle = esc(title.replace(/\s+/g, " ").trim());
+  const greeting = firstName ? `Hallo ${esc(firstName)},` : "Hallo,";
+  // Telefongerecht für Mail: navy/gold-Design wie die Website, Tabellen-Layout + Inline-Styles (Client-Kompat).
+  const p = "font-family:Arial,Helvetica,sans-serif;color:#e8eaf0;font-size:15px;line-height:1.65;margin:0 0 14px";
+  const html = `<!doctype html><html><body style="margin:0;background:#0e121b">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0e121b">
+  <tr><td align="center" style="padding:34px 16px">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
+      <tr><td style="padding:6px 4px 20px">
+        <div style="font-family:'Courier New',monospace;color:#cead60;font-size:12px;letter-spacing:2px;text-transform:uppercase">Bewerbung · live gebaut</div>
+        <div style="font-family:Georgia,'Times New Roman',serif;color:#e8eaf0;font-size:28px;line-height:1.1;margin-top:8px">Dennis Benter</div>
+        <div style="font-family:Arial,sans-serif;color:#9aa3b2;font-size:15px;margin-top:4px">${rolle}</div>
+      </td></tr>
+      <tr><td style="background:#141a26;border:1px solid #222a38;border-radius:14px;padding:26px">
+        <p style="${p}">${greeting}</p>
+        <p style="${p}">danke, dass du dir die Zeit genommen hast, meine Bewerbung anzuschauen.</p>
+        <p style="${p}">Wenn euch die Technik interessiert, mit der ich die Pipeline gebaut habe — hier ist der ganze Code:</p>
+        <p style="margin:4px 0 18px"><a href="${REPO_URL}" style="display:inline-block;font-family:Arial,sans-serif;font-size:14px;font-weight:600;color:#cead60;text-decoration:none;border:1px solid #cead60;border-radius:8px;padding:11px 20px">&#8594; GitHub-Repo ansehen</a></p>
+        <p style="${p}">Unabhängig davon hoffe ich, dass du nach dem Telefonat mit meinem Assistenten jetzt tatsächlich Lust auf ein Eis bekommen hast&nbsp;;-)</p>
+        <p style="${p}">Ich würde mich freuen, mich mehr mit dir &amp; deinen Kollegen zu dieser coolen Aufgabe auszutauschen — meldet euch gerne jederzeit.</p>
+        <p style="${p}">Meine Telefonnummer: <a href="tel:${phone}" style="color:#cead60;font-weight:600;text-decoration:none">${phone}</a></p>
+        <p style="${p};margin-top:18px">Danke und viele Grüße,<br><span style="font-family:Georgia,serif;color:#e8eaf0;font-size:18px">Dennis</span></p>
+      </td></tr>
+      <tr><td style="padding:16px 6px 0">
+        <p style="font-family:Arial,sans-serif;color:#6b7policy;font-size:12px;line-height:1.5;margin:0 0 6px"><a href="${safeUrl}" style="color:#9aa3b2">Deine personalisierte Seite</a> (auch zum Weiterleiten an Kolleg:innen).</p>
+        <p style="font-family:Arial,sans-serif;color:#5c6473;font-size:11px;line-height:1.5;margin:0">Deine Daten werden nur zur einmaligen Auslieferung dieser Bewerbung verwendet und innerhalb von 24 Stunden gelöscht.</p>
+      </td></tr>
+    </table>
+  </td></tr></table></body></html>`;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${RESEND_API_KEY}` },
-    body: JSON.stringify({ from: RESEND_FROM, to, subject: `Ihre Bewerbung für ${company}`, html }),
+    body: JSON.stringify({ from: RESEND_FROM, to, subject: `Meine Bewerbung als ${rolle}`, html }),
   });
   if (!res.ok) throw new Error(`Resend ${res.status}: ${await res.text()}`);
 }
@@ -381,7 +403,7 @@ WICHTIG: Antworte AUSSCHLIESSLICH mit gültigem JSON (RFC 8259) — alle Anführ
     // Ergebnis in stage_note festhalten (Resend-Antwort), damit Mail-Probleme ohne Function-Logs sichtbar sind.
     let emailNote = "Fertig — Mail versendet";
     try {
-      await sendEmail(email, url, company, firstName);
+      await sendEmail(email, url, company, firstName, title);
     } catch (e) {
       emailNote = `Fertig (Mail-Fehler: ${(e as Error).message})`.slice(0, 270);
       console.error(`[email] ${emailNote}`);
