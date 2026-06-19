@@ -5,7 +5,10 @@
 // ════════════════════════════════════════════════════════════════════════════
 const LLM_API_KEY = Deno.env.get("LLM_API_KEY") ?? "";
 const LITELLM_BASE_URL = Deno.env.get("LITELLM_BASE_URL") ?? "";
-const MODEL = Deno.env.get("LLM_MODEL_VOICE") ?? "claude-sonnet-4-6";
+// Voice = LATENZ-kritisch (Telefonie, Budget §8: erste Tokens < 600 ms). Haiku statt Sonnet:
+// Sonnet lag bei TTFT ~1,9 s über den Edge→Anthropic-Pfad → Antworten liefen in den 30s-Timeout
+// und brachen mitten im Satz ab. Haiku: TTFT ~0,65 s, fürs geerdete Q&A aus Kontext mehr als genug.
+const MODEL = Deno.env.get("LLM_MODEL_VOICE") ?? "claude-haiku-4-5-20251001";
 const MAX_TOKENS = 320; // telefongerecht kurz
 
 export interface ChatMessage {
@@ -42,7 +45,14 @@ async function streamAnthropic(
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: { "content-type": "application/json", "x-api-key": LLM_API_KEY, "anthropic-version": "2023-06-01" },
-    body: JSON.stringify({ model: MODEL, max_tokens: MAX_TOKENS, system, messages, stream: true }),
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: MAX_TOKENS,
+      // System/Kontext ist über alle Turns identisch → Prompt-Caching spart TTFT + Kosten ab Turn 2.
+      system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
+      messages,
+      stream: true,
+    }),
     signal: AbortSignal.timeout(30_000),
   });
   if (!res.ok) throw new Error(`Anthropic ${res.status}: ${await res.text()}`);
