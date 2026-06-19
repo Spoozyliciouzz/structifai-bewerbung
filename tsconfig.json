@@ -19,5 +19,5 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "exclude": ["node_modules", "dist", "pipeline/supabase/functions", "pipeline/voice"]
+  "exclude": ["node_modules", "dist", "pipeline/supabase/functions", "pipeline/voice", "relay-deno"]
 }
