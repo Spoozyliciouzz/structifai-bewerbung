@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test";
-import { normalize, detectEndOfTalk, buildSystemPrompt, buildIntro, INTRO, CLOSING } from "../pipeline/lib/conversation.ts";
+import { normalize, detectEndOfTalk, buildSystemPrompt, buildIntro, buildClosing, INTRO, CLOSING } from "../pipeline/lib/conversation.ts";
 import type { AgentContext } from "../pipeline/voice/types.ts";
 
 test("normalize: lowercase, Satzzeichen weg", () => {
@@ -48,6 +48,14 @@ test("INTRO macht KI-Disclosure, CLOSING verweist auf Email-Nummer", () => {
   expect(INTRO).toContain("KI-Assistent von Dennis Benter");
   expect(CLOSING.toLowerCase()).toContain("email");
   expect(CLOSING.toLowerCase()).toContain("nummer");
+});
+
+test("buildClosing: mit Eis Einladung, ohne Eis kein Eis", () => {
+  const mit = buildClosing("Pistazie");
+  expect(mit).toContain("Pistazie");
+  expect(mit.toLowerCase()).toContain("eisdiele");
+  expect(buildClosing().toLowerCase()).not.toContain("eisdiele");
+  expect(buildClosing().toLowerCase()).toContain("email");
 });
 
 test("buildIntro mit Vorname spricht direkt an, ohne Vorname neutral", () => {

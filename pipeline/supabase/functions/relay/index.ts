@@ -7,7 +7,7 @@
 // Persistenz der Turns nach voice_calls kommt in M4. DEPLOY: `--no-verify-jwt`, `--use-api`.
 // ════════════════════════════════════════════════════════════════════════════
 import type { CRInbound, CROutbound } from "../../../voice/types.ts";
-import { buildIntro, CLOSING, detectEndOfTalk, buildSystemPrompt } from "../../../lib/conversation.ts";
+import { buildIntro, buildClosing, detectEndOfTalk, buildSystemPrompt } from "../../../lib/conversation.ts";
 import { loadContext } from "../../../voice/context.ts";
 import { streamReply, type ChatMessage } from "../../../voice/claude.ts";
 
@@ -33,6 +33,7 @@ Deno.serve((req: Request): Response => {
 
   // Per-Connection-State (Closure lebt für die WS-Verbindung).
   let system = "";
+  let iceCream: string | undefined; // aus setup, fürs Closing (Eis-Einladung)
   const history: ChatMessage[] = [];
   let userTurns = 0;
   let busy = false;
@@ -46,7 +47,7 @@ Deno.serve((req: Request): Response => {
         console.log(`[relay] setup call=${msg.callSid} from=${msg.from}`);
         const firstName = msg.customParameters?.firstName?.trim() || undefined;
         const role = msg.customParameters?.role?.trim() || undefined;
-        const iceCream = msg.customParameters?.iceCream?.trim() || undefined;
+        iceCream = msg.customParameters?.iceCream?.trim() || undefined;
         const ctx = await loadContext();
         system = buildSystemPrompt(ctx, firstName, role, iceCream);
         const intro = buildIntro(firstName);
@@ -64,7 +65,7 @@ Deno.serve((req: Request): Response => {
 
         // End-of-Talk → Closing (Verweis auf Nummer in der Mail) → Call beenden.
         if (detectEndOfTalk(userText) || userTurns >= MAX_TURNS) {
-          sayFinal(socket, CLOSING);
+          sayFinal(socket, buildClosing(iceCream));
           send(socket, { type: "end" });
           break;
         }

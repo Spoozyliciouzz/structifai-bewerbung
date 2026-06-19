@@ -33,10 +33,21 @@ export function detectEndOfTalk(text: string): boolean {
   return END_EXACT.includes(n); // bloße Absage als ganze Äußerung
 }
 
-/** Closing (Kern-Mechanik): Verweis auf die Rückruf-Nr in der gerade zugestellten Mail. */
-export const CLOSING =
-  "Danke für deine Zeit. Wenn du doch noch Fragen hast, kannst du Dennis direkt anrufen. " +
-  "Die Nummer steht in der Email, die du erhalten hast.";
+/** Closing (Kern-Mechanik): Dank + Verweis auf Dennis' Nummer in der Mail + optional die
+ * Lieblingseis-Einladung (warmer Hook, wenn der Anrufer ein Eis angegeben hat). */
+export function buildClosing(iceCream?: string): string {
+  const eis = iceCream
+    ? ` Und Dennis lädt dich gern auf eine Kugel ${iceCream} bei deiner Lieblingseisdiele ein.`
+    : "";
+  return (
+    "Danke für das nette Gespräch. Wenn du doch noch Fragen hast, ruf Dennis gern direkt an — " +
+    "die Nummer steht in der Email, die du erhalten hast." + eis +
+    " Hab noch einen schönen Tag und bis bald."
+  );
+}
+
+/** Fallback-Closing ohne Eis (Tests / kein iceCream). */
+export const CLOSING = buildClosing();
 
 const INTRO_BODY =
   "ich bin der KI-Assistent von Dennis Benter — kein Mensch, sondern eine Stimme aus " +
