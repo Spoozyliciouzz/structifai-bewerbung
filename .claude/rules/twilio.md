@@ -13,10 +13,10 @@ Eine Twilio-Nummer, **nur Outbound** (aktuell US-Toll-Free `+1 833…`). Voice-f
   Empfänger sie nicht). Closing des Voice-Agenten verweist genau darauf.
 - **Secrets:** `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_NUMBER`, `DENNIS_PHONE` nur als
   Function-Secrets. Dennis' Handynummer ist Secret, nie Repo/Client.
-- **Vor Custom-Code:** Twilio TS-SDK + offizielle ConversationRelay-Docs prüfen (§14). Kein roher
+- **Vor Custom-Code:** Twilio TS-SDK + offizielle ConversationRelay-Docs prüfen. Kein roher
   Media-Streams-Audio-Layer, kein separater STT-Dienst.
 - **Kosten-Caps:** Voice + ConversationRelay-Aufschlag + ElevenLabs-Zeichen — harte Limits + Alerts.
-  Preise vor Go-live verifizieren (ändern sich), keine fixen Zahlen annehmen (§9.5).
+  Preise vor Go-live verifizieren (ändern sich), keine fixen Zahlen annehmen.
 - **Hinweis Nummernwahl:** Toll-Free reicht für Outbound. Wenn später doch geografische DE-Präsenz
   als Caller-ID gewünscht (Annahmequote bei DE-Empfängern), separate +49-Nummer kaufen — Code ist
   env-driven (`TWILIO_NUMBER`), kein Code-Change.

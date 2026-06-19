@@ -6,7 +6,7 @@ Orchestrator = Supabase Edge Function (Deno). Läuft im Request-Pfad, Ziel <60s.
   Client liest nur `build_jobs` via Realtime. Niemals Email/Telefon in `build_jobs` schreiben.
 - **Stages** schreiben Fortschritt nach `build_jobs` (stage, stage_note, stage_done):
   `enrich · scrape · extract · match · generate · deploy · email [· call]`.
-- **match+generate = EINE Sonnet-Runde.** Nie zwei LLM-Runden im Request-Pfad (Budget §8).
+- **match+generate = EINE Sonnet-Runde.** Nie zwei LLM-Runden im Request-Pfad (Budget).
 - **Fehlerpolitik:** Fehler Stage 1–7 ⇒ `status=error`. Fehler Stage 8 (call) ⇒ Build bleibt
   `done` (Mail ist raus).
 - **Gate vor jeder Mutation:** CORS-Origin-Check, Rate-Limit (IP/Domain), Token/PoW,

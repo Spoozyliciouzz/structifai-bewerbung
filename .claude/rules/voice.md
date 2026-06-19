@@ -6,7 +6,7 @@ Encore, NICHT im 60s-Budget. UWG §7 + Abuse-Gate sind blockierend. Architektur-
 - **Auslösung nur wenn ALLE wahr:** `callConsent === true` && gültige E.164-Nummer && Empfänger
   zugelassen (Email-Domain in `VOICE_ALLOWLIST_DOMAINS` **oder** server-erzeugter Token). Trigger-Endpoint
   `outbound-trigger` nur Server-zu-Server aus `build/` mit `TRIGGER_SHARED_SECRET` — nie für freie
-  Nummern auslösbar (§9.2 — sonst Robocall-Generator + UWG-Haftung). Rate-Limit, eine Bewerbung/Email.
+  Nummern auslösbar (sonst Robocall-Generator + UWG-Haftung). Rate-Limit, eine Bewerbung/Email.
 - **Consent geloggt:** `call_consent=true` + `consent_at` in `build_jobs_pii`, vor Trigger prüfen.
 - **Bot-Disclosure im ERSTEN Satz:** „KI-Assistent von Dennis Benter, kein Mensch." Kein Verkauf,
   kein Werbecharakter.

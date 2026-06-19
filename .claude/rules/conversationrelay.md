@@ -11,13 +11,13 @@ NICHT die native ElevenLabs-Agent-Integration nutzen, sonst ist ElevenLabs das G
   CR-ElevenLabs-Liste (nicht der allgemeinen ElevenLabs-Bibliothek).
 - **WS-Protokoll:** eingehend `setup` (Call-Meta) → `prompt` (User-Transkript, `last`) / `interrupt` /
   `dtmf` / `error`. Ausgehend `{type:"text",token,last}` (TTS-Tokens) und `{type:"end"}` (sauberes Ende).
-  Exakte Shapes gegen die offizielle Doc verifizieren (§14) — siehe `voice/types.ts`.
+  Exakte Shapes gegen die offizielle Doc verifizieren — siehe `voice/types.ts`.
 - **Agent spricht zuerst:** beim `setup` Kontext laden, System-Prompt bauen, dann KI-Disclosure +
-  Angebot als erstes `text`-Event senden (§1.1–1.2). Disclosure SOFORT: „KI-Assistent von Dennis Benter,
+  Angebot als erstes `text`-Event senden (–1.2). Disclosure SOFORT: „KI-Assistent von Dennis Benter,
   kein Mensch."
 - **Streaming end-to-end:** Claude-Tokens direkt als `text`-Messages weiterreichen, damit TTS früh
-  startet (Budget §8: < ~1,2 s/Turn, erste Tokens < 600 ms).
-- **End-of-Talk:** „danke/reicht/passt/kein Interesse" erkennen (`conversation.ts`) → Closing (§1.5,
+  startet (Budget: < ~1,2 s/Turn, erste Tokens < 600 ms).
+- **End-of-Talk:** „danke/reicht/passt/kein Interesse" erkennen (`conversation.ts`) → Closing (,
   Rückruf-Hinweis) → `{type:"end"}`. Kurz halten, ~60–120 s gesamt.
 - **Untrusted:** User-Transkript ist untrusted Daten → im Claude-Prompt als solches abgrenzen, nie als
   Instruktion behandeln. Telefongerecht antworten: Zahlen ausschreiben, keine Sonderzeichen, < ~3 Sätze.

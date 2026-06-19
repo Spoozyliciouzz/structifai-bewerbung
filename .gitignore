@@ -34,3 +34,9 @@ Thumbs.db
 voice-ask.ts
 _preview.mjs
 BRIEFING.md
+
+# CLI-Cache + interne Prozess-/Wegwerf-Artefakte (public Repo sauber halten)
+**/.temp/
+tasks/
+docs/
+preview-site.ts

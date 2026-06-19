@@ -38,7 +38,7 @@ per Mail in <60s → optional KI-Anruf. Profil-Wahrheit:
 - **Slug**: `crypto.randomUUID()`-Kurzform (12 hex) — nicht ratbar, kollisionsarm, keine PII.
 - **Rate-Limit**: Postgres-Counter pro IP+Domain im Service-Role-Pfad (kein externer State).
 - **enrich parallel** mit 5s-Timeout pro Pfad; Gesamt-Cap, damit 60s-Budget hält.
-- **`profile/dennis.json` public-safe**: keine VERIFY-Marker, keine Prozess-Kommentare (§15.3).
+- **`profile/dennis.json` public-safe**: keine VERIFY-Marker, keine Prozess-Kommentare.
 - **Voice = Twilio ConversationRelay statt Vapi** (eigenes Teilprojekt, im selben Repo+Supabase-Projekt
   integriert, nicht als Extra-Repo). Claude liefert nur Text, kein roher Audio-Layer. Functions:
   `outbound-trigger` · `relay` (WS) · `inbound` unter `pipeline/supabase/functions/`. Tabellen

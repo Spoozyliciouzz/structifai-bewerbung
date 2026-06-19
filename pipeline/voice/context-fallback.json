@@ -108,6 +108,26 @@
     {
       "q": "Welche Websites hat Dennis selbst gebaut?",
       "a": "Mehrere, die live sind: QMN als Vermarkter- und Mediapartner-Plattform, Upsidecode als technische Seite, und PINEA. Dazu gartendesign-fricke.de, eine Garten- und Landschaftsbau-Website, auf der seine Content-Pipeline produktiv läuft. Alles selbst gebaut, von der Architektur bis zum Deployment."
+    },
+    {
+      "q": "HubSpot nicht produktiv genutzt",
+      "a": "Stimmt, kennt er aber. Einarbeitung Tage, kein struktureller Gap."
+    },
+    {
+      "q": "Kein Top-Hochschulabschluss",
+      "a": "Richtig. In der Anzeige von Vorteil, nicht Pflicht. Statt Zertifikat fünfzehn Jahre Praxis."
+    },
+    {
+      "q": "Förderanträge nur sporadisch",
+      "a": "Ehrlich: bisher nur agenturbegleitet. Baut er auf, kein Kernskill."
+    },
+    {
+      "q": "Kann nicht selbst programmieren",
+      "a": "Stimmt, er schreibt keinen Code von Hand. Er baut mit KI-Agenten ganze Produktionssysteme — spec- und architekturgetrieben, mit Blick auf Sicherheit und Kapselung. Eher Architekt als Entwickler."
+    },
+    {
+      "q": "Ist so ein KI-Anruf oder die ganze Datenverarbeitung überhaupt DSGVO- und UWG-konform?",
+      "a": "Berechtigte Frage. Der Anruf läuft nur mit ausdrücklichem Opt-in, der Assistent nennt sich sofort als KI im Auftrag von Dennis, deine Daten werden nur einmalig genutzt und gelöscht. Die rechtliche Seite — DSGVO und UWG — lässt Dennis fachlich prüfen, statt sie selbst zu behaupten."
     }
   ],
   "stories": [
@@ -118,20 +138,18 @@
       "result": "Die Belege landen automatisch auf den richtigen Auffangkonten, das manuelle Hinterherlaufen entfällt. Eine kleine Lösung mit direktem Alltagsnutzen — und der Einstieg in ein größeres Financial Dashboard."
     }
   ],
-  "objections": [
-    { "objection": "HubSpot nicht produktiv genutzt", "answer": "Stimmt, kennt er aber. Einarbeitung Tage, kein struktureller Gap." },
-    { "objection": "Kein Top-Hochschulabschluss", "answer": "Richtig. In der Anzeige von Vorteil, nicht Pflicht. Statt Zertifikat fünfzehn Jahre Praxis." },
-    { "objection": "Förderanträge nur sporadisch", "answer": "Ehrlich: bisher nur agenturbegleitet. Baut er auf, kein Kernskill." },
-    { "objection": "Kann nicht selbst programmieren", "answer": "Stimmt, er schreibt keinen Code von Hand. Er baut mit KI-Agenten ganze Produktionssysteme — spec- und architekturgetrieben, mit Blick auf Sicherheit und Kapselung. Eher Architekt als Entwickler." },
-    { "objection": "Ist so ein KI-Anruf oder die ganze Datenverarbeitung überhaupt DSGVO- und UWG-konform?", "answer": "Berechtigte Frage. Der Anruf läuft nur mit ausdrücklichem Opt-in, der Assistent nennt sich sofort als KI im Auftrag von Dennis, deine Daten werden nur einmalig genutzt und gelöscht. Die rechtliche Seite — DSGVO und UWG — lässt Dennis fachlich prüfen, statt sie selbst zu behaupten." }
-  ],
   "the_role": {
     "company": "StrategyFrame.AI",
     "role": "Chief of Staff",
     "why_them": "Die Rolle trifft genau das, was Dennis schon operativ macht — Strategie und KI zusammenbringen. Der Ansatz, Strategie wirklich mit KI zu leben, reizt ihn; dazu die spannenden Kunden und das junge Team. Eine Rolle, die er sich sehr gut vorstellen kann.",
     "why_me": "Dennis kennt jeden Funktionsbereich eines Mittelständlers aus eigener Praxis — Finanz-Dashboards und KPIs, HR-Software, Gesellschaftsrecht, Google-Kampagnen und Performance-Marketing. Echter Generalist mit technischem Hintergrund, der die Prozesse schon erlebt hat und weiß, wo die Stolpersteine liegen und wie man sie organisiert. Genau das braucht ein Chief of Staff."
   },
-  "personal": { "hobby": "Golf", "family": "frischgebackener Vater eines acht Wochen alten Sohnes", "origin": "gebürtiger Allgäuer", "tone_anchor": "warm und selbstironisch — dreht Persönliches zurück auf Dennis' Bau-Drive, z. B.: die durch wenig Schlaf gewonnene Wachzeit nutzt er, um nachts noch kurz einen Prompt abzusetzen" },
+  "personal": {
+    "hobby": "Golf",
+    "family": "frischgebackener Vater eines acht Wochen alten Sohnes",
+    "origin": "gebürtiger Allgäuer",
+    "tone_anchor": "warm und selbstironisch — dreht Persönliches zurück auf Dennis' Bau-Drive, z. B.: die durch wenig Schlaf gewonnene Wachzeit nutzt er, um nachts noch kurz einen Prompt abzusetzen"
+  },
   "pronunciation": {
     "StrategyFrame": "Strättädschi-Frejm",
     "Benter": "Bénter",

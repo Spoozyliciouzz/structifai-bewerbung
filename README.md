@@ -70,19 +70,19 @@ Job-Cache hochladen: `scraper/cache/job-4428605958.json` → privater `cache`-Bu
 
 ## Definition-of-Done-Checklisten
 
-**§9 Constraints**
+**Constraints**
 - [ ] UWG §7: Voice nur Opt-in + Nummer + Consent geloggt; Bot identifiziert sich als KI; kein Werbecharakter.
 - [ ] DSGVO: Zweckbindung, PII-Löschung <24h, Datenschutz-Link, Auftragsverarbeiter benannt.
 - [ ] Zustellbarkeit: Resend von verifizierter `structifai.de` mit SPF/DKIM/DMARC.
 - [ ] Abuse: Rate-Limit IP/Domain, eine Bewerbung/Email, Bot-Check, E.164 serverseitig, Voice-Gate.
 - [ ] RLS: `build_jobs` PII-frei, `build_jobs_pii` keine anon-Policy, Secrets nur Function-Secrets.
 
-**§15 Public-Repo-Härtung**
+**Public-Repo-Härtung**
 - [ ] Keine Secrets im Repo/History; `.gitignore` deckt `.env*`, `scraper/.auth/`, `cache/`.
 - [ ] Service-Role-Key nie client/Repo. `profile/dennis.json` ohne interne Marker.
 - [ ] Voice-Abuse-Gate aktiv. Spend-Caps (Resend/Vapi/LLM). Kuratierter Public-Branch.
 
-**§16 Trust-Boundaries**
+**Trust-Boundaries**
 - [ ] Alle Outputs HTML-escaped + CSP. Prompt-Injection-Delimiter. RLS deny-by-default getestet.
 - [ ] Storage-Writes service-role-only. Endpoint token+rate-limit-gated. CORS auf structifai.de.
 
