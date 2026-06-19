@@ -211,18 +211,22 @@ async function realtime(payload){
   // callToken via localStorage an den Live-Tab übergeben (sessionStorage ist NICHT
   // über window.open hinweg geteilt — daher localStorage, keyed auf jobId).
   if(callToken) localStorage.setItem("ct:" + jobId, callToken);
-  window.open(`/b/${slug}?live=1&job=${jobId}`, "_blank", "noopener");
+  const liveUrl = `/b/${slug}?live=1&job=${jobId}`;
+  window.open(liveUrl, "_blank", "noopener");
 
-  showLiveOpened();
+  showLiveOpened(liveUrl);
 }
 
 // ── Inline-Bestätigung auf der Landing (Live-Tab läuft separat) ──────────────
-function showLiveOpened(){
+function showLiveOpened(url){
   consoleEl.classList.remove("show");
-  $("reveal-link").hidden = true;
+  const link = $("reveal-link");
+  link.href = url;            // echtes Ziel → Tab geschlossen? hier wieder öffnen
+  link.hidden = false;
+  link.textContent = "Seite wieder öffnen →";
   $("reveal-phone").hidden = true;
   document.querySelector("#reveal h2").textContent = "Läuft.";
-  $("reveal-text").textContent = "Deine Live-Bewerbung öffnet sich in einem neuen Tab.";
+  $("reveal-text").textContent = "Deine Live-Bewerbung läuft in einem neuen Tab. Tab geschlossen? Hier zurück:";
   revealEl.classList.add("show");
   revealEl.scrollIntoView({block:"nearest"});
   $("submit").disabled = false; $("submit").textContent = "Pipeline live erleben";
