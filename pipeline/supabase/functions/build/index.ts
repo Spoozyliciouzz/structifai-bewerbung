@@ -378,14 +378,17 @@ WICHTIG: Antworte AUSSCHLIESSLICH mit gültigem JSON (RFC 8259) — alle Anführ
 
     await updateStage(jobId, { stage: "email", stage_note: "Mail versendet", stage_done: false });
     // Mail ist Auslieferungs-Komfort, nicht der Kern-Deliverable (Seite ist gebaut). Fehler ⇒ Build bleibt done.
+    // Ergebnis in stage_note festhalten (Resend-Antwort), damit Mail-Probleme ohne Function-Logs sichtbar sind.
+    let emailNote = "Fertig — Mail versendet";
     try {
       await sendEmail(email, url, company, firstName);
     } catch (e) {
-      console.error(`[email] Versand fehlgeschlagen (Build bleibt done): ${(e as Error).message}`);
+      emailNote = `Fertig (Mail-Fehler: ${(e as Error).message})`.slice(0, 270);
+      console.error(`[email] ${emailNote}`);
     }
 
     // Stages 1–7 fertig → done.
-    await updateStage(jobId, { stage: "email", stage_note: "Fertig", stage_done: true, status: "done" });
+    await updateStage(jobId, { stage: "email", stage_note: emailNote, stage_done: true, status: "done" });
 
     // PII NICHT sofort löschen: der Anruf wird erst durch den Button auf der Live-Seite ausgelöst
     // (request-call braucht callToken/Telefon/Consent aus build_jobs_pii). Der callToken läuft nach
