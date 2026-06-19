@@ -36,30 +36,31 @@ Deno.serve((req: Request): Response => {
   // Per-Connection-State (Closure lebt für die WS-Verbindung).
   let system = "";
   let iceCream: string | undefined; // aus setup, fürs Closing (Eis-Einladung)
-  let callId: string | undefined;   // voice_calls.id, aus setup-customParameters
+  let callSid: string | undefined;  // Twilio Call-SID (zuverlässig im setup) → PATCH-Key
   const history: ChatMessage[] = [];
   let userTurns = 0;
   let promptEvents = 0;             // ALLE prompt-Events (auch ignorierte) — zeigt STT-Echo/Spam
   let busy = false;
-  let recorded = false;
+  let finalized = false;
 
-  // M4/DEBUG: Abbruch-Grund + Transkript nach voice_calls (Service-Role). Best-effort, blockiert nie.
-  // status "closed:end_of_talk…"/"closed:max_turns…" = WIR schließen; "closed:ws_closed…" = Twilio/Hangup.
-  async function recordClose(reason: string): Promise<void> {
-    if (!callId || recorded || !SUPABASE_URL) return;
-    recorded = true;
+  // M4/DEBUG: Zustand nach voice_calls schreiben (Service-Role, PATCH per twilio_call_sid).
+  // Nach JEDEM Turn (final=false) + beim Schluss (final=true). status "active…" = läuft,
+  // "closed:end_of_talk/max_turns/llm_error" = WIR schließen, "ws_closed…" = Twilio/Hangup.
+  async function recordState(status: string, final = false): Promise<void> {
+    if (!callSid || !SUPABASE_URL) return;
+    if (final) { if (finalized) return; finalized = true; }
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/voice_calls?id=eq.${encodeURIComponent(callId)}`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/voice_calls?twilio_call_sid=eq.${encodeURIComponent(callSid)}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json", apikey: SERVICE_KEY,
           authorization: `Bearer ${SERVICE_KEY}`, Prefer: "return=minimal",
         },
         body: JSON.stringify({
-          status: ("closed:" + reason).slice(0, 250),
+          status: status.slice(0, 250),
           turns: history,
           transcript: history.map((h) => `${h.role}: ${h.content}`).join("\n").slice(0, 8000),
-          ended_at: new Date().toISOString(),
+          ...(final ? { ended_at: new Date().toISOString() } : {}),
         }),
       });
     } catch (_) { /* best-effort */ }
@@ -75,7 +76,7 @@ Deno.serve((req: Request): Response => {
         const firstName = msg.customParameters?.firstName?.trim() || undefined;
         const role = msg.customParameters?.role?.trim() || undefined;
         iceCream = msg.customParameters?.iceCream?.trim() || undefined;
-        callId = msg.customParameters?.callId?.trim() || undefined;
+        callSid = msg.callSid?.trim() || undefined;
         const ctx = await loadContext();
         system = buildSystemPrompt(ctx, firstName, role, iceCream);
         const intro = buildIntro(firstName);
@@ -95,8 +96,9 @@ Deno.serve((req: Request): Response => {
         // End-of-Talk → Closing (Verweis auf Nummer in der Mail) → Call beenden.
         const eot = detectEndOfTalk(userText);
         if (eot || userTurns >= MAX_TURNS) {
-          await recordClose(
-            `${eot ? "end_of_talk" : "max_turns"} turns=${userTurns} prompts=${promptEvents} last="${userText.slice(0, 80)}"`,
+          await recordState(
+            `closed:${eot ? "end_of_talk" : "max_turns"} turns=${userTurns} prompts=${promptEvents} last="${userText.slice(0, 80)}"`,
+            true,
           );
           sayFinal(socket, buildClosing(iceCream));
           send(socket, { type: "end" });
@@ -109,9 +111,10 @@ Deno.serve((req: Request): Response => {
           const reply = await streamReply(system, history, (t) => { acc += t; sayToken(socket, t); });
           send(socket, { type: "text", token: "", last: true }); // Turn abschließen
           history.push({ role: "assistant", content: reply || acc });
+          await recordState(`active turns=${userTurns} prompts=${promptEvents}`); // Snapshot je Turn
         } catch (e) {
           console.error(`[relay] LLM-Fehler: ${(e as Error).message}`);
-          await recordClose(`llm_error: ${(e as Error).message}`);
+          await recordState(`closed:llm_error ${(e as Error).message}`, true);
           sayFinal(socket,
             "Entschuldige, da hakt gerade die Technik. Ruf am besten die Nummer aus der Mail an, dann hast du Dennis direkt.");
           send(socket, { type: "end" });
@@ -134,9 +137,17 @@ Deno.serve((req: Request): Response => {
   };
 
   socket.onclose = (e: CloseEvent) => {
-    console.log("[relay] closed");
-    // Falls WIR noch nicht geschlossen haben, kam der Close von Twilio/Hangup/Plattform → festhalten.
-    void recordClose(`ws_closed code=${e.code} turns=${userTurns} prompts=${promptEvents}`);
+    console.log(`[relay] closed code=${e.code} reason=${e.reason}`);
+    // Falls WIR noch nicht geschlossen haben, kam der Close von Twilio/Hangup/Plattform.
+    // EdgeRuntime.waitUntil hält die Funktion am Leben, bis der DB-Write durch ist (sonst zu spät).
+    const rec = recordState(
+      `ws_closed code=${e.code} reason="${(e.reason ?? "").slice(0, 90)}" turns=${userTurns} prompts=${promptEvents}`,
+      true,
+    );
+    try {
+      // @ts-ignore EdgeRuntime ist im Supabase-Deno-Kontext vorhanden.
+      EdgeRuntime.waitUntil(rec);
+    } catch { void rec; }
   };
   socket.onerror = (e: Event | ErrorEvent) =>
     console.error(`[relay] ws error: ${(e as ErrorEvent).message ?? "unknown"}`);
