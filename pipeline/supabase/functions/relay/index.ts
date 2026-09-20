@@ -50,7 +50,7 @@ Deno.serve((req: Request): Response => {
     if (!callSid || !SUPABASE_URL) return;
     if (final) { if (finalized) return; finalized = true; }
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/voice_calls?twilio_call_sid=eq.${encodeURIComponent(callSid)}`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/bw_voice_calls?twilio_call_sid=eq.${encodeURIComponent(callSid)}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json", apikey: SERVICE_KEY,

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://qpxoggvbkbjluxkorgrp.supabase.co wss://qpxoggvbkbjluxkorgrp.supabase.co">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://hhxwojewbtegovzdxpfw.supabase.co wss://hhxwojewbtegovzdxpfw.supabase.co">
 <title>Bewerbung — Dennis Benter</title>
 <meta name="description" content="Personalisierte Bewerbungsseite — live gebaut.">
 <meta name="robots" content="noindex">
@@ -54,6 +54,56 @@
   .facts{margin:16px 0 14px;color:var(--ink);font-size:1.04rem}
   .facts .sep{color:var(--gold);margin:0 6px}
   ul.bullets{list-style:none;margin:0;padding:0}
+
+  /* ── n=1-Abschnitte einer Bewerbung ──────────────────────────────────────── */
+  .ap-eyebrow{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:.74rem;
+    letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px}
+  .ap-headline{font-size:clamp(1.4rem,3.4vw,2rem);line-height:1.25;margin:0 0 14px;color:var(--ink)}
+  .ap-lead{color:var(--muted);margin:0}
+  .ap-hint{color:var(--muted);font-size:.86rem;margin:8px 0 0}
+
+  .ap-ref{border-left:2px solid var(--line);padding:2px 0 2px 14px;margin:18px 0 24px}
+  .ap-ref-label{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:.7rem;
+    letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:6px}
+  .ap-source{color:var(--gold);text-decoration:none;word-break:break-word}
+  .ap-source:hover,.ap-source:focus-visible{text-decoration:underline}
+  .ap-source-id{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:.7rem;
+    margin-right:8px}
+
+  .ap-options{border:1px solid var(--line);border-radius:10px;background:var(--card);
+    padding:18px;margin:20px 0}
+  .ap-field{border:0;margin:0 0 18px;padding:0}
+  .ap-field legend{padding:0;margin-bottom:8px;color:var(--ink);font-weight:600}
+  .ap-field label{display:inline-flex;align-items:center;gap:6px;margin-right:18px;
+    color:var(--ink);cursor:pointer}
+  .ap-free{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+  /* Ein eigenes display: schlägt die Browser-Regel für [hidden] — ohne diese Zeile bliebe
+     ein abgewähltes Feld sichtbar stehen. Gilt für jeden Abschnitt mit eigenem display. */
+  .ap-free[hidden],.ap-options[hidden],.ap-ref[hidden],section.ap[hidden]{display:none}
+  .ap-free label{color:var(--muted);font-size:.86rem}
+  .ap-free input{background:var(--navy);border:1px solid var(--line);border-radius:6px;
+    color:var(--ink);padding:9px 11px;font:inherit;max-width:32ch}
+  .ap-free input:disabled{opacity:.5}
+  .ap-preview{border-top:1px solid var(--line);padding-top:14px}
+  .ap-preview ul{list-style:none;margin:0;padding:0;color:var(--muted)}
+  .ap-preview li{padding:3px 0}
+
+  .ap-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:18px}
+  .ap-step{border-top:1px solid var(--line);padding-top:12px}
+  .ap-step-range{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:.7rem;
+    letter-spacing:.06em;display:block;margin-bottom:8px}
+  .ap-step h3{margin:0 0 6px;font-size:1rem;color:var(--ink)}
+  .ap-step p{margin:0;color:var(--muted);font-size:.92rem}
+
+  .ap-starters{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  .ap-starters li{border-left:2px solid var(--line);padding-left:14px;color:var(--ink)}
+  .ap-sources{list-style:none;margin:0;padding:0;display:grid;gap:12px;color:var(--muted);
+    font-size:.9rem}
+  .ap-sources li{display:flex;flex-direction:column;gap:3px}
+
+  /* Fokus bleibt sichtbar — die Optionen sind mit der Tastatur bedienbar. */
+  .ap-options input:focus-visible,.ap-source:focus-visible{outline:2px solid var(--gold);
+    outline-offset:2px}
   ul.bullets li{position:relative;padding:8px 0 8px 22px;border-bottom:1px solid var(--line);color:var(--ink)}
   ul.bullets li:last-child{border-bottom:0}
   ul.bullets li::before{content:"";position:absolute;left:2px;top:16px;width:7px;height:7px;
@@ -242,6 +292,13 @@
     </div>
   </header>
 
+  <!-- Aufhänger dieser Bewerbung — nur sichtbar, wenn eine freigegebene Seite vorliegt. -->
+  <section class="block reveal ap" id="sec-hero" hidden>
+    <p class="ap-eyebrow" id="hero-eyebrow"></p>
+    <h2 class="ap-headline" id="hero-headline"></h2>
+    <p class="ap-lead measure" id="hero-lead"></p>
+  </section>
+
   <!-- ① Wer bin ich -->
   <section class="block reveal" id="sec-about" data-reveal>
     <div class="label"><span class="n">①</span> Wer bin ich</div>
@@ -291,6 +348,74 @@
         <div class="gdots" id="gdots" role="tablist" aria-label="Projekte"></div>
       </div>
     </div>
+  </section>
+
+  <!-- Arbeitsprobe dieser Bewerbung — leer, solange keine freigegebene Seite vorliegt. -->
+  <section class="block reveal ap" id="sec-lab" hidden>
+    <p class="ap-eyebrow" id="lab-eyebrow"></p>
+    <h2 class="ap-headline" id="lab-headline"></h2>
+
+    <div class="ap-ref" id="lab-ref" hidden>
+      <span class="ap-ref-label" id="lab-ref-label"></span>
+      <p class="measure" id="lab-ref-observation"></p>
+      <a class="ap-source" id="lab-ref-link" target="_blank" rel="noopener noreferrer"></a>
+    </div>
+
+    <!-- Optionsvorschau: drei unabhängige Ja/Nein-Fragen, wie im echten Testbereich. -->
+    <form class="ap-options" id="lab-options" hidden>
+      <p class="ap-eyebrow">Ihr Test, Ihre Angaben</p>
+      <fieldset class="ap-field">
+        <legend>Verpflegungsmehraufwendungen berücksichtigen?</legend>
+        <label><input type="radio" name="includePerDiem" value="yes"> Ja</label>
+        <label><input type="radio" name="includePerDiem" value="no" checked> Nein</label>
+        <p class="ap-hint">Im Testsystem geben Sie dafür Abfahrt, Rückkehr, auswärtige Übernachtung und gegebenenfalls gestellte Mahlzeiten an. Daraus wird die Pauschale berechnet.</p>
+      </fieldset>
+      <fieldset class="ap-field">
+        <legend>Kostenstelle berücksichtigen?</legend>
+        <label><input type="radio" name="includeCostCenter" value="yes"> Ja</label>
+        <label><input type="radio" name="includeCostCenter" value="no" checked> Nein</label>
+        <div class="ap-free" id="wrap-costCenter" hidden>
+          <label for="costCenter">Ihre Kostenstelle</label>
+          <input type="text" id="costCenter" name="costCenter" maxlength="60" disabled>
+          <p class="ap-hint">Frei wählbar. Eine erfundene Angabe funktioniert genauso.</p>
+        </div>
+      </fieldset>
+      <fieldset class="ap-field">
+        <legend>Mitarbeiternummer berücksichtigen?</legend>
+        <label><input type="radio" name="includeEmployeeNumber" value="yes"> Ja</label>
+        <label><input type="radio" name="includeEmployeeNumber" value="no" checked> Nein</label>
+        <div class="ap-free" id="wrap-employeeNumber" hidden>
+          <label for="employeeNumber">Ihre Mitarbeiternummer</label>
+          <input type="text" id="employeeNumber" name="employeeNumber" maxlength="40" disabled>
+          <p class="ap-hint">Beliebiger Text ist möglich; keine Stammdatenprüfung.</p>
+        </div>
+      </fieldset>
+      <div class="ap-preview" aria-live="polite">
+        <p class="ap-eyebrow">Vorschau Ihrer Auswahl</p>
+        <ul id="lab-preview"></ul>
+      </div>
+    </form>
+
+    <p class="ap-hint" id="lab-sandbox-note"></p>
+  </section>
+
+  <!-- 90-Tage-Vorschlag -->
+  <section class="block reveal ap" id="sec-90" hidden>
+    <p class="ap-eyebrow" id="nd-eyebrow"></p>
+    <h2 class="ap-headline" id="nd-headline"></h2>
+    <div class="ap-steps" id="nd-steps"></div>
+  </section>
+
+  <!-- Gesprächseinstiege -->
+  <section class="block reveal ap" id="sec-talk" hidden>
+    <p class="ap-eyebrow">Mögliche Gesprächseinstiege</p>
+    <ul class="ap-starters" id="talk-starters"></ul>
+  </section>
+
+  <!-- Quellen -->
+  <section class="block reveal ap" id="sec-sources" hidden>
+    <p class="ap-eyebrow">Grundlage dieser Bewerbung</p>
+    <ul class="ap-sources" id="sources-list"></ul>
   </section>
 
   <!-- ④ Gebaut mit -->
@@ -371,11 +496,11 @@
 <script>
 // ── CONFIG ───────────────────────────────────────────────────────────────────
 const CONFIG = {
-  supabaseUrl: "https://qpxoggvbkbjluxkorgrp.supabase.co",
-  anonKey:     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFweG9nZ3Zia2JqbHV4a29yZ3JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2Njk4MTQsImV4cCI6MjA5NzI0NTgxNH0.vw8ygS3mMzCUkSpGiwvFhnt4v34pc6yoL-SJ4BbC00w",   // ← Anon/Publishable-Key wird beim Deploy eingetragen ⇒ schaltet Realtime frei.
+  supabaseUrl: "https://hhxwojewbtegovzdxpfw.supabase.co",
+  anonKey:     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeHdvamV3YnRlZ292emR4cGZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MDEzMTMsImV4cCI6MjA5NDA3NzMxM30.JbekGiW57qaICDdhg5NMFJ91zmT5grRdRw1xPsXRBNQ",   // ← Anon/Publishable-Key wird beim Deploy eingetragen ⇒ schaltet Realtime frei.
                      //   Leer ⇒ Realtime aus, JSON-Polling-Fallback übernimmt (Build wird trotzdem fertig).
-  storageBase: "https://qpxoggvbkbjluxkorgrp.supabase.co/storage/v1/object/public/sites",
-  callEndpoint:"https://qpxoggvbkbjluxkorgrp.supabase.co/functions/v1/request-call",
+  storageBase: "https://hhxwojewbtegovzdxpfw.supabase.co/storage/v1/object/public/bw-sites",
+  callEndpoint:"https://hhxwojewbtegovzdxpfw.supabase.co/functions/v1/request-call",
 };
 const SUPABASE_JS = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
 
@@ -425,6 +550,11 @@ function renderHeader(data){
     pill.classList.add("static");
     txt($("pill-text"), "Bewerbung");
   }
+  // Bewusst hier und nicht nur in renderShell: die Live-Timeline ruft renderShell NIE,
+  // sondern die Render-Funktionen einzeln. Ein separater Aufruf hätte die n=1-Abschnitte
+  // im echten Build-Ablauf gar nicht erscheinen lassen. Alles, was den Kopf zeigt, zeigt
+  // jetzt auch die Bewerbung.
+  renderApplicationPage(data);
 }
 
 // ── ① About ──────────────────────────────────────────────────────────────────
@@ -853,8 +983,177 @@ function bindGalleryNav(){
 }
 
 // ── Render all (non-fit) content ─────────────────────────────────────────────
+// ── Optionsvorschau Spesen-Fall ─────────────────────────────────────────────
+// Dieselben Regeln wie pipeline/lib/expense-options.ts (dort getestet). Bei „Nein"
+// verschwindet die Angabe vollständig — sie wird nicht leer mitgeführt. Freitext bleibt
+// Text, damit führende Nullen und erfundene Namen erhalten bleiben.
+function describeExpenseOptions(sel){
+  const lines = [];
+  if(sel.includePerDiem) lines.push("Verpflegungsmehraufwand: anhand Ihrer Reiseangaben berechnen");
+  if(sel.includeCostCenter) lines.push("Kostenstelle: " + (sel.costCenter || "bitte frei eingeben"));
+  if(sel.includeEmployeeNumber) lines.push("Mitarbeiternummer: " + (sel.employeeNumber || "bitte frei eingeben"));
+  if(!lines.length) lines.push("Abrechnung der Belege ohne die drei Zusatzangaben.");
+  return lines;
+}
+
+let expenseBound = false;
+function bindExpenseOptions(){
+  const form = $("lab-options");
+  if(!form || expenseBound) return;
+  expenseBound = true;
+
+  function ja(name){
+    const picked = form.querySelector('input[name="'+name+'"]:checked');
+    return !!picked && picked.value === "yes";
+  }
+  function render(){
+    const sel = {
+      includePerDiem: ja("includePerDiem"),
+      includeCostCenter: ja("includeCostCenter"),
+      includeEmployeeNumber: ja("includeEmployeeNumber"),
+      costCenter: $("costCenter").value,
+      employeeNumber: $("employeeNumber").value,
+    };
+    // Abgewählte Felder werden ausgeblendet UND deaktiviert — ein verstecktes, aber aktives
+    // Feld würde sonst weiter Werte mitschicken.
+    [["costCenter", sel.includeCostCenter], ["employeeNumber", sel.includeEmployeeNumber]]
+      .forEach(([name, an]) => {
+        $(name).disabled = !an;
+        $("wrap-" + name).hidden = !an;
+      });
+    const host = $("lab-preview"); host.textContent = "";
+    describeExpenseOptions(sel).forEach(line => host.appendChild(txt(el("li"), line)));
+  }
+
+  form.addEventListener("input", render);
+  form.addEventListener("change", render);
+  form.addEventListener("submit", e => e.preventDefault());
+  render();
+}
+
+// ── n=1-Abschnitte dieser Bewerbung ─────────────────────────────────────────
+// Werte kommen aus bw_application_content.page und werden ausschließlich über txt()
+// gesetzt. Fehlt ein Abschnitt, bleibt er verborgen — keine leeren Überschriften.
+
+/** Setzt Text und zeigt/verbirgt den Träger. Gibt zurück, ob etwas sichtbar wurde. */
+function setOptional(id, value){
+  const node = $(id); if(!node) return false;
+  const has = typeof value === "string" && value.length > 0;
+  txt(node, has ? value : ""); node.hidden = !has;
+  return has;
+}
+
+function renderHero(page){
+  const h = (page && page.hero) || null;
+  const any = [
+    setOptional("hero-eyebrow", h && h.eyebrow),
+    setOptional("hero-headline", h && h.headline),
+    setOptional("hero-lead", h && h.lead),
+  ].some(Boolean);
+  $("sec-hero").hidden = !any;
+  if(any) revealNow($("sec-hero"));
+}
+
+function renderCompanyReference(ref){
+  const host = $("lab-ref");
+  if(!ref){ host.hidden = true; return; }
+  const any = [
+    setOptional("lab-ref-label", ref.label),
+    setOptional("lab-ref-observation", ref.observation),
+  ].some(Boolean);
+  const link = $("lab-ref-link");
+  const href = safeUrl(ref.source_url);
+  if(href){ link.href = href; txt(link, (ref.source_label || href) + " ↗"); link.hidden = false; }
+  else { link.removeAttribute("href"); link.hidden = true; }
+  host.hidden = !(any || href);
+}
+
+function renderWorkSample(page){
+  const ws = (page && page.work_sample) || null;
+  const sec = $("sec-lab");
+  if(!ws){ sec.hidden = true; return; }
+  setOptional("lab-eyebrow", ws.eyebrow);
+  setOptional("lab-headline", ws.headline);
+  renderCompanyReference(page.company_reference);
+
+  // Die Optionsvorschau gehört zum Spesen-Fall. Andere Bewerbungen bringen andere Module mit.
+  const istSpesen = ws.module === "expense-case";
+  $("lab-options").hidden = !istSpesen;
+  if(istSpesen) bindExpenseOptions();
+
+  // Der Testbereich existiert noch nicht — der Hinweis steht nur, solange er aus ist.
+  setOptional("lab-sandbox-note", ws.sandbox_enabled ? "" : ws.sandbox_disabled_reason);
+
+  sec.hidden = false;
+  revealNow(sec);
+}
+
+function renderNinetyDays(page){
+  const nd = (page && page.ninety_days) || null;
+  const sec = $("sec-90");
+  const steps = (nd && Array.isArray(nd.steps)) ? nd.steps : [];
+  if(!nd || (!steps.length && !nd.headline)){ sec.hidden = true; return; }
+  setOptional("nd-eyebrow", nd.eyebrow);
+  setOptional("nd-headline", nd.headline);
+  const host = $("nd-steps"); host.textContent = "";
+  steps.forEach(s => {
+    const card = el("div","ap-step");
+    if(s && s.range) card.appendChild(txt(el("span","ap-step-range"), s.range));
+    if(s && s.title) card.appendChild(txt(el("h3"), s.title));
+    if(s && s.body)  card.appendChild(txt(el("p","measure"), s.body));
+    host.appendChild(card);
+  });
+  sec.hidden = false;
+  revealNow(sec);
+}
+
+function renderStarters(page){
+  const list = (page && Array.isArray(page.conversation_starters)) ? page.conversation_starters : [];
+  const sec = $("sec-talk");
+  const host = $("talk-starters"); host.textContent = "";
+  list.forEach(s => host.appendChild(txt(el("li"), s)));
+  sec.hidden = list.length === 0;
+  if(list.length) revealNow(sec);
+}
+
+function renderSources(page){
+  const list = (page && Array.isArray(page.sources)) ? page.sources : [];
+  const sec = $("sec-sources");
+  const host = $("sources-list"); host.textContent = "";
+  list.forEach(s => {
+    if(!s) return;
+    const li = el("li");
+    if(s.id) li.appendChild(txt(el("span","ap-source-id"), s.id));
+    if(s.finding) li.appendChild(txt(el("span"), s.finding));
+    const href = safeUrl(s.url);
+    if(href){
+      const a = el("a","ap-source");
+      a.href = href; a.target = "_blank"; a.rel = "noopener noreferrer";
+      txt(a, href + (s.retrieved ? " · abgerufen " + s.retrieved : ""));
+      li.appendChild(a);
+    }
+    host.appendChild(li);
+  });
+  sec.hidden = list.length === 0;
+  if(list.length) revealNow(sec);
+}
+
+/**
+ * Idempotent: darf aus jedem Pfad und mehrfach aufgerufen werden. Wird aus renderHeader()
+ * angestossen — es gibt zwei Render-Wege (Live-Timeline und Statikmodus), und ein separater
+ * Aufruf nur im einen liess die Abschnitte im anderen komplett verschwinden.
+ */
+function renderApplicationPage(data){
+  const page = (data && data.page) || null;
+  renderHero(page);
+  renderWorkSample(page);
+  renderNinetyDays(page);
+  renderStarters(page);
+  renderSources(page);
+}
+
 function renderShell(data){
-  renderHeader(data);
+  renderHeader(data);   // stösst renderApplicationPage mit an
   renderAbout(data);
   renderGallery(data);
   bindGalleryNav();
@@ -969,7 +1268,7 @@ async function runTimeline(getData){
           const sb = window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.anonKey);
           const chan = sb.channel("build-"+jobId)
             .on("postgres_changes",
-              { event:"UPDATE", schema:"public", table:"build_jobs", filter:"id=eq."+jobId },
+              { event:"UPDATE", schema:"public", table:"bw_build_jobs", filter:"id=eq."+jobId },
               ({ new: row })=>{
                 if(!row) return;
                 // Drive the live progress bar from the real pipeline stage.

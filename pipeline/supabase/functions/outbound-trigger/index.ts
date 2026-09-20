@@ -9,9 +9,15 @@
 import { connectConversationRelay } from "../../../lib/twiml.ts";
 import { authorizeOutbound } from "../../../lib/voice-gate.ts";
 import { emailDomain } from "../../../lib/validate.ts";
+import { signCallAuth } from "../../../lib/callauth.ts";
 import type { OutboundTriggerInput } from "../../../voice/types.ts";
 
 const SHARED_SECRET = Deno.env.get("TRIGGER_SHARED_SECRET") ?? "";
+// Gemeinsames Geheimnis mit dem Relay. Fehlt es, wird kein Anruf-Token ausgestellt und das
+// Gespräch läuft ohne Stellenkontext — lieber eine Lücke als eine ungeprüfte Bewerbung.
+const RELAY_SETUP_SECRET = Deno.env.get("RELAY_SETUP_SECRET") ?? "";
+/** Gültigkeit des Anruf-Tokens. Kurz, weil der Anruf unmittelbar nach dem Ausstellen startet. */
+const CALL_AUTH_TTL_SECONDS = 600;
 const ALLOWLIST = (Deno.env.get("VOICE_ALLOWLIST_DOMAINS") ?? "")
   .split(",").map((d) => d.trim().toLowerCase()).filter(Boolean);
 const TWILIO_SID = Deno.env.get("TWILIO_ACCOUNT_SID") ?? "";
@@ -45,7 +51,7 @@ function sbHeaders(): Record<string, string> {
 }
 
 async function rateLimit(key: string, windowSec: number, limit: number): Promise<boolean> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/bump_rate_limit`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/bw_bump_rate_limit`, {
     method: "POST",
     headers: sbHeaders(),
     body: JSON.stringify({ p_key: key, p_window_seconds: windowSec, p_limit: limit }),
@@ -54,11 +60,18 @@ async function rateLimit(key: string, windowSec: number, limit: number): Promise
   return (await res.json()) === true;
 }
 
-async function insertCall(jobId: string | null, phone: string): Promise<string> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/voice_calls`, {
+async function insertCall(
+  jobId: string | null, phone: string, applicationId?: string,
+): Promise<string> {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/bw_voice_calls`, {
     method: "POST",
     headers: { ...sbHeaders(), Prefer: "return=representation" },
-    body: JSON.stringify({ job_id: jobId, direction: "outbound", counterpart_phone: phone, status: "initiated" }),
+    body: JSON.stringify({
+      job_id: jobId, direction: "outbound", counterpart_phone: phone, status: "initiated",
+      // Von Anfang an festhalten, zu welcher Bewerbung der Anruf gehört — sonst steht es
+      // erst nach dem ersten Relay-Update drin, und bei einem Abbruch davor gar nicht.
+      ...(applicationId ? { application_id: applicationId } : {}),
+    }),
   });
   if (!res.ok) throw new Error(`insert voice_calls ${res.status}: ${await res.text()}`);
   const [row] = (await res.json()) as Array<{ id: string }>;
@@ -66,7 +79,7 @@ async function insertCall(jobId: string | null, phone: string): Promise<string> 
 }
 
 async function patchCall(id: string, patch: Record<string, unknown>): Promise<void> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/voice_calls?id=eq.${id}`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/bw_voice_calls?id=eq.${id}`, {
     method: "PATCH",
     headers: { ...sbHeaders(), Prefer: "return=minimal" },
     body: JSON.stringify(patch),
@@ -121,23 +134,48 @@ Deno.serve(async (req: Request): Promise<Response> => {
     return json({ error: "internal" }, 500);
   }
 
+  const firstName = body.firstName?.trim();
+  const role = body.role?.trim();
+  const iceCream = body.iceCream?.trim();
+  // Welche Bewerbung dieses Gespräch führen darf. Form hier prüfen, statt einen kaputten Wert
+  // ins TwiML zu schreiben; der Relay prüft ihn erneut und löst ihn serverseitig auf.
+  const rawAppId = body.applicationId?.trim() ?? "";
+  const applicationId = /^[a-z0-9][a-z0-9-]{1,62}$/.test(rawAppId) ? rawAppId : undefined;
+
   // Call anlegen → Twilio starten → SID nachtragen.
   let callId: string;
   try {
-    callId = await insertCall(jobId, phone);
+    callId = await insertCall(jobId, phone, applicationId);
   } catch (e) {
     console.error(`[outbound] insert: ${(e as Error).message}`);
     return json({ error: "internal" }, 500);
   }
+  // Die Bewerbung reist NICHT als freier Parameter, sondern in einer signierten Nutzlast.
+  // Sonst könnte jeder, der einen Slug kennt, den WebSocket ansprechen und sich den Inhalt
+  // einer fremden Bewerbung ausliefern lassen.
+  let auth = "";
+  if (RELAY_SETUP_SECRET) {
+    auth = await signCallAuth({
+      callId,
+      ...(applicationId ? { applicationId } : {}),
+      exp: Math.floor(Date.now() / 1000) + CALL_AUTH_TTL_SECONDS,
+    }, RELAY_SETUP_SECRET);
+  } else {
+    console.error("[outbound] RELAY_SETUP_SECRET fehlt — Gespräch läuft ohne Stellenkontext.");
+  }
 
-  const firstName = body.firstName?.trim();
-  const role = body.role?.trim();
-  const iceCream = body.iceCream?.trim();
   const twiml = connectConversationRelay({
     wsUrl: relayWsUrl(),
     ttsProvider: TTS_PROVIDER,
     voiceId: TTS_VOICE_ID,
-    parameters: { callId, ...(jobId ? { jobId } : {}), ...(firstName ? { firstName } : {}), ...(role ? { role } : {}), ...(iceCream ? { iceCream } : {}) },
+    parameters: {
+      callId,
+      ...(jobId ? { jobId } : {}),
+      ...(auth ? { auth } : {}),
+      ...(firstName ? { firstName } : {}),
+      ...(role ? { role } : {}),
+      ...(iceCream ? { iceCream } : {}),
+    },
   });
 
   try {

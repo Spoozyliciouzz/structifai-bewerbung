@@ -138,12 +138,7 @@
       "result": "Die Belege landen automatisch auf den richtigen Auffangkonten, das manuelle Hinterherlaufen entfällt. Eine kleine Lösung mit direktem Alltagsnutzen — und der Einstieg in ein größeres Financial Dashboard."
     }
   ],
-  "the_role": {
-    "company": "StrategyFrame.AI",
-    "role": "Chief of Staff",
-    "why_them": "Die Rolle trifft genau das, was Dennis schon operativ macht — Strategie und KI zusammenbringen. Der Ansatz, Strategie wirklich mit KI zu leben, reizt ihn; dazu die spannenden Kunden und das junge Team. Eine Rolle, die er sich sehr gut vorstellen kann.",
-    "why_me": "Dennis kennt jeden Funktionsbereich eines Mittelständlers aus eigener Praxis — Finanz-Dashboards und KPIs, HR-Software, Gesellschaftsrecht, Google-Kampagnen und Performance-Marketing. Echter Generalist mit technischem Hintergrund, der die Prozesse schon erlebt hat und weiß, wo die Stolpersteine liegen und wie man sie organisiert. Genau das braucht ein Chief of Staff."
-  },
+  "_removed_the_role": "Hier stand bis 2026-09-15 ein the_role mit einer konkreten Firma. Als globaler Rueckfall haette es jedem Gespraech die Inhalte einer fremden Bewerbung untergeschoben. Stellenbezogener Kontext kommt jetzt ausschliesslich aus bw_application_content der freigegebenen Version; fehlt er, sagt der Agent, dass ihm dazu nichts vorliegt. Auch Aussprache-Hilfen zu Firmennamen gehoeren in die jeweilige Bewerbung, nicht hierher.",
   "personal": {
     "hobby": "Golf",
     "family": "frischgebackener Vater eines acht Wochen alten Sohnes",
@@ -151,7 +146,6 @@
     "tone_anchor": "warm und selbstironisch — dreht Persönliches zurück auf Dennis' Bau-Drive, z. B.: die durch wenig Schlaf gewonnene Wachzeit nutzt er, um nachts noch kurz einen Prompt abzusetzen"
   },
   "pronunciation": {
-    "StrategyFrame": "Strättädschi-Frejm",
     "Benter": "Bénter",
     "structifai": "strakt-if-ai",
     "GartenAIden": "Garten-Eden"

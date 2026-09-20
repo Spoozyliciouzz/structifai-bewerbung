@@ -94,20 +94,51 @@ export interface VoiceCall {
   ended_at: string | null;
 }
 
-/** Geladener Reasoning-Kontext (DB-Tabelle oder Fallback-JSON). */
+/**
+ * n=1-Teil einer Bewerbung: der `voice`-Block aus der freigegebenen Version in
+ * bw_application_content. Kommt NIE aus einem globalen Rückfall.
+ */
+export interface ApplicationVoice {
+  /** Erste Wortmeldung dieser Bewerbung; ohne Angabe gilt der allgemeine Intro-Text. */
+  intro?: string;
+  closing?: string;
+  /** Zusätzliche Gesprächsregeln, die nur für diese Stelle gelten. */
+  rules_extra?: string[];
+  /** Firma, Titel, Auslegung der Anzeige, Arbeitsprobe. */
+  the_role?: Record<string, unknown>;
+  objections?: Array<{ objection: string; answer: string }>;
+  /** Stellenbezogene Fragen; ergänzen die agnostischen, ersetzen sie nicht. */
+  faq?: Array<{ q: string; a: string }>;
+}
+
+/**
+ * Geladener Reasoning-Kontext für genau ein Gespräch.
+ *
+ * Agnostisch (gilt für jede Bewerbung): profile, projects, faq, stories, personal,
+ * pronunciation — dazu der Lieblingseis-Hook, der am Empfänger hängt, nicht an der Stelle.
+ * Je Bewerbung: application_id, the_role, objections, intro, closing, rules_extra und die
+ * stellenbezogenen faq-Einträge. Fehlen sie, ist für diese Sitzung nichts freigegeben —
+ * ein gültiger Zustand, kein Grund für einen Rückfall.
+ */
 export interface AgentContext {
   profile: Record<string, unknown>;
   projects: Array<Record<string, unknown>>;
   faq: Array<{ q: string; a: string }>;
   /** Konkrete Anekdoten: Situation → Aktion → Ergebnis. Macht Antworten lebendig. */
   stories?: Array<{ title: string; situation: string; action: string; result: string }>;
-  /** Einwände + ehrliche Antwort (HubSpot, Abschluss, …). */
-  objections?: Array<{ objection: string; answer: string }>;
-  /** Kontext zur konkreten Stelle/Firma, damit der Agent aufs Gegenüber eingeht. */
-  the_role?: Record<string, unknown>;
   /** Persönliches (Hobby, Familie, Herkunft) — warm + selbstironisch auf Nachfrage. */
   personal?: { hobby?: string; family?: string; origin?: string; tone_anchor?: string };
   pronunciation?: Record<string, string>;
+
+  // ── je Bewerbung, nur nach erfolgreichem Laden gesetzt ──
+  application_id?: string;
+  /** Einwände + ehrliche Antwort. */
+  objections?: Array<{ objection: string; answer: string }>;
+  /** Kontext zur konkreten Stelle/Firma, damit der Agent aufs Gegenüber eingeht. */
+  the_role?: Record<string, unknown>;
+  intro?: string;
+  closing?: string;
+  rules_extra?: string[];
 }
 
 /** Input des outbound-trigger-Endpoints (Server-zu-Server aus build/). */

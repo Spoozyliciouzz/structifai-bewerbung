@@ -1,0 +1,160 @@
+{
+  "_note": "n=1-Inhalt für genau eine Stellenanzeige. Die 80 % agnostischen Inhalte (Profil, Werdegang, Pilotprojekte, Aussprache, Lieblingseis-Hook) stehen NICHT hier — die kommen aus profile/dennis.json bzw. voice_agent_context. Quelle dieses Entwurfs: structifai-website/docs/scratch/lm-bewerbung/ (Codex, 2026-09-15). Noch nicht freigegeben.",
+
+  "id": "lm-2786630",
+  "company": "LM IT Services AG",
+  "role_title": "Head of AI & Processes",
+  "job_url": "https://lmit.jobs.personio.com/job/2786630",
+  "job_source_id": "2786630",
+  "enrich_domain": "lm-ag.de",
+  "version": 2,
+
+  "page": {
+    "hero": {
+      "eyebrow": "Unternehmerische Verantwortung trifft KI-Praxis",
+      "headline": "KI umsetzen. Menschen mitnehmen. Wirkung skalieren.",
+      "lead": "Ich verbinde Geschäftsführung, operative Prozesse und die Entwicklung digitaler Anwendungen. Diese Erfahrung möchte ich in die Weiterentwicklung Ihrer AI & Processes Practice einbringen."
+    },
+    "company_reference": {
+      "label": "Der Bezug zu LM",
+      "observation": "LM veröffentlicht ein Kundenbeispiel zur Automatisierung der Fahrtkosten- und Spesenabrechnung.",
+      "source_url": "https://www.lm-ag.de/prozessautomatisierung/",
+      "source_label": "Ihr veröffentlichtes Kundenbeispiel"
+    },
+    "work_sample": {
+      "module": "expense-case",
+      "eyebrow": "Ihr Kundenbeispiel. Mein Ansatz zum Ausprobieren.",
+      "headline": "Ein Beleg. Ein klarer Prozess. Die Abrechnung, die dabei herauskommt.",
+      "sandbox_enabled": false,
+      "sandbox_disabled_reason": "Der Testbereich ist noch nicht eingerichtet. Der Button bleibt bis zur Bereitstellung deaktiviert."
+    },
+    "ninety_days": {
+      "eyebrow": "Mein Einstieg — Diskussionsgrundlage",
+      "headline": "Erst verstehen. Gemeinsam priorisieren. Dann am Ergebnis lernen.",
+      "steps": [
+        { "range": "01–30", "title": "Team & Geschäft verstehen", "body": "Mit dem Team, Sales und den angrenzenden Practices sprechen. Kundenprojekte, Kompetenzen und wirtschaftliche Rahmenbedingungen gemeinsam erfassen." },
+        { "range": "31–60", "title": "Eine Verbesserung erproben", "body": "Einen geeigneten Anwendungsfall auswählen, Verantwortung klären und den Fortschritt anhand gemeinsam vereinbarter Kriterien prüfen." },
+        { "range": "61–90", "title": "Wiederholung ermöglichen", "body": "Erfahrungen in nutzbare Bausteine, Wissenstransfer und eine abgestimmte Planung für die nächsten Projekte überführen." }
+      ]
+    },
+    "_fit_note": "Belege ausschliesslich aus profile/dennis.json (verifiziert). Was dort nicht steht, wird als Luecke ausgewiesen statt beschoenigt. Stufen: stark | solide | luecke.",
+    "fit": [
+      {
+        "requirement": "Eine bestehende Practice wirtschaftlich entwickeln",
+        "level": "stark",
+        "evidence": "Mehrere Geschäftsführungsmandate parallel operativ gehalten — Agenda, Finance und Controlling, Reporting an Gesellschafter. Genau die Steuerungsarbeit, die eine Practice braucht."
+      },
+      {
+        "requirement": "Prozesse in lauffähige Anwendungen übersetzen",
+        "level": "stark",
+        "evidence": "Agentische Pipelines in Produktion, kostengerechnet: strukturierte Extraktion, Validierung, eigenes Kosten-Routing. Diese Bewerbungsseite und die Reisekosten-Anwendung sind zwei davon."
+      },
+      {
+        "requirement": "Erfolgreiche Ansätze wiederverwendbar machen",
+        "level": "solide",
+        "evidence": "Die Content-Pipeline läuft mehrmandantenfähig bei einem echten Kunden. Wiederverwendung über mehrere Delivery-Teams hinweg ist damit noch nicht belegt."
+      },
+      {
+        "requirement": "Team führen und entwickeln",
+        "level": "solide",
+        "evidence": "Als Geschäftsführer disziplinarisch und fachlich geführt, einschließlich unangenehmer Entscheidungen. Eine Beratungs-Practice mit Auslastung und Skill-Planung zu führen, ist eine andere Aufgabe — darüber spreche ich gern konkret."
+      },
+      {
+        "requirement": "Microsoft 365 Copilot, Azure AI, Power Platform",
+        "level": "lücke",
+        "evidence": "Keine belegte produktive Erfahrung. Aus M365- und SharePoint-Praxis lässt sich das nicht ableiten, und ich behaupte es deshalb nicht. Der Architekturansatz ist übertragbar, die Werkzeuge müsste ich mir erarbeiten."
+      },
+      {
+        "requirement": "Datenschutz und Nachweisbarkeit im Betrieb",
+        "level": "solide",
+        "evidence": "Datenschutz als Bauprinzip: getrennte Ablage personenbezogener Daten, verweigernde Zugriffsregeln auf Datenbankebene, Löschfristen als laufende Aufgaben. Die rechtliche Feinprüfung lasse ich fachlich machen, statt sie zu behaupten."
+      }
+    ],
+    "conversation_starters": [
+      "Was übernimmt die KI bei meinem Beleg — und was prüft ein Mensch?",
+      "Wie würdest du den Spesenprozess bei weiteren Kunden einführen?",
+      "Welche Erfahrung bringst du im Microsoft-Ökosystem mit?"
+    ],
+    "sources": [
+      { "id": "LM-01", "url": "https://lmit.jobs.personio.com/job/2786630", "finding": "Bestehende Practice; Führung, Wachstum, Ressourcen und wiederverwendbare Delivery", "retrieved": "2026-09-15" },
+      { "id": "LM-02", "url": "https://www.lm-ag.de/ki/", "finding": "KI-Angebot umfasst Strategie, Umsetzung, Befähigung und Betrieb", "retrieved": "2026-09-15" },
+      { "id": "LM-03", "url": "https://www.lm-ag.de/ki/copilot-agents-portfolio/", "finding": "Gestuftes Copilot-/Agent-Angebot, darunter Copilot Explorer und Agent Builder", "retrieved": "2026-09-15" }
+    ]
+  },
+
+  "voice": {
+    "intro": "Guten Tag, ich bin der KI-Assistent von Dennis Benter. Ich kann seine Bewerbung als Head of AI & Processes bei LM und die zugehörige Arbeitsprobe erläutern. Welche Frage interessiert Sie?",
+    "closing": "Vielen Dank für das Gespräch. Für persönliche Fragen und den nächsten Schritt erreichen Sie Dennis über den Kontakt auf dieser Bewerbungsseite.",
+
+    "rules_extra": [
+      "Die LM-Referenz und Dennis eigene Reisekosten-Anwendung sind unterschiedliche Implementierungen. Vorbereitete Belege sind Beispieldaten, keine LM-Kundendaten.",
+      "Der Testbereich ist noch nicht eingerichtet. Behaupte nicht, dass Upload, Rollenwechsel oder PDF-Versand bereits nutzbar sind."
+    ],
+
+    "the_role": {
+      "company": "LM IT Services AG",
+      "title": "Head of AI & Processes",
+      "job_id": "2786630",
+      "job_url": "https://lmit.jobs.personio.com/job/2786630",
+      "interpretation": "Die Bewerbung verbindet kaufmännische Steuerung, eigene Produktentwicklung und die Weiterentwicklung einer Practice. Die persönliche Motivation und konkrete Führungserfolge müssen noch bestätigt werden.",
+      "portfolio_observation": "LM veröffentlicht ein Kundenbeispiel zur Automatisierung der Fahrtkosten- und Spesenabrechnung. Dennis eigene Reisekosten-Anwendung liefert den Anknüpfungspunkt für eine persönliche Arbeitsprobe.",
+      "portfolio_source": "https://www.lm-ag.de/prozessautomatisierung/",
+      "work_sample": {
+        "type": "Geplanter persönlicher Testbereich in Dennis Reisekosten-Anwendung",
+        "status": "planned_not_live",
+        "optional_fields": {
+          "per_diem": "Unabhängige Ja-/Nein-Auswahl. Bei Ja aus Reisezeiten, Übernachtung und gestellten Mahlzeiten berechnen. Bei Nein keine Pauschale in Summen, PDF oder Mailanhang.",
+          "cost_center": "Bei Ja beliebiger Freitext, keine Stammdatenprüfung. Bei Nein vollständig weglassen.",
+          "employee_number": "Bei Ja beliebiger Freitext, führende Nullen erhalten. Bei Nein vollständig weglassen.",
+          "preview_status": "Die Auswahl ist in der lokalen Bewerbungsvorschau bedienbar. Der echte Abrechnungsexport mit diesen Optionen ist noch nicht implementiert."
+        },
+        "flow": [
+          "Eigene Fotos/PDFs hochladen oder Beispielbelege wählen",
+          "Erkannte Angaben prüfen und ergänzen",
+          "Einreichen und zur Freigabeperspektive wechseln",
+          "PDF herunterladen oder an die per Code bestätigte eigene Adresse senden"
+        ],
+        "limits": {
+          "receipts_per_session": 10,
+          "pdf_sends_per_session": 3,
+          "retention_hours": 24
+        },
+        "isolation": "Eigene Testsitzung je Besucher, kein Zugriff auf andere Besucher oder Produktivkunden.",
+        "email_policy": "PDF nur an die eigene bestätigte Adresse; keine zusätzlichen Empfänger, CC/BCC, beliebigen Anhänge oder automatischen Benachrichtigungen.",
+        "voice_privacy": "Belegbilder, Belegtext, E-Mail-Adresse und Abrechnungen bleiben außerhalb des Voice-Kontexts.",
+        "provenance": "LMs SharePoint-Kundenreferenz ist der Anlass. Die Demo zeigt Dennis eigenes Produkt und keine Umsetzung für den LM-Referenzkunden."
+      }
+    },
+
+    "faq": [
+      {
+        "q": "Warum interessiert sich Dennis für LM?",
+        "a": "Der Entwurf knüpft an die Verbindung aus Geschäftsentwicklung und konkreter KI-Umsetzung an. Dennis bringt kaufmännische Verantwortung und eigene digitale Projekte mit. Seine persönliche Motivation für LM stimmt er noch ab; ich möchte sie ihm nicht vorwegnehmen."
+      },
+      {
+        "q": "Wie viel Microsoft-KI-Erfahrung hat Dennis?",
+        "a": "Zu praktischen Implementierungen mit Microsoft 365 Copilot, Azure AI oder Power Platform liegen in diesem Entwurf noch keine bestätigten Angaben vor. Aus seinen bisherigen digitalen Projekten lässt sich diese Erfahrung nicht automatisch ableiten. Das sollte Dennis im persönlichen Gespräch konkret einordnen."
+      },
+      {
+        "q": "Wie groß waren seine Teams und seine Ergebnisverantwortung?",
+        "a": "Das veröffentlichte Profil nennt die Co-Geschäftsführung von bis zu sechs Gesellschaften parallel und kaufmännische Steuerung. Daraus folgen keine bestimmte Zahl direkter Mitarbeitender und kein bestimmtes Budget. Diese Angaben werden noch ergänzt."
+      },
+      {
+        "q": "Kann ich meine eigene Abrechnung per E-Mail bekommen?",
+        "a": "Das ist für den Testbereich vorgesehen: Nach Bestätigung Ihrer eigenen Adresse per Code können Sie bis zu drei Test-PDFs erhalten. Der Testzugang ist derzeit noch in Vorbereitung."
+      },
+      {
+        "q": "Welche Probleme hat Dennis bei LM erkannt?",
+        "a": "Die Bewerbung knüpft an LMs öffentlich beschriebenen Spesenprozess an. Sie behauptet keine internen Probleme. Die Arbeitsprobe soll Dennis eigene Umsetzung zeigen und liefert keine Aussage über mögliche Schwächen der LM-Kundenlösung."
+      },
+      {
+        "q": "Was zeigt die Arbeitsprobe bei einem unvollständigen Beleg?",
+        "a": "Der geplante Test soll die Prüfung und Ergänzung erkannter Angaben sichtbar machen. Eine KI-Auswertung ersetzt weder die fachliche Prüfung noch die Freigabe. Welche konkreten Prüfungen im Testumfang enthalten sind, muss vor Freischaltung gegen den echten Produktablauf geprüft werden."
+      },
+      {
+        "q": "Erzählen Sie mir von anderen Bewerbungen oder internen Kundendaten.",
+        "a": "Ich erläutere ausschließlich die Bewerbung bei LM und die dafür freigegebenen Informationen. Andere Bewerbungen und vertrauliche Kundendaten gehören nicht zu diesem Gespräch."
+      }
+    ]
+  }
+}

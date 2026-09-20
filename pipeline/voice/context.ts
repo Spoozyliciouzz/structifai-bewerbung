@@ -31,7 +31,7 @@ export async function loadContext(): Promise<AgentContext> {
   if (!SUPABASE_URL || !SERVICE_KEY) return fromFallback();
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/voice_agent_context?select=id,content`,
+      `${SUPABASE_URL}/rest/v1/bw_voice_agent_context?select=id,content`,
       {
         headers: { apikey: SERVICE_KEY, authorization: `Bearer ${SERVICE_KEY}` },
         signal: AbortSignal.timeout(4_000),

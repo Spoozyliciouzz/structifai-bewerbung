@@ -1,5 +1,5 @@
 /**
- * Optionaler Upload in den privaten `cache`-Bucket via Storage-REST.
+ * Optionaler Upload in den privaten `bw-cache`-Bucket via Storage-REST.
  * Nutzt den SERVICE-ROLE-Key — nur lokal/offline beim Seeden (Scraper läuft nie im Client).
  * Wenn SUPABASE_URL / SERVICE_ROLE_KEY fehlen, wird der Upload übersprungen (no-op).
  */
@@ -10,7 +10,9 @@ export async function uploadToCache(objectPath: string, json: unknown): Promise<
     console.error("[storage] SUPABASE_URL/SERVICE_ROLE_KEY fehlen — Upload übersprungen.");
     return false;
   }
-  const res = await fetch(`${url}/storage/v1/object/cache/${objectPath}`, {
+  // Muss zum Lesepfad in build/index.ts passen — schreibt der Scraper nach `cache`, während
+  // der Build aus `bw-cache` liest, bleibt der Bucket leer und der Build bricht beim Scrape ab.
+  const res = await fetch(`${url}/storage/v1/object/bw-cache/${objectPath}`, {
     method: "POST",
     headers: {
       authorization: `Bearer ${key}`,
@@ -20,6 +22,6 @@ export async function uploadToCache(objectPath: string, json: unknown): Promise<
     body: JSON.stringify(json),
   });
   if (!res.ok) throw new Error(`[storage] Upload ${res.status}: ${await res.text()}`);
-  console.error(`[storage] hochgeladen: cache/${objectPath}`);
+  console.error(`[storage] hochgeladen: bw-cache/${objectPath}`);
   return true;
 }

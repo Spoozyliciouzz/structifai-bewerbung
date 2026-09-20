@@ -73,7 +73,7 @@ export async function enrichDomain(domain: string): Promise<string> {
   return text;
 }
 
-// CLI: `bun run enrich strategyframe.ai`
+// CLI: `bun run enrich lm-ag.de`  (Domain steht in applications.enrich_domain)
 if (import.meta.main) {
   const domain = process.argv[2];
   if (!domain) {

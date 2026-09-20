@@ -130,11 +130,21 @@
 <script>
 // ── CONFIG — leer lassen ⇒ Simulationsmodus (Demo ohne Backend) ──────────────
 const CONFIG = {
-  endpoint:    "https://qpxoggvbkbjluxkorgrp.supabase.co/functions/v1/build",
-  supabaseUrl: "https://qpxoggvbkbjluxkorgrp.supabase.co",
-  anonKey:     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFweG9nZ3Zia2JqbHV4a29yZ3JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE2Njk4MTQsImV4cCI6MjA5NzI0NTgxNH0.vw8ygS3mMzCUkSpGiwvFhnt4v34pc6yoL-SJ4BbC00w",   // ← Anon/Publishable-Key eintragen ⇒ schaltet von Simulation auf Live
+  endpoint:    "https://hhxwojewbtegovzdxpfw.supabase.co/functions/v1/build",
+  supabaseUrl: "https://hhxwojewbtegovzdxpfw.supabase.co",
+  anonKey:     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeHdvamV3YnRlZ292emR4cGZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MDEzMTMsImV4cCI6MjA5NDA3NzMxM30.JbekGiW57qaICDdhg5NMFJ91zmT5grRdRw1xPsXRBNQ",   // ← Anon/Publishable-Key eintragen ⇒ schaltet von Simulation auf Live
   resultBase:  "https://bewerbung.structifai.de/b",
+  // Welche Bewerbung gebaut wird. Über ?a=<slug> je Aufruf überschreibbar, damit dieselbe
+  // Seite mehrere Stellen bedienen kann. Ohne diesen Wert weist der Build jede Einreichung
+  // mit 400 ab — er hat bewusst keinen Standard auf irgendeine Firma.
+  applicationId: "lm-2786630",
 };
+
+/** Bewerbung aus der Adresszeile, sonst die konfigurierte. Form prüft der Server erneut. */
+function currentApplicationId(){
+  const p = new URLSearchParams(location.search).get("a");
+  return (p && /^[a-z0-9][a-z0-9-]{1,62}$/.test(p)) ? p : CONFIG.applicationId;
+}
 
 const STAGES = ["enrich","scrape","extract","match","generate","deploy","email"];
 const LABELS = {
@@ -254,7 +264,8 @@ $("form").addEventListener("submit", async (e)=>{
     const configured = CONFIG.endpoint && CONFIG.supabaseUrl && CONFIG.anonKey;
     if(!configured){ buildConsole(consent); await simulate(consent); return; }
     const pow = await solvePow(email);
-    const payload = {email, phone:consent?phone:null, callConsent:consent, pow};
+    const payload = {email, phone:consent?phone:null, callConsent:consent, pow,
+                     applicationId: currentApplicationId()};
     if(firstName) payload.firstName = firstName;
     if(role) payload.role = role;
     if(iceCream) payload.iceCream = iceCream;

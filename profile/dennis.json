@@ -33,7 +33,7 @@
       "name": "Automatisierte Bewerbung mit KI-Assistent",
       "icon": "📞",
       "kind": "voice",
-      "one": "Meine vollautomatische Bewerbung: Website-Build mit real-live-data, Twilio ConversationRelay macht STT/TTS, Claude das Reasoning, ElevenLabs die deutsche Stimme. Klick auf den Hörer oben und sprich mit meinem Assistenten.",
+      "one": "Diese Bewerbung selbst: Inhalte liegen als freigegebene Version in Postgres, die Seite wird einmal daraus gerendert und statisch ausgeliefert. Derselbe freigegebene Stand versorgt den Sprachassistenten am Telefon — er kann nichts sagen, was nicht auch hier steht.",
       "stack": "Twilio ConversationRelay · Claude Sonnet · ElevenLabs (DE) · Supabase Edge"
     },
     {

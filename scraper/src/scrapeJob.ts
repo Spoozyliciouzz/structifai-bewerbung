@@ -66,7 +66,7 @@ export async function scrapeJob(id: string): Promise<JobCache> {
   }
 }
 
-// CLI: `bun run scrape:job 4428605958`
+// CLI: `bun run scrape:job 2786630`  (ID steht in applications.job_source_id)
 if (import.meta.main) {
   const id = process.argv[2] ?? process.env.TARGET_JOB_ID;
   if (!id) {

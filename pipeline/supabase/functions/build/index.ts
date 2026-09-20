@@ -23,8 +23,11 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const RESEND_FROM = Deno.env.get("RESEND_FROM") ?? "Dennis Benter <bewerbung@structifai.de>";
 const RESULT_BASE = Deno.env.get("PUBLIC_RESULT_BASE") ?? "https://bewerbung.structifai.de/b";
 const DENNIS_PHONE = Deno.env.get("DENNIS_PHONE") ?? "";
-const TARGET_JOB_ID = Deno.env.get("TARGET_JOB_ID") ?? "4428605958";
-const TARGET_DOMAIN = Deno.env.get("TARGET_DOMAIN") ?? "strategyframe.ai";
+// Welche Bewerbung gebaut wird, steht seit 0003 in `applications`. Kein Default auf eine
+// konkrete Firma mehr: ein falscher Fallback würde die Seite einer fremden Stelle bauen.
+// DEFAULT_APPLICATION_ID greift nur, wenn der Request keine ID mitschickt.
+const DEFAULT_APPLICATION_ID = Deno.env.get("DEFAULT_APPLICATION_ID") ?? "";
+const APPLICATION_ID_RE = /^[a-z0-9][a-z0-9-]{1,62}$/;
 
 const ALLOWED_ORIGINS = ["https://bewerbung.structifai.de", "https://structifai.de", "https://www.structifai.de"];
 const POW_DIFFICULTY = 4; // führende Hex-Nullen in sha256(email:ts:nonce)
@@ -72,7 +75,7 @@ function sbHeaders(): Record<string, string> {
 }
 
 async function rpcRateLimit(key: string, windowSec: number, limit: number): Promise<boolean> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/bump_rate_limit`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/bw_bump_rate_limit`, {
     method: "POST",
     headers: sbHeaders(),
     body: JSON.stringify({ p_key: key, p_window_seconds: windowSec, p_limit: limit }),
@@ -83,7 +86,7 @@ async function rpcRateLimit(key: string, windowSec: number, limit: number): Prom
 
 /** Eine Bewerbung pro Email (Hash). true = neu (erlaubt), false = Duplikat. */
 async function claimEmail(emailHash: string): Promise<boolean> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/submission_guard`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/bw_submission_guard`, {
     method: "POST",
     headers: { ...sbHeaders(), Prefer: "return=minimal" },
     body: JSON.stringify({ email_hash: emailHash }),
@@ -93,8 +96,10 @@ async function claimEmail(emailHash: string): Promise<boolean> {
   return true;
 }
 
+// build_jobs ist anon-lesbar (0001) — hier darf NICHTS stehen, was die Bewerbung verrät.
+// Die application_id liegt in build_jobs_pii, siehe Begründung in 0003.
 async function insertJob(slug: string): Promise<string> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/build_jobs`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/bw_build_jobs`, {
     method: "POST",
     headers: { ...sbHeaders(), Prefer: "return=representation" },
     body: JSON.stringify({ stage: "queued", result_slug: slug }),
@@ -104,18 +109,59 @@ async function insertJob(slug: string): Promise<string> {
   return row.id;
 }
 
+/** Stammsatz der Bewerbung. Nur `released` — ein Entwurf darf keine Seite erzeugen. */
+interface ApplicationRow {
+  id: string;
+  company: string;
+  role_title: string;
+  job_source_id: string | null;
+  enrich_domain: string | null;
+  released_version: number | null;
+  bw_application_content: Array<{ version: number; page: unknown; released_at: string | null }>;
+}
+
+/** Die Bewerbung samt der EINEN freigegebenen Inhaltsversion. */
+interface LoadedApplication extends ApplicationRow {
+  /** Seiteninhalt der freigegebenen Version; null, wenn keine passende Version existiert. */
+  page: unknown;
+}
+
+async function loadApplication(applicationId: string): Promise<LoadedApplication> {
+  // Seite und Gespräch müssen dieselbe freigegebene Version benutzen — deshalb wird sie hier
+  // mitgeladen, statt sie später erneut und womöglich anders aufzulösen.
+  const cols = "id,company,role_title,job_source_id,enrich_domain,released_version," +
+    "bw_application_content(version,page,released_at)";
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/bw_applications` +
+      `?select=${cols}&id=eq.${encodeURIComponent(applicationId)}&status=eq.released`,
+    { headers: sbHeaders() },
+  );
+  if (!res.ok) throw new Error(`load application ${res.status}: ${await res.text()}`);
+  const rows = (await res.json()) as ApplicationRow[];
+  const row = rows[0];
+  // Kein Fallback auf irgendeine andere Bewerbung: lieber gar keine Seite als die falsche.
+  if (!row) throw new Error(`application ${applicationId} fehlt oder ist nicht freigegeben`);
+
+  const version = (row.bw_application_content ?? []).find(
+    (c) => c.version === row.released_version && c.released_at !== null,
+  );
+  return { ...row, page: version?.page ?? null };
+}
+
 async function insertPii(
   jobId: string, email: string, phone: string | null, consent: boolean,
   firstName: string | null, role: string | null, iceCream: string | null,
+  applicationId: string,
 ): Promise<string> {
   const callToken = crypto.randomUUID().replace(/-/g, "");
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/build_jobs_pii`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/bw_build_jobs_pii`, {
     method: "POST",
     headers: { ...sbHeaders(), Prefer: "return=minimal" },
     body: JSON.stringify({
       job_id: jobId, email, phone,
       call_consent: consent, consent_at: consent ? new Date().toISOString() : null,
       first_name: firstName, role, ice_cream: iceCream,
+      application_id: applicationId,
       call_token: callToken,
       call_token_expires_at: new Date(Date.now() + 30 * 60_000).toISOString(),
     }),
@@ -127,7 +173,7 @@ async function insertPii(
 async function updateStage(
   jobId: string, patch: Record<string, unknown>,
 ): Promise<void> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/build_jobs?id=eq.${jobId}`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/bw_build_jobs?id=eq.${jobId}`, {
     method: "PATCH",
     headers: { ...sbHeaders(), Prefer: "return=minimal" },
     body: JSON.stringify(patch),
@@ -136,7 +182,7 @@ async function updateStage(
 }
 
 async function readJobCache(id: string): Promise<{ title: string; company: string; text: string }> {
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/cache/job-${id}.json`, {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/bw-cache/job-${id}.json`, {
     headers: { apikey: SERVICE_KEY, authorization: `Bearer ${SERVICE_KEY}` },
   });
   if (!res.ok) throw new Error(`cache job-${id}.json ${res.status}: ${(await res.text()).slice(0, 120)}`);
@@ -144,7 +190,7 @@ async function readJobCache(id: string): Promise<{ title: string; company: strin
 }
 
 async function uploadSiteData(slug: string, data: SiteData): Promise<void> {
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/sites/${slug}.json`, {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/bw-sites/${slug}.json`, {
     method: "PUT",
     headers: {
       apikey: SERVICE_KEY,
@@ -341,14 +387,17 @@ async function sendEmail(
 // ── Hintergrund-Pipeline (Stages 1–7, optional 8) ──────────────────────────────
 async function runPipeline(
   jobId: string, slug: string, email: string,
-  firstName: string | null, role: string | null,
+  firstName: string | null, role: string | null, applicationId: string,
 ): Promise<void> {
   try {
+    const app = await loadApplication(applicationId);
+
     await updateStage(jobId, { stage: "enrich", stage_note: "Öffentlichen Kontext sammeln", stage_done: false });
-    const enrich = await enrichDomain(TARGET_DOMAIN);
+    const enrich = app.enrich_domain ? await enrichDomain(app.enrich_domain) : "";
 
     await updateStage(jobId, { stage: "scrape", stage_note: "Anzeige aus Cache", stage_done: false });
-    const job = await readJobCache(TARGET_JOB_ID);
+    if (!app.job_source_id) throw new Error(`application ${app.id}: job_source_id fehlt`);
+    const job = await readJobCache(app.job_source_id);
 
     await updateStage(jobId, { stage: "extract", stage_note: "Anforderungen strukturieren", stage_done: false });
     const extract = await callClaudeJson(
@@ -391,9 +440,14 @@ WICHTIG: Antworte AUSSCHLIESSLICH mit gültigem JSON (RFC 8259) — alle Anführ
       });
     }
 
-    const company = job.company || "StrategyFrame.AI";
-    const title = job.title || "Chief of Staff";
-    const siteData = buildSiteData({ company, title, profile, fitDimensions: gen.fitDimensions });
+    // Fällt der Anzeigen-Cache aus, gilt der freigegebene Stammsatz — nie eine fremde Firma.
+    const company = job.company || app.company;
+    const title = job.title || app.role_title;
+    // Der freigegebene Seiteninhalt geht mit in die JSON — build.html rendert daraus die
+    // n=1-Abschnitte. Fehlt er, bleibt die Seite beim agnostischen Teil.
+    const siteData = buildSiteData({
+      company, title, profile, fitDimensions: gen.fitDimensions, page: app.page,
+    });
     await uploadSiteData(slug, siteData);
 
     const url = `${RESULT_BASE}/${slug}`;
@@ -433,12 +487,19 @@ Deno.serve(async (req: Request): Promise<Response> => {
   let body: {
     email?: string; phone?: string; callConsent?: boolean;
     firstName?: string; role?: string; iceCream?: string;
+    applicationId?: string;
     pow?: { ts?: number; nonce?: string }; hp?: string;
   };
   try { body = await req.json(); } catch { return json({ error: "bad json" }, 400, origin); }
 
   // Honeypot — Bots füllen versteckte Felder.
   if (body.hp) return json({ error: "rejected" }, 400, origin);
+
+  // Welche Bewerbung? Der Wert kommt aus dem Client und ist untrusted — Form prüfen, bevor er
+  // in eine Query geht. Ob es die Bewerbung gibt und ob sie freigegeben ist, klärt
+  // loadApplication() serverseitig.
+  const applicationId = (body.applicationId ?? "").trim() || DEFAULT_APPLICATION_ID;
+  if (!APPLICATION_ID_RE.test(applicationId)) return json({ error: "application" }, 400, origin);
 
   const email = (body.email ?? "").trim().toLowerCase();
   if (!EMAIL_RE.test(email)) return json({ error: "email" }, 400, origin);
@@ -471,11 +532,13 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // Job anlegen (PII getrennt).
   const slug = makeSlug(crypto.randomUUID());
   const jobId = await insertJob(slug);
-  const callToken = await insertPii(jobId, email, phone, callConsent, firstName, role, iceCream);
+  const callToken = await insertPii(
+    jobId, email, phone, callConsent, firstName, role, iceCream, applicationId,
+  );
 
   // Pipeline im Hintergrund — Response sofort.
   // @ts-ignore EdgeRuntime ist im Supabase-Deno-Kontext vorhanden.
-  EdgeRuntime.waitUntil(runPipeline(jobId, slug, email, firstName, role));
+  EdgeRuntime.waitUntil(runPipeline(jobId, slug, email, firstName, role, applicationId));
 
   // callToken nur ausliefern, wenn Consent erteilt wurde — sonst erscheint kein (brechender)
   // Anruf-Button auf der Live-Seite, sondern der Mail-Rückruf-Hinweis.

@@ -30,6 +30,7 @@ interface PiiRow {
   first_name: string | null;
   role: string | null;
   ice_cream: string | null;
+  application_id: string | null;
   call_token: string | null;
   call_token_expires_at: string | null;
   call_token_used: boolean | null;
@@ -57,7 +58,7 @@ function sbHeaders(): Record<string, string> {
 }
 
 async function rateLimit(key: string, windowSec: number, limit: number): Promise<boolean> {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/bump_rate_limit`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/bw_bump_rate_limit`, {
     method: "POST",
     headers: sbHeaders(),
     body: JSON.stringify({ p_key: key, p_window_seconds: windowSec, p_limit: limit }),
@@ -85,7 +86,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   let row: PiiRow | undefined;
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/build_jobs_pii?job_id=eq.${jid}&select=*`,
+      `${SUPABASE_URL}/rest/v1/bw_build_jobs_pii?job_id=eq.${jid}&select=*`,
       { headers: sbHeaders() },
     );
     if (!res.ok) throw new Error(`select pii ${res.status}`);
@@ -121,7 +122,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // gleichzeitig schon verbraucht (Race) ⇒ 409.
   try {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/build_jobs_pii?job_id=eq.${jid}&call_token_used=eq.false`,
+      `${SUPABASE_URL}/rest/v1/bw_build_jobs_pii?job_id=eq.${jid}&call_token_used=eq.false`,
       {
         method: "PATCH",
         headers: { ...sbHeaders(), Prefer: "return=representation" },
@@ -143,6 +144,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
       headers: { "content-type": "application/json", authorization: `Bearer ${SHARED_SECRET}` },
       body: JSON.stringify({
         jobId,
+        // Ohne diese Weitergabe liefe das Gespräch ohne Stellenkontext: der Relay
+        // bekäme keine applicationId und der Agent müsste zu jeder Frage zur Stelle passen.
+        applicationId: row.application_id,
         phone: row.phone,
         email: row.email,
         firstName: row.first_name,
@@ -157,7 +161,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   // DSGVO: Zweck erfüllt → PII-Row löschen.
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/build_jobs_pii?job_id=eq.${jid}`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/bw_build_jobs_pii?job_id=eq.${jid}`, {
       method: "DELETE",
       headers: { ...sbHeaders(), Prefer: "return=minimal" },
     });

@@ -113,9 +113,12 @@ export interface AgentContext {
 /** Input des outbound-trigger-Endpoints (Server-zu-Server aus build/). */
 export interface OutboundTriggerInput {
   jobId?: string;
+  /** Welche Bewerbung dieses Gespräch führen darf; reist als <Parameter> ins setup-Event. */
+  applicationId?: string;
   phone: string; // E.164
   email: string;
   firstName?: string; // Vorname des Anrufers — Agent spricht ihn direkt an
   role?: string; // Funktionsbereich/Rolle des Anrufers — Agent spiegelt Stärken
-  iceCream?: string; // Lieblings-Eissorte — humorvoller Closing-Hook
+  iceCream?: string; // Lieblings-Eissorte — humorvoller Closing-Hook; hängt am Empfänger,
+                     // nicht an der Stelle, und bleibt deshalb im agnostischen Teil
 }

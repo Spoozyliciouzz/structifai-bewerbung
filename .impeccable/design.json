@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-06T00:00:00Z",
+  "title": "Design System: Bewerbung als Maschine",
+  "extensions": {
+    "colorMeta": {
+      "machine-navy": { "role": "neutral", "displayName": "Machine-Navy", "canonical": "#0e121b", "tonalRamp": ["#05070c", "#0e121b", "#141a26", "#222a38", "#3a4456", "#5a6578", "#8892a3", "#c2c9d4"] },
+      "panel-navy": { "role": "neutral", "displayName": "Panel-Navy", "canonical": "#141a26", "tonalRamp": ["#0a0e15", "#141a26", "#1b2230", "#222b3b", "#3a4456", "#5a6578", "#8892a3", "#c2c9d4"] },
+      "signal-gold": { "role": "primary", "displayName": "Signal-Gold", "canonical": "#cead60", "tonalRamp": ["#3a2f12", "#5c4b1e", "#7e672c", "#a0843d", "#cead60", "#dac286", "#e7d6ad", "#f3ead6"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#e8eaf0", "tonalRamp": ["#23262e", "#3c414d", "#575d6c", "#767d8d", "#979eae", "#b8becb", "#d3d7e0", "#e8eaf0"] },
+      "muted-steel": { "role": "neutral", "displayName": "Muted-Steel", "canonical": "#9aa3b2", "tonalRamp": ["#1c2029", "#2e3441", "#434b5b", "#5b6476", "#747e91", "#9aa3b2", "#bcc3cf", "#dde1e8"] },
+      "ok-green": { "role": "tertiary", "displayName": "OK-Grün", "canonical": "#7fd1a3", "tonalRamp": ["#12301f", "#1e4a31", "#2c6746", "#3d855c", "#54a374", "#7fd1a3", "#a6e0c0", "#d2f0de"] },
+      "err-red": { "role": "tertiary", "displayName": "Fehler-Rot", "canonical": "#e08a8a", "tonalRamp": ["#3a1414", "#5c2323", "#7e3434", "#a04a4a", "#c26666", "#e08a8a", "#ecb0b0", "#f6d8d8"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Playfair)", "purpose": "Nur die Hero-Zeile; die menschliche Stimme." },
+      "label": { "displayName": "Label (IBM Plex Mono)", "purpose": "Alles, was die Pipeline sagt: Kicker, Stages, Status, Pills." }
+    },
+    "shadows": [
+      { "name": "stage-glow", "value": "0 0 0 4px #cead6022", "purpose": "Glow um den aktiven Stage-Dot — Status, kein Raumeffekt." },
+      { "name": "pulse-ring", "value": "0 0 0 0 #cead6055 → 0 0 0 22px #cead6000 (animiert)", "purpose": "Puls um Live-Indikatoren (Pill-Dot, Voice-Ring)." }
+    ],
+    "motion": [
+      { "name": "ease-progress", "value": "cubic-bezier(0.22, 0.61, 0.36, 1)", "purpose": "Fortschrittsbalken- und Gallery-Bewegung." },
+      { "name": "pulse", "value": "1.8s–2.2s ease-out infinite", "purpose": "Live-Puls; via prefers-reduced-motion global deaktiviert." },
+      { "name": "fade-reveal", "value": "0.5s ease, translateY(8-10px) → 0", "purpose": "Reveal von Sektionen und Ergebnis-Karte." }
+    ],
+    "breakpoints": [
+      { "name": "narrow", "value": "560px" },
+      { "name": "mobile-claim", "value": "600px" },
+      { "name": "desktop", "value": "900px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Der eine CTA — deckendes Gold, dunkle Schrift.",
+      "html": "<button class=\"ds-btn-primary\">Pipeline live erleben</button>",
+      "css": ".ds-btn-primary { background: #cead60; color: #1a1407; border: 0; border-radius: 10px; padding: 14px 18px; font-size: 1rem; font-weight: 600; font-family: Inter, system-ui, sans-serif; cursor: pointer; transition: transform .12s ease, filter .12s ease; } .ds-btn-primary:hover:not(:disabled) { filter: brightness(1.06); } .ds-btn-primary:active:not(:disabled) { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: 2px solid #cead60; outline-offset: 2px; } .ds-btn-primary:disabled { opacity: .55; cursor: not-allowed; }"
+    },
+    {
+      "name": "Ghost CTA Pill",
+      "kind": "button",
+      "refersTo": "pill-badge",
+      "description": "Sekundär-Link auf der Build-Seite: Gold-Border-Pill in Mono.",
+      "html": "<a class=\"ds-glink\" href=\"#\">Projekt ansehen →</a>",
+      "css": ".ds-glink { display: inline-block; text-decoration: none; color: #cead60; font-family: 'IBM Plex Mono', monospace; font-size: .82rem; letter-spacing: .04em; border: 1px solid #cead60; border-radius: 99px; padding: 9px 16px; background: #cead600d; transition: background .15s ease, transform .12s ease; } .ds-glink:hover { background: #cead6022; } .ds-glink:active { transform: translateY(1px); } .ds-glink:focus-visible { outline: 2px solid #cead60; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Formularfeld auf Panel-Navy mit Hairline und Gold-Fokus.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-email\">Ihre Email</label><input class=\"ds-input\" id=\"ds-email\" type=\"email\" placeholder=\"founder@strategyframe.ai\"></div>",
+      "css": ".ds-field { font-family: Inter, system-ui, sans-serif; } .ds-label { display: block; font-size: .85rem; color: #9aa3b2; margin-bottom: 6px; } .ds-input { width: 100%; background: #141a26; border: 1px solid #222a38; color: #e8eaf0; border-radius: 10px; padding: 13px 14px; font-size: 1rem; font-family: inherit; } .ds-input:focus-visible { outline: 2px solid #cead60; outline-offset: 2px; }"
+    },
+    {
+      "name": "Live Pill",
+      "kind": "chip",
+      "refersTo": "pill-badge",
+      "description": "Status-Badge mit pulsierendem Gold-Dot.",
+      "html": "<span class=\"ds-pill\"><span class=\"ds-pill-dot\"></span>Live-Build</span>",
+      "css": ".ds-pill { display: inline-flex; align-items: center; gap: 7px; font-family: 'IBM Plex Mono', monospace; font-size: .72rem; letter-spacing: .05em; text-transform: uppercase; color: #cead60; border: 1px solid #222a38; border-radius: 99px; padding: 4px 11px; background: #cead600d; } .ds-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #cead60; box-shadow: 0 0 0 0 #cead6066; animation: ds-pulse 1.8s ease-out infinite; } @keyframes ds-pulse { 0% { box-shadow: 0 0 0 0 #cead6066; } 70% { box-shadow: 0 0 0 7px #cead6000; } 100% { box-shadow: 0 0 0 0 #cead6000; } } @media (prefers-reduced-motion: reduce) { .ds-pill-dot { animation: none; } }"
+    },
+    {
+      "name": "Build-Konsole",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Signature-Komponente: Stage-Zeilen mit Dot-Statusampel in Mono.",
+      "html": "<div class=\"ds-console\"><div class=\"ds-stage ds-done\"><span class=\"ds-dot\"></span><span>enrich</span><span class=\"ds-note\">strategyframe.ai</span></div><div class=\"ds-stage ds-active\"><span class=\"ds-dot\"></span><span>extract</span><span class=\"ds-note\">7 Anforderungen</span></div><div class=\"ds-stage\"><span class=\"ds-dot\"></span><span>generate</span><span class=\"ds-note\"></span></div></div>",
+      "css": ".ds-console { background: #0a0e15; border: 1px solid #222a38; border-radius: 12px; padding: 8px 4px; } .ds-stage { display: flex; align-items: center; gap: 12px; padding: 9px 16px; font-family: 'IBM Plex Mono', monospace; font-size: .86rem; color: #9aa3b2; opacity: .45; } .ds-stage .ds-dot { width: 9px; height: 9px; border-radius: 50%; background: #222a38; flex: 0 0 auto; } .ds-stage .ds-note { color: #9aa3b2; font-size: .78rem; margin-left: auto; } .ds-stage.ds-active { opacity: 1; color: #e8eaf0; } .ds-stage.ds-active .ds-dot { background: #cead60; box-shadow: 0 0 0 4px #cead6022; } .ds-stage.ds-done { opacity: 1; color: #7fd1a3; } .ds-stage.ds-done .ds-dot { background: #7fd1a3; }"
+    },
+    {
+      "name": "Tech-Karte",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Stack-Karte mit 3px Gold-Kante links.",
+      "html": "<div class=\"ds-tcard\"><span class=\"ds-tcat\">Reasoning</span><span class=\"ds-tname\">Claude Sonnet 4.6</span><span class=\"ds-tone\">Matching, Seitentexte &amp; Voice</span></div>",
+      "css": ".ds-tcard { position: relative; background: #141a26; border: 1px solid #222a38; border-radius: 13px; padding: 15px 16px; display: flex; flex-direction: column; gap: 5px; overflow: hidden; transition: border-color .15s ease, transform .12s ease; font-family: Inter, system-ui, sans-serif; } .ds-tcard:hover { border-color: #cead6055; transform: translateY(-1px); } .ds-tcard::before { content: \"\"; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: #cead60; opacity: .55; } .ds-tcat { font-family: 'IBM Plex Mono', monospace; font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: #cead60; opacity: .75; } .ds-tname { font-family: 'Playfair Display', serif; font-size: 1.02rem; line-height: 1.2; color: #e8eaf0; } .ds-tone { color: #9aa3b2; font-size: .86rem; line-height: 1.45; }"
+    },
+    {
+      "name": "Sektions-Label",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Nummerierter Mono-Kicker über jeder Sektion.",
+      "html": "<div class=\"ds-seclabel\"><span class=\"ds-n\">②</span> Wie ich zur Stelle passe</div>",
+      "css": ".ds-seclabel { font-family: 'IBM Plex Mono', monospace; color: #cead60; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; } .ds-seclabel .ds-n { opacity: .7; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Der Maschinenraum, der gerade läuft",
+    "overview": "Eine dunkle, ruhige Kommandozentrale: tiefes Navy als Raum, ein einziges Signal-Gold als Stimme der Maschine. Die Seite inszeniert keinen Bewerber, sie inszeniert eine laufende Pipeline — Mono-Labels wie Konsolen-Prompts, Stage-Dots, die von grau über gold zu grün schalten, ein Puls, der „live“ bedeutet. Playfair Display liefert die menschliche Gegenstimme; alles andere ist das, was die Maschine tut. Landing und generierte Bewerbungsseite teilen exakt dieselben Tokens — Konsistenz beim Aha-Moment ist Briefing-Pflicht.",
+    "keyCharacteristics": [
+      "Dunkler Grund mit radialem Glow statt flacher Fläche",
+      "Ein Akzent (Gold) trägt Status, Fokus, CTA und Labels — sonst nichts",
+      "Konsolen-Grammatik: IBM Plex Mono, uppercase, getrackt, nummerierte Sektions-Labels",
+      "Hairline-Borders statt Schatten; Tiefe durch Flächenton",
+      "Bewegung = Statusanzeige, nie Dekoration; prefers-reduced-motion schaltet alles ab"
+    ],
+    "rules": [
+      { "name": "The One-Voice Rule", "body": "Gold ist die einzige Markenfarbe. Kein zweiter Akzent, nirgends.", "section": "colors" },
+      { "name": "The Translucent-Gold Rule", "body": "Gold als Fläche nur in Transparenzstufen; deckendes Gold ist dem Primär-Button und aktiven Indikatoren vorbehalten.", "section": "colors" },
+      { "name": "The Machine-Speaks-Mono Rule", "body": "Alles, was die Pipeline sagt, steht in IBM Plex Mono. Alles, was der Mensch sagt, in Playfair/Inter. Nie mischen.", "section": "typography" },
+      { "name": "The Glow-Not-Shadow Rule", "body": "Kein grauer Drop-Shadow, nirgends. Wenn etwas leuchtet, lebt es; alles andere ist flach mit Hairline.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do Gold (#cead60) als einzigen Akzent führen; Flächen-Gold nur transluzent.",
+      "Do jede Pipeline-/Statusäußerung in IBM Plex Mono setzen, uppercase, getrackt.",
+      "Do Tiefe über Flächentöne + 1px #222a38 lösen; Glows nur als Live-Puls.",
+      "Do prefers-reduced-motion als globalen Kill-Switch beibehalten.",
+      "Do Fokus sichtbar halten: 2px Gold-Outline, 2px Offset.",
+      "Do die Maschinen-Ästhetik 1:1 auf generierte Seiten übertragen (BRIEFING §7.5)."
+    ],
+    "donts": [
+      "Don't Berater-/Dienstleister-Optik: keine Feature-Grids, Testimonial-Slider, SaaS-Template-Muster.",
+      "Don't Marketing-Floskeln-Typografie: keine Superlativ-Heros, Gradient-Headlines, kein zweiter Akzent.",
+      "Don't PDF-/CV-Bewerbungsästhetik.",
+      "Don't graue Drop-Shadows oder Glassmorphism; einzige Leuchterscheinung ist der Gold-Puls.",
+      "Don't Mono-Labels unter 0.62rem oder Muted-Steel-Text unter 0.88rem.",
+      "Don't landing-tosie.css als Referenz verwenden — gehört nicht zu diesem System."
+    ]
+  }
+}

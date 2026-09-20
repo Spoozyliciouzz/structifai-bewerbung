@@ -18,11 +18,15 @@
 import type { CRInbound, CROutbound } from "./lib/types.ts";
 import { buildIntro, buildClosing, detectEndOfTalk, buildSystemPrompt } from "./lib/conversation.ts";
 import { loadContext } from "./lib/context.ts";
+import { verifyCallAuth } from "./lib/callauth.ts";
 import { streamReply, type ChatMessage } from "./lib/claude.ts";
 
 const MAX_TURNS = 8; // Telefonat kurz halten (Budget/UWG: kein Dauergespräch)
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+// Muss mit dem Wert in outbound-trigger übereinstimmen. Fehlt er, wird kein Anruf-Token
+// anerkannt und jedes Gespräch läuft ohne Stellenkontext — fail closed, nicht fail open.
+const RELAY_SETUP_SECRET = Deno.env.get("RELAY_SETUP_SECRET") ?? "";
 
 function send(socket: WebSocket, msg: CROutbound): void {
   if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(msg));
@@ -41,6 +45,8 @@ function handleSocket(socket: WebSocket): void {
   let system = "";
   let iceCream: string | undefined; // aus setup, fürs Closing (Eis-Einladung)
   let callSid: string | undefined;  // Twilio Call-SID (zuverlässig im setup) → PATCH-Key
+  let applicationIdForCall: string | undefined; // nur gesetzt, wenn eine freigegebene Bewerbung geladen wurde
+  let closingText: string | undefined;          // Abschlusstext dieser Bewerbung, sonst der allgemeine
   const history: ChatMessage[] = [];
   let userTurns = 0;
   let promptEvents = 0;             // ALLE prompt-Events (auch ignorierte) — zeigt STT-Echo/Spam
@@ -54,7 +60,7 @@ function handleSocket(socket: WebSocket): void {
     if (!callSid || !SUPABASE_URL) return;
     if (final) { if (finalized) return; finalized = true; }
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/voice_calls?twilio_call_sid=eq.${encodeURIComponent(callSid)}`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/bw_voice_calls?twilio_call_sid=eq.${encodeURIComponent(callSid)}`, {
         method: "PATCH",
         headers: {
           "content-type": "application/json", apikey: SERVICE_KEY,
@@ -62,6 +68,7 @@ function handleSocket(socket: WebSocket): void {
         },
         body: JSON.stringify({
           status: status.slice(0, 250),
+          ...(applicationIdForCall ? { application_id: applicationIdForCall } : {}),
           turns: history,
           transcript: history.map((h) => `${h.role}: ${h.content}`).join("\n").slice(0, 8000),
           ...(final ? { ended_at: new Date().toISOString() } : {}),
@@ -81,9 +88,31 @@ function handleSocket(socket: WebSocket): void {
         const role = msg.customParameters?.role?.trim() || undefined;
         iceCream = msg.customParameters?.iceCream?.trim() || undefined;
         callSid = msg.callSid?.trim() || undefined;
-        const ctx = await loadContext();
+
+        // Welche Bewerbung dieses Gespräch führen darf, steht in einer signierten Nutzlast,
+        // die outbound-trigger beim Start des Anrufs ausgestellt hat. Ein frei mitgeschickter
+        // Slug wird NICHT akzeptiert: der WebSocket nimmt jede Verbindung an, also könnte
+        // sonst jeder mit einem geratenen Slug fremde Bewerbungsinhalte abrufen.
+        const authToken = msg.customParameters?.auth?.trim() ?? "";
+        const claim = RELAY_SETUP_SECRET
+          ? await verifyCallAuth(authToken, RELAY_SETUP_SECRET)
+          : null;
+        if (authToken && !claim) {
+          console.log("[relay] Anruf-Token ungueltig oder abgelaufen — kein Stellenkontext.");
+        }
+        const applicationId = claim?.applicationId;
+
+        const ctx = await loadContext(applicationId);
+        // Sichtbar machen, wenn ein Gespräch ohne freigegebenen Stellenkontext läuft.
+        console.log(
+          `[relay] setup call=${msg.callSid} application=${applicationId ?? "(keine)"} ` +
+            `stellenkontext=${ctx.the_role ? "geladen" : "FEHLT"}`,
+        );
+        applicationIdForCall = ctx.application_id;
+        closingText = ctx.closing;
+
         system = buildSystemPrompt(ctx, firstName, role, iceCream);
-        const intro = buildIntro(firstName);
+        const intro = buildIntro(firstName, ctx.intro);
         sayFinal(socket, intro); // Agent spricht zuerst, ggf. mit Vorname
         history.push({ role: "assistant", content: intro });
         break;
@@ -104,7 +133,7 @@ function handleSocket(socket: WebSocket): void {
             `closed:${eot ? "end_of_talk" : "max_turns"} turns=${userTurns} prompts=${promptEvents} last="${userText.slice(0, 80)}"`,
             true,
           );
-          sayFinal(socket, buildClosing(iceCream));
+          sayFinal(socket, buildClosing(iceCream, closingText));
           send(socket, { type: "end" });
           break;
         }
