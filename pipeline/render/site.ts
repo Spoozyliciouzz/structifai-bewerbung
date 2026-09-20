@@ -281,7 +281,7 @@ export function renderSite(input: SiteInput): string {
 
   if (p.conversation_starters?.length) {
     sections.push(`    <h2>Fragen Sie ruhig genauer nach</h2>
-    <p class="lead">Mein KI-Assistent erläutert diese Bewerbung am Telefon. Er nennt sich sofort als KI und sagt offen, wenn ihm etwas nicht vorliegt.</p>
+    <p class="lead">Mein KI-Assistent erläutert diese Bewerbung im Sprach-Widget auf dieser Seite. Er nennt sich sofort als KI und sagt offen, wenn ihm etwas nicht vorliegt.</p>
     <ul class="plain starters">
       ${p.conversation_starters.map((s) => `<li>${esc(s)}</li>`).join("\n      ")}
     </ul>`);
@@ -348,13 +348,13 @@ ${head(`Technik — Bewerbung bei ${input.company}`, false)}
     <h2>Aufbau</h2>
     <div class="card">
       <p>Der Inhalt jeder Bewerbung liegt als unveränderliche, freigegebene Version in Postgres. Die Seite wird <strong>einmal bei der Freigabe</strong> gerendert und als statische Datei ausgeliefert, nicht bei jedem Aufruf erzeugt. Das hält die Auslieferung schnell und nimmt dem Besuch jede Fehlerquelle: zur Laufzeit gibt es nichts, was scheitern könnte.</p>
-      <p>Derselbe freigegebene Stand versorgt Seite und Telefongespräch. Der Assistent kann damit nichts sagen, was nicht auch auf der Seite steht.</p>
+      <p>Derselbe freigegebene Stand versorgt Seite und Sprachassistent. Der Assistent kann damit nichts sagen, was nicht auch auf der Seite steht.</p>
     </div>
 
-    <h2>Das Telefongespräch</h2>
+    <h2>Das Gespräch mit dem Assistenten</h2>
     <div class="card">
-      <p>Sprachkanal über Twilio ConversationRelay, Reasoning über Claude. Der Assistent meldet sich sofort als KI und beantwortet ausschließlich, was für genau diese Bewerbung freigegeben ist.</p>
-      <p>Welche Bewerbung ein Gespräch führen darf, steht in einer signierten, kurzlebigen Nutzlast, die der Server beim Anruf ausstellt. Ein frei mitgeschickter Name wird nicht akzeptiert. Fehlt die Freigabe, sagt der Assistent, dass ihm dazu nichts vorliegt — er rät nicht.</p>
+      <p>Der Sprachassistent läuft als Web-Widget von Famulor direkt im Browser — kein Anruf, keine Telefonnummer, die Besucherin startet das Gespräch selbst. Er meldet sich sofort als KI und beantwortet ausschließlich, was für genau diese Bewerbung freigegeben ist.</p>
+      <p>Sein Wissen ist derselbe freigegebene Stand, aus dem auch diese Seite gerendert wird — als Prompt fest je Bewerbung erzeugt, nicht zur Laufzeit zusammengesucht. Fehlt ihm etwas, sagt er das und verweist auf den Kontakt auf der Seite — er rät nicht.</p>
     </div>
 
     <h2>Datenschutz</h2>
@@ -366,13 +366,13 @@ ${head(`Technik — Bewerbung bei ${input.company}`, false)}
 
     <h2>Was bewusst nicht gebaut ist</h2>
     <div class="card">
-      <p>Kein Nachweis, dass die Gegenstelle des Sprachkanals wirklich der Telefonanbieter ist. Die Signatur verhindert, dass sich jemand eine fremde Bewerbung aussucht, ersetzt aber keine beidseitige Authentifizierung.</p>
+      <p>Das Widget weiß nicht, von welcher Seite es gestartet wurde — es gibt keinen Kanal dafür. Deshalb ein Assistent je Bewerbung statt eines Assistenten, dem die Seite sagt, worum es geht.</p>
       <p>Der persönliche Testbereich der Reisekosten-Anwendung ist entworfen, aber nicht eingerichtet. Solange das so ist, behauptet weder die Seite noch der Assistent, dass er nutzbar wäre.</p>
       <p>Keine Suchmaschinen-Indexierung, keine öffentliche Übersicht aller Bewerbungen, keine Verknüpfung zwischen ihnen.</p>
     </div>
 
     <h2>Fragen?</h2>
-    <p>Der Assistent erklärt das auch am Telefon, und Dennis ist direkt erreichbar: <a href="mailto:${esc(input.contact)}">${esc(input.contact)}</a></p>
+    <p>Der Assistent erklärt das auch selbst, und Dennis ist direkt erreichbar: <a href="mailto:${esc(input.contact)}">${esc(input.contact)}</a></p>
 
     <footer>
       ${back ? `<p><a href="${esc(back)}">← zurück zur Bewerbung</a></p>` : ""}

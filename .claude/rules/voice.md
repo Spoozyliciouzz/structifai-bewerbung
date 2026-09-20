@@ -1,25 +1,24 @@
-# Rules — pipeline/voice/ (Twilio ConversationRelay)
+# Rules — Sprachassistent (Famulor Web-Widget)
 
-Encore, NICHT im 60s-Budget. UWG §7 + Abuse-Gate sind blockierend. Architektur-Details:
-`.claude/rules/twilio.md` (Outbound-Nummer) + `.claude/rules/conversationrelay.md` (WS/Reasoning).
+Gespräch im Browser auf `/b/{slug}`, gestartet von der Besucherin. Kein Anruf, keine Nummer,
+kein Consent-Gate (UWG §7 greift nicht — sie initiiert). Encore, nicht im 60s-Budget.
 
-- **Auslösung nur wenn ALLE wahr:** `callConsent === true` && gültige E.164-Nummer && Empfänger
-  zugelassen (Email-Domain in `VOICE_ALLOWLIST_DOMAINS` **oder** server-erzeugter Token). Trigger-Endpoint
-  `outbound-trigger` nur Server-zu-Server aus `build/` mit `TRIGGER_SHARED_SECRET` — nie für freie
-  Nummern auslösbar (sonst Robocall-Generator + UWG-Haftung). Rate-Limit, eine Bewerbung/Email.
-- **Consent geloggt:** `call_consent=true` + `consent_at` in `build_jobs_pii`, vor Trigger prüfen.
-- **Bot-Disclosure im ERSTEN Satz:** „KI-Assistent von Dennis Benter, kein Mensch." Kein Verkauf,
-  kein Werbecharakter.
-- **Echtes Kurzgespräch, kein Skript-Bot:** Agent kennt Dennis (Profil/Projekte/FAQ aus
-  `voice_agent_context`, Fallback `context-fallback.json`), beantwortet 1–3 Fragen ehrlich (Lücken
-  benennen: HubSpot bekannt aber nicht produktiv; kein Top-Abschluss). ~60–120 s, Deutsch, warm.
-- **Closing (Kern-Mechanik):** Verweis auf die **Nummer in der gerade zugestellten Mail** —
-  „in der Mail, die du eben bekommen hast, steht eine Nummer; ruf da an, dann hast du Dennis direkt
-  am Apparat." Dann `{type:"end"}`. (Nummer = `DENNIS_PHONE`, klingelt direkt bei Dennis.)
-- **Kein Twilio-Inbound.** Empfänger ruft NICHT die Twilio-Nummer zurück, sondern Dennis' Handy aus
-  der Mail. Keine Flüsteransage, keine Bridge — Dennis geht direkt ran.
-- **Stimme: Schwelle, kein Optimierungsprojekt.** ElevenLabs DE-Stimme (in ConversationRelay
-  konfiguriert), muss „klingt wie normaler deutscher Mensch am Telefon" bestehen. 1–2 PSTN-Testanrufe an
-  eigene Nummer (8 kHz degradiert TTS, Browser-Preview lügt). Eigennamen (StrategyFrame, Benter) sauber.
-- **DSGVO:** `voice_calls` RLS dicht; Transkript < 7 Tage (`purge_old_voice_pii`); Auftragsverarbeiter
-  Twilio/Anthropic-LiteLLM/ElevenLabs benannt.
+- **Ein Assistent je Bewerbung.** Prompt kommt aus `bun run famulor:prompt applications/<id>.json`
+  (Quelle: `pipeline/voice/context-fallback.json` + `applications/<id>.json › voice`) und wird per
+  MCP `update_assistant` eingespielt — nie von Hand im Famulor-Editor pflegen, sonst driftet er.
+- **IDs stehen in `applications/<id>.json › voice.famulor`** und in `bw_applications`
+  (`famulor_assistant_id`, `famulor_widget_key`). Widget-Key ist public; Assistant-ID unkritisch.
+- **Widget nur auf `/b/*`.** Site-JSON trägt `voice.widget_key`; `build.html › buildVoiceSlide`
+  mountet lazy per `OurAiCallingWidget.boot(key, host)`. Allowed Origins in Famulor pflegen.
+  CSP an zwei Stellen (Meta in build.html, netlify.toml `/b/*`) — `app.famulor.io` in
+  `script-src`, `connect-src`, `frame-src`.
+- **Bot-Disclosure im ersten Satz** (`voice.intro`). Ehrlich, Lücken benennen, kein Verkauf,
+  keine Preise/Zusagen. Closing = Kontakt auf dieser Seite (`voice.closing`).
+- **Transkript:** Post-Call-Webhook (unsigniert) → `bw-famulor-webhook/<FAMULOR_WEBHOOK_TOKEN>` →
+  `bw_voice_calls` (`provider_call_id` unique, `turns`, `summary`). Purge < 7 Tage
+  (`bw_purge_old_voice_pii`). Kein `job_id` — das Widget kennt die Seite nicht.
+- **DSGVO:** Auftragsverarbeiter Famulor (+ dessen Sub-Prozessoren) benennen; kein Recording
+  (`recording_enabled: false`), kein Memory (`memory_mode: off`). Famulor-Retention 3 Monate
+  (Workspace), unsere Kopie 7 Tage — die FAQ-Antworten nennen genau das.
+- **Kein REST-API-Zugang im Plus-Plan** (`403 api_access_required`). Alles Programmatische läuft
+  über MCP (Claude) oder Webhooks (Famulor → wir). Kein Code darf `app.famulor.io/api/v1` rufen.

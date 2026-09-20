@@ -1,5 +1,5 @@
 {
-  "_note": "n=1-Inhalt für genau eine Stellenanzeige. Die 80 % agnostischen Inhalte (Profil, Werdegang, Pilotprojekte, Aussprache, Lieblingseis-Hook) stehen NICHT hier — die kommen aus profile/dennis.json bzw. voice_agent_context. Quelle dieses Entwurfs: structifai-website/docs/scratch/lm-bewerbung/ (Codex, 2026-09-15). Noch nicht freigegeben.",
+  "_note": "n=1-Inhalt für genau eine Stellenanzeige. Die 80 % agnostischen Inhalte (Profil, Werdegang, Pilotprojekte, Aussprache) stehen NICHT hier — die kommen aus profile/dennis.json bzw. voice_agent_context. Quelle dieses Entwurfs: structifai-website/docs/scratch/lm-bewerbung/ (Codex, 2026-09-15). Noch nicht freigegeben.",
 
   "id": "lm-2786630",
   "company": "LM IT Services AG",
@@ -85,6 +85,10 @@
   "voice": {
     "intro": "Guten Tag, ich bin der KI-Assistent von Dennis Benter. Ich kann seine Bewerbung als Head of AI & Processes bei LM und die zugehörige Arbeitsprobe erläutern. Welche Frage interessiert Sie?",
     "closing": "Vielen Dank für das Gespräch. Für persönliche Fragen und den nächsten Schritt erreichen Sie Dennis über den Kontakt auf dieser Bewerbungsseite.",
+    "famulor": {
+      "assistant_id": "bba9c07e-bfb5-4d88-907a-b744df1bd97a",
+      "widget_key": "wgt_4c78d477d570420bb38b117c"
+    },
 
     "rules_extra": [
       "Die LM-Referenz und Dennis eigene Reisekosten-Anwendung sind unterschiedliche Implementierungen. Vorbereitete Belege sind Beispieldaten, keine LM-Kundendaten.",

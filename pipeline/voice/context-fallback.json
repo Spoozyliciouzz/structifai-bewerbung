@@ -1,5 +1,5 @@
 {
-  "_note": "Public-safe Dennis-Kontext für den Voice-Reasoning-Loop. Abgeleitet aus profile/dennis.json (verifiziert) + Interview-Ergänzungen. Fallback, wenn voice_agent_context (DB) leer/unerreichbar ist. KEINE unverifizierten Fakten — der Agent gibt das wörtlich am Telefon wieder.",
+  "_note": "Public-safe Dennis-Kontext für den Famulor-Sprachassistenten (Web-Widget). Abgeleitet aus profile/dennis.json (verifiziert) + Interview-Ergänzungen. Einzige Prompt-Quelle neben applications/<id>.json › voice (bun run famulor:prompt). KEINE unverifizierten Fakten — der Agent gibt das wörtlich wieder.",
   "profile": {
     "name": "Dennis Benter",
     "role": "Operating Partner / Interim-COO — structifai",
@@ -26,8 +26,8 @@
     },
     {
       "name": "Diese Bewerbung",
-      "one": "Web-Seite, Mail und dieser Anruf sind eine einzige Pipeline, von Dennis solo gebaut. In unter einer Minute generiert und zugestellt.",
-      "stack": "Supabase Edge, Twilio ConversationRelay, Claude, ElevenLabs"
+      "one": "Web-Seite, Mail und dieses Gespräch sind eine einzige Pipeline, von Dennis solo gebaut. In unter einer Minute generiert und zugestellt.",
+      "stack": "Supabase Edge, Claude, Famulor Web-Widget"
     },
     {
       "name": "Beleg-Finder",
@@ -58,8 +58,8 @@
       "a": "Bisher nur agenturbegleitet und sporadisch. Ehrliche Lücke, die er aufbaut, kein Kernskill."
     },
     {
-      "q": "Warum der Anruf?",
-      "a": "Web, Mail und Anruf sind dieselbe Pipeline. Der Anruf zeigt sie zu Ende gedacht — und die Nummer ist direkt erreichbar, ein Rückruf landet bei Dennis selbst."
+      "q": "Warum dieser Sprachassistent?",
+      "a": "Web, Mail und dieses Gespräch sind dieselbe Pipeline. Der Assistent zeigt sie zu Ende gedacht: er kennt genau diese Bewerbung und nichts darüber hinaus. Für alles Persönliche steht der Kontakt direkt auf der Seite."
     },
     {
       "q": "Verfügbarkeit und Anstellungsmodell?",
@@ -103,7 +103,7 @@
     },
     {
       "q": "Wie hält Dennis es mit Datenschutz und DSGVO?",
-      "a": "Datenschutz ist für Dennis Bauprinzip, nicht Nachgedanke: personenbezogene Daten getrennt gespeichert, strikte Zugriffsregeln direkt auf Datenbankebene, Einwilligung als Pflicht und feste Löschfristen. Bei diesem Anruf heißt das: nur mit deinem Opt-in, der Assistent nennt sich sofort als KI, deine Nummer wird einmalig genutzt und zügig gelöscht. Die rechtliche Feinprüfung lässt Dennis fachlich machen — er gibt sich nicht als Jurist aus."
+      "a": "Datenschutz ist für Dennis Bauprinzip, nicht Nachgedanke: personenbezogene Daten getrennt gespeichert, strikte Zugriffsregeln direkt auf Datenbankebene, Einwilligung als Pflicht und feste Löschfristen. Bei diesem Gespräch heißt das: Sie starten es selbst, der Assistent nennt sich sofort als KI, es gibt keine Tonaufzeichnung, das Gesprächsprotokoll wird bei Dennis nach sieben Tagen und beim Plattformanbieter nach spätestens drei Monaten gelöscht. Die rechtliche Feinprüfung lässt Dennis fachlich machen — er gibt sich nicht als Jurist aus."
     },
     {
       "q": "Welche Websites hat Dennis selbst gebaut?",
@@ -126,8 +126,8 @@
       "a": "Stimmt, er schreibt keinen Code von Hand. Er baut mit KI-Agenten ganze Produktionssysteme — spec- und architekturgetrieben, mit Blick auf Sicherheit und Kapselung. Eher Architekt als Entwickler."
     },
     {
-      "q": "Ist so ein KI-Anruf oder die ganze Datenverarbeitung überhaupt DSGVO- und UWG-konform?",
-      "a": "Berechtigte Frage. Der Anruf läuft nur mit ausdrücklichem Opt-in, der Assistent nennt sich sofort als KI im Auftrag von Dennis, deine Daten werden nur einmalig genutzt und gelöscht. Die rechtliche Seite — DSGVO und UWG — lässt Dennis fachlich prüfen, statt sie selbst zu behaupten."
+      "q": "Ist so ein KI-Gespräch oder die ganze Datenverarbeitung überhaupt DSGVO-konform?",
+      "a": "Berechtigte Frage. Das Gespräch starten Sie selbst, der Assistent nennt sich sofort als KI im Auftrag von Dennis, es gibt keine Tonaufzeichnung, und das Protokoll wird bei Dennis nach sieben Tagen und beim Plattformanbieter nach spätestens drei Monaten gelöscht. Die rechtliche Seite — DSGVO und UWG — lässt Dennis fachlich prüfen, statt sie selbst zu behaupten."
     }
   ],
   "stories": [

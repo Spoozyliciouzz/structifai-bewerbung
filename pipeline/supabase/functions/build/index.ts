@@ -1,13 +1,13 @@
 // ════════════════════════════════════════════════════════════════════════════
 // build/index.ts — Orchestrator (Supabase Edge Function, Deno).
-// POST {email, phone?, callConsent?, pow, hp} → Gates → insert → {jobId, slug}.
+// POST {email, firstName?, role?, applicationId?, pow, hp} → Gates → insert → {jobId, slug}.
 // Pipeline läuft danach im Hintergrund und schreibt jede Stage in build_jobs.
 //
-// Trust-Boundary (§16): email/phone/enrich/job-text sind UNTRUSTED DATEN.
+// Trust-Boundary (§16): email/enrich/job-text sind UNTRUSTED DATEN.
 // Sie werden nie als Instruktion behandelt; alle Outputs werden escaped (render/mail).
 // ════════════════════════════════════════════════════════════════════════════
 import { esc, type Match, type CoverageLevel } from "../../../render/site.ts";
-import { EMAIL_RE, E164_RE, emailDomain, makeSlug } from "../../../lib/validate.ts";
+import { EMAIL_RE, emailDomain, makeSlug } from "../../../lib/validate.ts";
 import { coerceScore, type DimensionScore } from "../../../lib/scoring.ts";
 import { buildSiteData, type SiteData } from "../../../lib/sitedata.ts";
 import profile from "../../../../profile/dennis.json" with { type: "json" };
@@ -51,7 +51,7 @@ function json(body: unknown, status: number, origin: string | null): Response {
   });
 }
 
-// ── Validierung (EMAIL_RE/E164_RE aus lib/validate.ts) ──────────────────────────
+// ── Validierung (EMAIL_RE aus lib/validate.ts) ──────────────────────────
 async function sha256Hex(s: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -117,6 +117,7 @@ interface ApplicationRow {
   job_source_id: string | null;
   enrich_domain: string | null;
   released_version: number | null;
+  famulor_widget_key: string | null;
   bw_application_content: Array<{ version: number; page: unknown; released_at: string | null }>;
 }
 
@@ -130,7 +131,7 @@ async function loadApplication(applicationId: string): Promise<LoadedApplication
   // Seite und Gespräch müssen dieselbe freigegebene Version benutzen — deshalb wird sie hier
   // mitgeladen, statt sie später erneut und womöglich anders aufzulösen.
   const cols = "id,company,role_title,job_source_id,enrich_domain,released_version," +
-    "bw_application_content(version,page,released_at)";
+    "famulor_widget_key,bw_application_content(version,page,released_at)";
   const res = await fetch(
     `${SUPABASE_URL}/rest/v1/bw_applications` +
       `?select=${cols}&id=eq.${encodeURIComponent(applicationId)}&status=eq.released`,
@@ -149,25 +150,14 @@ async function loadApplication(applicationId: string): Promise<LoadedApplication
 }
 
 async function insertPii(
-  jobId: string, email: string, phone: string | null, consent: boolean,
-  firstName: string | null, role: string | null, iceCream: string | null,
-  applicationId: string,
-): Promise<string> {
-  const callToken = crypto.randomUUID().replace(/-/g, "");
+  jobId: string, email: string, firstName: string | null, role: string | null, applicationId: string,
+): Promise<void> {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/bw_build_jobs_pii`, {
     method: "POST",
     headers: { ...sbHeaders(), Prefer: "return=minimal" },
-    body: JSON.stringify({
-      job_id: jobId, email, phone,
-      call_consent: consent, consent_at: consent ? new Date().toISOString() : null,
-      first_name: firstName, role, ice_cream: iceCream,
-      application_id: applicationId,
-      call_token: callToken,
-      call_token_expires_at: new Date(Date.now() + 30 * 60_000).toISOString(),
-    }),
+    body: JSON.stringify({ job_id: jobId, email, first_name: firstName, role, application_id: applicationId }),
   });
   if (!res.ok) throw new Error(`insert pii ${res.status}`);
-  return callToken;
 }
 
 async function updateStage(
@@ -365,13 +355,12 @@ async function sendEmail(
         <p style="${p}">danke, dass du dir die Zeit genommen hast, meine Bewerbung anzuschauen.</p>
         <p style="${p}">Wenn euch die Technik interessiert, mit der ich die Pipeline gebaut habe — hier ist der ganze Code:</p>
         <p style="margin:4px 0 18px"><a href="${REPO_URL}" style="display:inline-block;font-family:Arial,sans-serif;font-size:14px;font-weight:600;color:#cead60;text-decoration:none;border:1px solid #cead60;border-radius:8px;padding:11px 20px">&#8594; GitHub-Repo ansehen</a></p>
-        <p style="${p}">Unabhängig davon hoffe ich, dass du nach dem Telefonat mit meinem Assistenten jetzt tatsächlich Lust auf ein Eis bekommen hast&nbsp;;-)</p>
         <p style="${p}">Ich würde mich freuen, mich mehr mit dir &amp; deinen Kollegen zu dieser coolen Aufgabe auszutauschen — meldet euch gerne jederzeit.</p>
         <p style="${p}">Meine Telefonnummer: <a href="tel:${phoneHref}" style="color:#cead60;font-weight:600;text-decoration:none">${phoneShow}</a></p>
         <p style="${p};margin-top:18px">Danke und viele Grüße,<br><span style="font-family:Georgia,serif;color:#e8eaf0;font-size:18px">Dennis</span></p>
       </td></tr>
       <tr><td style="padding:16px 6px 0">
-        <p style="font-family:Arial,sans-serif;color:#6b7policy;font-size:12px;line-height:1.5;margin:0 0 6px"><a href="${safeUrl}" style="color:#9aa3b2">Deine personalisierte Seite</a> (auch zum Weiterleiten an Kolleg:innen).</p>
+        <p style="font-family:Arial,sans-serif;color:#6b7280;font-size:12px;line-height:1.5;margin:0 0 6px"><a href="${safeUrl}" style="color:#9aa3b2">Deine personalisierte Seite</a> (auch zum Weiterleiten an Kolleg:innen).</p>
         <p style="font-family:Arial,sans-serif;color:#5c6473;font-size:11px;line-height:1.5;margin:0">Deine Daten werden nur zur einmaligen Auslieferung dieser Bewerbung verwendet und innerhalb von 24 Stunden gelöscht.</p>
       </td></tr>
     </table>
@@ -434,7 +423,7 @@ WICHTIG: Antworte AUSSCHLIESSLICH mit gültigem JSON (RFC 8259) — alle Anführ
       const reqs = (extract.requirements ?? []).slice(0, 6);
       gen = coerceGenerated({
         matches: reqs.map((r) => ({ requirement: r.label, level: "solide", evidence: "" })),
-        why_role: "Operator statt Berater: Diese Seite und der Anruf sind live von Dennis' eigener Pipeline gebaut — die Details bespricht er am liebsten direkt.",
+        why_role: "Operator statt Berater: Diese Seite und der Sprachassistent darauf sind live von Dennis' eigener Pipeline gebaut — die Details bespricht er am liebsten direkt.",
         automation_example: "Dieselbe Pipeline, die diese Seite erzeugt hat, läuft auch für Kunden — Content-Automatisierung, Outreach-Audits, Finanz-Reporting.",
         fit: { dimensions: reqs.map((r) => ({ label: r.label, score: 7 })) },
       });
@@ -447,6 +436,7 @@ WICHTIG: Antworte AUSSCHLIESSLICH mit gültigem JSON (RFC 8259) — alle Anführ
     // n=1-Abschnitte. Fehlt er, bleibt die Seite beim agnostischen Teil.
     const siteData = buildSiteData({
       company, title, profile, fitDimensions: gen.fitDimensions, page: app.page,
+      widgetKey: app.famulor_widget_key,
     });
     await uploadSiteData(slug, siteData);
 
@@ -467,10 +457,8 @@ WICHTIG: Antworte AUSSCHLIESSLICH mit gültigem JSON (RFC 8259) — alle Anführ
     // Stages 1–7 fertig → done.
     await updateStage(jobId, { stage: "email", stage_note: emailNote, stage_done: true, status: "done" });
 
-    // PII NICHT sofort löschen: der Anruf wird erst durch den Button auf der Live-Seite ausgelöst
-    // (request-call braucht callToken/Telefon/Consent aus build_jobs_pii). Der callToken läuft nach
-    // 30 Min ab; request-call löscht die Zeile nach Nutzung; der <24h-Cron (purge_old_pii) räumt
-    // ungenutzte Fälle DSGVO-konform ab. KEIN Auto-Anruf hier — der Button triggert.
+    // PII-Zeile bleibt bis zum <24h-Cron (bw_purge_old_pii) — es gibt keinen späteren Schritt mehr,
+    // der sie braucht; das Widget-Gespräch läuft ohne Bezug zum Job.
   } catch (e) {
     const msg = (e as Error).message ?? "unbekannt";
     console.error(`[pipeline] Fehler: ${msg}`);
@@ -485,9 +473,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method !== "POST") return json({ error: "method" }, 405, origin);
 
   let body: {
-    email?: string; phone?: string; callConsent?: boolean;
-    firstName?: string; role?: string; iceCream?: string;
-    applicationId?: string;
+    email?: string; firstName?: string; role?: string; applicationId?: string;
     pow?: { ts?: number; nonce?: string }; hp?: string;
   };
   try { body = await req.json(); } catch { return json({ error: "bad json" }, 400, origin); }
@@ -504,16 +490,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const email = (body.email ?? "").trim().toLowerCase();
   if (!EMAIL_RE.test(email)) return json({ error: "email" }, 400, origin);
 
-  const phone = body.phone?.trim() || null;
-  const callConsent = body.callConsent === true;
   const cap = (s: string | undefined): string | null => {
     const v = s?.trim();
     return v ? v.slice(0, 120) : null;
   };
   const firstName = cap(body.firstName);
   const role = cap(body.role);
-  const iceCream = cap(body.iceCream);
-  if (callConsent && (!phone || !E164_RE.test(phone))) return json({ error: "phone" }, 400, origin);
 
   // Proof-of-Work (gegen offenen-Endpoint-Missbrauch).
   if (!(await verifyPow(email, body.pow))) return json({ error: "pow" }, 400, origin);
@@ -532,15 +514,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // Job anlegen (PII getrennt).
   const slug = makeSlug(crypto.randomUUID());
   const jobId = await insertJob(slug);
-  const callToken = await insertPii(
-    jobId, email, phone, callConsent, firstName, role, iceCream, applicationId,
-  );
+  await insertPii(jobId, email, firstName, role, applicationId);
 
   // Pipeline im Hintergrund — Response sofort.
   // @ts-ignore EdgeRuntime ist im Supabase-Deno-Kontext vorhanden.
   EdgeRuntime.waitUntil(runPipeline(jobId, slug, email, firstName, role, applicationId));
 
-  // callToken nur ausliefern, wenn Consent erteilt wurde — sonst erscheint kein (brechender)
-  // Anruf-Button auf der Live-Seite, sondern der Mail-Rückruf-Hinweis.
-  return json({ jobId, slug, callToken: callConsent ? callToken : null }, 202, origin);
+  return json({ jobId, slug }, 202, origin);
 });

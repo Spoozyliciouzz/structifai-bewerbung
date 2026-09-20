@@ -28,3 +28,12 @@ test("buildSiteData mappt LLM-Fit + Profil zu PII-freiem SiteData", () => {
   expect(sd.cases[1]!.url).toBeUndefined();
   expect(JSON.stringify(sd)).not.toMatch(/email|phone|firstName/i);
 });
+
+test("Widget-Key kommt validiert ins SiteData, Müll bleibt draußen", () => {
+  const base = { company: "X", title: "Y", profile: PROFILE, fitDimensions: [] };
+  expect(buildSiteData({ ...base, widgetKey: "wgt_AbC123xyz" }).voice).toEqual({ widget_key: "wgt_AbC123xyz" });
+  expect(buildSiteData({ ...base, widgetKey: "" }).voice).toBeUndefined();
+  expect(buildSiteData({ ...base, widgetKey: "<script>" }).voice).toBeUndefined();
+  expect(buildSiteData({ ...base, widgetKey: null }).voice).toBeUndefined();
+  expect(buildSiteData(base).voice).toBeUndefined();
+});

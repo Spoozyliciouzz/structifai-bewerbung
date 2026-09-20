@@ -1,17 +1,12 @@
 /**
  * Pure Validierungs-Helfer — keine Runtime-Deps, von Deno (Edge) und Bun (Tests)
- * importierbar. Einzige Quelle für Email-/E.164-/Slug-Regeln (kein Duplikat im Orchestrator).
+ * importierbar. Einzige Quelle für Email-/Slug-Regeln (kein Duplikat im Orchestrator).
  */
 
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const E164_RE = /^\+[1-9]\d{7,14}$/;
 
 export function isEmail(s: string): boolean {
   return EMAIL_RE.test(s.trim());
-}
-
-export function isE164(s: string): boolean {
-  return E164_RE.test(s.trim());
 }
 
 /** Domain-Teil einer Email, lowercased. "" wenn ungültig. */

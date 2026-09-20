@@ -53,6 +53,8 @@ export interface SiteData {
   cases: SiteCase[];
   /** Nur gesetzt, wenn die Bewerbung eine freigegebene Seite hat. */
   page?: ApplicationPage;
+  /** Famulor-Web-Widget dieser Bewerbung. Fehlt ⇒ Voice-Karte ohne Aktion. */
+  voice?: { widget_key: string };
 }
 
 interface ProfileSystem {
@@ -79,6 +81,8 @@ interface BuildArgs {
   fitDimensions: DimensionScore[];
   /** Freigegebener Seiteninhalt der Bewerbung, roh aus jsonb. */
   page?: unknown;
+  /** Public Widget-Key aus bw_applications.famulor_widget_key; null/leer ⇒ kein Widget. */
+  widgetKey?: string | null;
 }
 
 // ── Aufbereitung des freigegebenen Seiteninhalts ─────────────────────────────
@@ -180,10 +184,18 @@ function coercePage(raw: unknown): ApplicationPage | undefined {
   });
 }
 
+/** Famulor-Widget-Keys: `wgt_` + URL-sichere Zeichen. Alles andere ⇒ kein Widget. */
+const WIDGET_KEY_RE = /^wgt_[A-Za-z0-9_-]{8,80}$/;
+
+function widgetKey(v: string | null | undefined): string | undefined {
+  return typeof v === "string" && WIDGET_KEY_RE.test(v) ? v : undefined;
+}
+
 /** Baut SiteData aus verifiziertem Profil + LLM-Fit. Scores werden geklemmt, Gesamt berechnet. */
 export function buildSiteData(a: BuildArgs): SiteData {
   const dims = a.fitDimensions.map((d) => ({ label: String(d.label).slice(0, 80), score: coerceScore(d.score) }));
   const page = coercePage(a.page);
+  const key = widgetKey(a.widgetKey);
   return {
     company: a.company,
     title: a.title,
@@ -199,5 +211,6 @@ export function buildSiteData(a: BuildArgs): SiteData {
       ...(s.image ? { image: s.image } : {}),
     })),
     ...(page ? { page } : {}),
+    ...(key ? { voice: { widget_key: key } } : {}),
   };
 }

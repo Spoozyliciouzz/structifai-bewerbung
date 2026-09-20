@@ -110,6 +110,37 @@ async function rest(
   return text ? (JSON.parse(text) as unknown) : null;
 }
 
+interface FamulorIds {
+  assistant_id: string | null;
+  widget_key: string | null;
+}
+
+/**
+ * Liest `voice.famulor` streng: fehlt der Block ganz, gibt es kein Widget (beide `null`).
+ * Ist er da, aber falsch geformt — kein Objekt, oder eine gesetzte ID ist kein nicht-leerer
+ * String —, wird abgebrochen statt still `null` zu schreiben; sonst deaktiviert ein Tippfehler
+ * das Widget kommentarlos beim nächsten Seed.
+ */
+function parseFamulor(voice: Record<string, unknown>): FamulorIds {
+  const f = voice.famulor;
+  if (f === undefined) return { assistant_id: null, widget_key: null };
+  if (!isRecord(f)) fail("`voice.famulor` muss ein Objekt sein (assistant_id/widget_key).");
+
+  const assistantId = f.assistant_id;
+  const widgetKey = f.widget_key;
+  if (assistantId !== undefined && (typeof assistantId !== "string" || !assistantId.trim())) {
+    fail("`voice.famulor.assistant_id` muss ein nicht-leerer String sein.");
+  }
+  if (widgetKey !== undefined && (typeof widgetKey !== "string" || !widgetKey.trim())) {
+    fail("`voice.famulor.widget_key` muss ein nicht-leerer String sein.");
+  }
+
+  return {
+    assistant_id: typeof assistantId === "string" ? assistantId.trim() : null,
+    widget_key: typeof widgetKey === "string" ? widgetKey.trim() : null,
+  };
+}
+
 async function main(): Promise<void> {
   const filePath = process.argv[2];
   if (!filePath) fail("Aufruf: bun run seed:application <datei.json> [--release]");
@@ -117,6 +148,7 @@ async function main(): Promise<void> {
 
   const raw: unknown = await Bun.file(filePath).json();
   const app = parseApplication(raw);
+  const famulor = parseFamulor(app.voice);
 
   const base = env("SUPABASE_URL");
   const key = env("SUPABASE_SERVICE_ROLE_KEY");
@@ -159,6 +191,8 @@ async function main(): Promise<void> {
     job_url: app.job_url ?? null,
     job_source_id: app.job_source_id ?? null,
     enrich_domain: app.enrich_domain ?? null,
+    famulor_assistant_id: famulor.assistant_id,
+    famulor_widget_key: famulor.widget_key,
   };
   const metadataDarfSchreiben = !current || current.status !== "released" || release;
 
@@ -182,6 +216,9 @@ async function main(): Promise<void> {
 
   // 3) Inhaltsversion anlegen, falls sie noch nicht existiert.
   if (!existing) {
+    // Stammdaten ≠ Inhaltsversion (0007): die Famulor-IDs leben in bw_applications
+    // (oben in `metadata`), nicht dupliziert in der versionierten Inhalts-Spalte.
+    const { famulor: _famulor, ...voiceContent } = app.voice;
     await rest(base, key, "bw_application_content", {
       method: "POST",
       prefer: "return=minimal",
@@ -189,7 +226,7 @@ async function main(): Promise<void> {
         application_id: app.id,
         version: app.version,
         page: app.page,
-        voice: app.voice,
+        voice: voiceContent,
         released_at: release ? new Date().toISOString() : null,
       },
     });

@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test";
-import { isEmail, isE164, emailDomain, makeSlug, timingSafeEqual } from "../pipeline/lib/validate.ts";
+import { isEmail, emailDomain, makeSlug, timingSafeEqual } from "../pipeline/lib/validate.ts";
 
 test("isEmail", () => {
   expect(isEmail("founder@strategyframe.ai")).toBe(true);
@@ -7,13 +7,6 @@ test("isEmail", () => {
   expect(isEmail("nope")).toBe(false);
   expect(isEmail("a@b")).toBe(false);
   expect(isEmail("a b@c.de")).toBe(false);
-});
-
-test("isE164", () => {
-  expect(isE164("+4915112345678")).toBe(true);
-  expect(isE164("015112345678")).toBe(false);   // ohne +
-  expect(isE164("+0123")).toBe(false);            // führende 0 nach +
-  expect(isE164("+49")).toBe(false);              // zu kurz
 });
 
 test("emailDomain", () => {

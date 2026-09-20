@@ -12,7 +12,7 @@ Sekundär: Dennis Benter selbst — die Seite ist seine Bewerbung; jede Design- 
 
 ## Product Purpose
 
-Eine Bewerbung, die **das Produkt ist, nicht beschreibt**. Der Empfänger gibt auf `bewerbung.structifai.de` seine Email ein, sieht einem Agenten live beim Bauen zu (Realtime-Konsole) und erhält in <60s eine frisch gerenderte, auf ihn zugeschnittene Bewerbungsseite per Mail; optional ruft danach ein KI-Voice-Agent an und schließt den Loop. Drei Modalitäten (Web → Mail → Telefon), eine Pipeline, solo gebaut. Erfolg = der Aha-Moment beim Founder plus ein Code-Review-fähiges öffentliches Repo (RLS, DSGVO, Trust-Boundaries), das die Behauptung beweist.
+Eine Bewerbung, die **das Produkt ist, nicht beschreibt**. Der Empfänger gibt auf `bewerbung.structifai.de` seine Email ein, sieht einem Agenten live beim Bauen zu (Realtime-Konsole) und erhält in <60s eine frisch gerenderte, auf ihn zugeschnittene Bewerbungsseite per Mail — mit einem eigenen KI-Sprachassistenten (Famulor-Widget) direkt auf der Seite. Drei Modalitäten (Web → Mail → Sprachassistent), eine Pipeline, solo gebaut. Erfolg = der Aha-Moment beim Founder plus ein Code-Review-fähiges öffentliches Repo (RLS, DSGVO, Trust-Boundaries), das die Behauptung beweist.
 
 ## Brand Personality
 

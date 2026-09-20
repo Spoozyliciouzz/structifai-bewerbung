@@ -31,10 +31,10 @@
     },
     {
       "name": "Automatisierte Bewerbung mit KI-Assistent",
-      "icon": "📞",
+      "icon": "🎙️",
       "kind": "voice",
-      "one": "Diese Bewerbung selbst: Inhalte liegen als freigegebene Version in Postgres, die Seite wird einmal daraus gerendert und statisch ausgeliefert. Derselbe freigegebene Stand versorgt den Sprachassistenten am Telefon — er kann nichts sagen, was nicht auch hier steht.",
-      "stack": "Twilio ConversationRelay · Claude Sonnet · ElevenLabs (DE) · Supabase Edge"
+      "one": "Diese Bewerbung selbst: Inhalte liegen als freigegebene Version in Postgres, die Seite wird einmal daraus gerendert und statisch ausgeliefert. Derselbe freigegebene Stand versorgt den Sprachassistenten im Browser — er kann nichts sagen, was nicht auch hier steht.",
+      "stack": "Famulor Web-Widget · Claude · Supabase Edge"
     },
     {
       "name": "Reisekosten-Automatisierung",

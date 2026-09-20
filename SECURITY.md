@@ -7,7 +7,7 @@ Security-Theater). Sie wird bei Abweichung korrigiert.
 
 ## Trust-Boundary
 Alles, was via Tool gefetcht oder eingegeben wird — Enrich-HTML, gescrapter Job-Text, Email,
-Telefon — ist **untrusted DATEN**. Niemals Instruktion, niemals Code.
+Sprachassistent-Transkript — ist **untrusted DATEN**. Niemals Instruktion, niemals Code.
 
 ## Kontrollen
 
@@ -19,7 +19,7 @@ Telefon — ist **untrusted DATEN**. Niemals Instruktion, niemals Code.
 | RLS-Bypass | Service-Role-Key nur in Function-Secrets, nie Client/Repo |
 | Storage-Manipulation | `sites`/`cache` nur Service-Role schreibbar; `cache` privat (kein public read) |
 | Endpoint-Missbrauch (Mail-Spam) | Server-Token/Proof-of-Work + Rate-Limit (IP/Domain) + eine Bewerbung pro Email; CORS auf structifai.de |
-| Voice-Abuse (fremde Anrufe) | Anruf nur bei Email-Domain-Allowlist **oder** Server-Token; nie rein client-getriggert; Spend-Caps |
+| Voice-Missbrauch | Widget nur auf `/b/*`, ein Assistent je Bewerbung, Prompt nur aus dem Generator; kein REST-Zugriff auf Famulor möglich (Plan ohne API) |
 | Secret-Leak via Git | `.gitignore` für `.env*`, `scraper/.auth/`, `cache/`; nur `.env.example` committed; History secret-frei |
 | Repo-Integrität | Branch-Protection auf `main`, keine Collaborators, Secret-Scanning + Push-Protection |
 
@@ -27,4 +27,5 @@ Telefon — ist **untrusted DATEN**. Niemals Instruktion, niemals Code.
 Sicherheitslücken bitte vertraulich an **d.benter@djwcapitalmanagement.de**.
 
 ## Out of Scope
-Kein Login/Account, kein Multi-User. Voice-Anruf ist Opt-in und domain-gegatet. Kein Tracking.
+Kein Login/Account, kein Multi-User. Der Sprachassistent läuft als Widget, von der Besucherin
+selbst gestartet — kein Anruf, kein Consent-Gate nötig. Kein Tracking.

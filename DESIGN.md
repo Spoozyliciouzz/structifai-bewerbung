@@ -122,7 +122,7 @@ Eine Committed-Dark-Palette: Navy ist der Raum, Gold ist die einzige Stimme, zwe
 - **Label** (400, 0.78rem, letter-spacing 0.06em, UPPERCASE, Gold): Kicker, Sektions-Nummern, Stage-Namen, Pills. Untergrenze 0.62rem (Tech-Karten-Kategorie) — nicht weiter verkleinern.
 
 ### Named Rules
-**The Machine-Speaks-Mono Rule.** Alles, was die Pipeline sagt (Stages, Status, Notes, Engine-Zeile, Telefon-Hinweis), steht in IBM Plex Mono. Alles, was der Mensch sagt, in Playfair/Inter. Nie mischen.
+**The Machine-Speaks-Mono Rule.** Alles, was die Pipeline sagt (Stages, Status, Notes, Engine-Zeile, Sprachassistent-Hinweis), steht in IBM Plex Mono. Alles, was der Mensch sagt, in Playfair/Inter. Nie mischen.
 
 ## 4. Elevation
 

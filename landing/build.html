@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://hhxwojewbtegovzdxpfw.supabase.co wss://hhxwojewbtegovzdxpfw.supabase.co">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://app.famulor.io; connect-src 'self' https://hhxwojewbtegovzdxpfw.supabase.co wss://hhxwojewbtegovzdxpfw.supabase.co https://app.famulor.io; frame-src https://app.famulor.io">
 <title>Bewerbung — Dennis Benter</title>
 <meta name="description" content="Personalisierte Bewerbungsseite — live gebaut.">
 <meta name="robots" content="noindex">
@@ -184,7 +184,7 @@
   .voice-hero{position:relative;aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;
     border-bottom:1px solid #cead6033;overflow:hidden;background:
       radial-gradient(120px 120px at 50% 45%,#cead6022,transparent)}
-  /* big pulsing phone = the call trigger */
+  /* mic ring = widget trigger */
   .voice-hero .ring{width:92px;height:92px;border-radius:50%;display:flex;align-items:center;justify-content:center;
     font-size:2.6rem;background:#cead601a;border:2px solid var(--gold);color:var(--ink);padding:0;
     box-shadow:0 0 0 0 #cead6055;animation:vpulse 2.2s ease-out infinite;z-index:1;
@@ -195,6 +195,8 @@
   .voice-hero button.ring:disabled{cursor:default;animation:none;opacity:.85}
   @keyframes vpulse{0%{box-shadow:0 0 0 0 #cead6055}70%{box-shadow:0 0 0 22px #cead6000}100%{box-shadow:0 0 0 0 #cead6000}}
   .voice-hero .ring.nopulse{animation:none}
+  .voice-hero.widget{aspect-ratio:9/16;margin:0 auto;padding:0;border-radius:20px;overflow:hidden}
+  .voice-hero.widget .wave{display:none}
 
   /* icon-style slide (folded into gallery) */
   .gcard.iconcard{background:var(--card);border-color:var(--line);position:relative}
@@ -214,7 +216,6 @@
   .wave i:nth-child(4){animation-delay:.36s}.wave i:nth-child(5){animation-delay:.48s}
   .wave i:nth-child(6){animation-delay:.30s}.wave i:nth-child(7){animation-delay:.18s}
   @keyframes wv{0%,100%{height:8px}50%{height:34px}}
-  .cta-note{color:var(--muted);font-size:.88rem;min-height:1.1em}
   .voice-hint{color:var(--muted);font-size:.9rem;margin-top:auto;
     border:1px dashed var(--line);border-radius:10px;padding:10px 13px;background:#0e121b66}
 
@@ -449,14 +450,9 @@
         <span class="tone">Live-Fortschritt dieser Seite</span>
       </div>
       <div class="tcard">
-        <span class="tcat">Telefonie</span>
-        <span class="tname">Twilio ConversationRelay</span>
-        <span class="tone">Telefonie + STT/TTS für den KI-Anruf</span>
-      </div>
-      <div class="tcard">
-        <span class="tcat">Stimme</span>
-        <span class="tname">ElevenLabs / Google TTS</span>
-        <span class="tone">deutsche Sprachsynthese</span>
+        <span class="tcat">Sprachassistent</span>
+        <span class="tname">Famulor Web-Widget</span>
+        <span class="tone">Voice + Chat im Browser (STT/TTS/LLM)</span>
       </div>
       <div class="tcard">
         <span class="tcat">Zustellung</span>
@@ -489,7 +485,7 @@
 
   <footer>
     <p>Dennis Benter · <a href="mailto:d.benter@djwcapitalmanagement.de">d.benter@djwcapitalmanagement.de</a></p>
-    <p>Web · Mail · Telefon — eine Pipeline, solo gebaut.</p>
+    <p>Web · Mail · Sprachassistent — eine Pipeline, solo gebaut.</p>
   </footer>
 </main>
 
@@ -500,9 +496,24 @@ const CONFIG = {
   anonKey:     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeHdvamV3YnRlZ292emR4cGZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MDEzMTMsImV4cCI6MjA5NDA3NzMxM30.JbekGiW57qaICDdhg5NMFJ91zmT5grRdRw1xPsXRBNQ",   // ← Anon/Publishable-Key wird beim Deploy eingetragen ⇒ schaltet Realtime frei.
                      //   Leer ⇒ Realtime aus, JSON-Polling-Fallback übernimmt (Build wird trotzdem fertig).
   storageBase: "https://hhxwojewbtegovzdxpfw.supabase.co/storage/v1/object/public/bw-sites",
-  callEndpoint:"https://hhxwojewbtegovzdxpfw.supabase.co/functions/v1/request-call",
 };
 const SUPABASE_JS = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
+const FAMULOR_WIDGET_JS = "https://app.famulor.io/widget.js";
+/** Loader-API: primär window.OurAiCallingWidget (Snippet-Name), window.FamulorWidget ist Alias. */
+function widgetApi(){
+  const a = window.OurAiCallingWidget || window.FamulorWidget;
+  return (a && typeof a.boot === "function") ? a : null;
+}
+/** Lädt widget.js einmalig; löst auf, sobald die Loader-API verfügbar ist. */
+function loadFamulorWidget(){
+  return new Promise((resolve,reject)=>{
+    if(widgetApi()) return resolve();
+    const s=document.createElement("script"); s.src=FAMULOR_WIDGET_JS; s.async=true;
+    s.onload=()=>{ if(widgetApi()) resolve(); else reject(new Error("widget api")); };
+    s.onerror=()=>reject(new Error("widget load"));
+    document.head.appendChild(s);
+  });
+}
 
 const $ = (id) => document.getElementById(id);
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -798,7 +809,7 @@ function buildVisualSlide(c){
   return card;
 }
 
-function buildVoiceSlide(c){
+function buildVoiceSlide(c, widgetKey){
   const card = el("div","gcard voice");
   const hero = el("div","voice-hero");
   const wave = el("div","wave");
@@ -806,67 +817,78 @@ function buildVoiceSlide(c){
 
   const body = el("div","body");
   const head = el("div"); head.style.display="flex"; head.style.alignItems="center"; head.style.gap="10px";
-  head.appendChild(txt(el("span","gicon"), (c && c.icon) || "📞"));
+  head.appendChild(txt(el("span","gicon"), (c && c.icon) || "🎙️"));
   head.appendChild(txt(el("span","gname"), c && c.name));
   body.appendChild(head);
   body.appendChild(txt(el("p","gone"), c && c.one));
 
-  // The phone IS the trigger when a call token is present in live mode.
-  const callToken = (LIVE && jobId) ? localStorage.getItem("ct:" + jobId) : null;
-  const ring = el(callToken ? "button" : "div", "ring");
+  // Der Ring IST der Auslöser, sobald die Bewerbung ein Famulor-Widget hat (Site-JSON voice.widget_key).
+  // Gleicher Pfad für Live- und Statik-Ansicht — es gibt nur diesen einen.
+  const key = (typeof widgetKey === "string" && /^wgt_[A-Za-z0-9_-]{8,80}$/.test(widgetKey)) ? widgetKey : "";
+  const ring = el(key ? "button" : "div", "ring");
   if(REDUCED) ring.classList.add("nopulse");
-  ring.textContent = "📞";
+  ring.textContent = "🎙️";
   hero.appendChild(ring);
   hero.appendChild(wave);
   card.appendChild(hero);
 
-  if(LIVE && callToken){
-    // clickable / keyboard-activatable phone trigger
+  if(key){
     ring.type = "button";
-    ring.setAttribute("aria-label","Rückruf auslösen — Dennis' KI ruft dich an");
-    const note = el("div","cta-note"); note.setAttribute("role","status");
+    ring.setAttribute("aria-label","Mit Dennis' KI sprechen — im Browser, kein Telefon nötig");
     const label = el("div","voice-hint");
-    label.textContent = "Jetzt live ausprobieren — tippen, und Dennis' KI ruft dich an.";
-    ring.addEventListener("click", ()=> triggerCall(ring, label, note, callToken));
-    body.appendChild(note);
+    label.setAttribute("role","status");
+    label.textContent = "Tippen und mit Dennis' KI sprechen — im Browser, kein Telefon nötig.";
+    ring.addEventListener("click", ()=> mountWidget(key, hero, ring, label));
     body.appendChild(label);
-  } else if(LIVE){
-    // live but no token: pulsing phone, no call action — just the hint
-    const hint = el("div","voice-hint");
-    hint.textContent = "Tipp: Dennis Rückrufnummer steht in der Email, die du gerade erhalten hast.";
-    body.appendChild(hint);
   }
-  // static mode: phone + name + one only, no action/hint (handled by LIVE checks above)
   card.appendChild(body);
   return card;
 }
 
-async function triggerCall(ring, label, note, callToken){
-  ring.disabled = true; ring.classList.add("nopulse"); note.textContent = "";
-  label.textContent = "Verbinde…";
+async function mountWidget(key, hero, ring, label){
+  if(hero.dataset.mounting === "1") return;   // Doppelklick: nur ein Boot pro Karte
+  hero.dataset.mounting = "1";
+  ring.disabled = true; ring.classList.add("nopulse");
+  label.textContent = "Assistent wird geladen…";
   try{
-    const res = await fetch(CONFIG.callEndpoint, {
-      method:"POST", headers:{"content-type":"application/json"},
-      body: JSON.stringify({ jobId, callToken })
+    await loadFamulorWidget();
+    // mountInline (widget.js) übernimmt max-width/border-radius NUR, wenn die Inline-Styles des
+    // Host-Elements noch leer sind (Check läuft auf hero.style.*, nicht auf berechnete Werte) —
+    // vorab setzen, sonst gewinnt beim Boot Famulors Default (420px breit) statt unserer 9/16-Karte.
+    hero.style.maxWidth = "360px";
+    hero.style.borderRadius = "20px";
+
+    // boot() fetcht die Config async und liefert kein Promise — mountInline leert das Host-Element
+    // erst GENAU beim Einsetzen des iframes (Fetch erfolgreich). Ein MutationObserver meldet das
+    // zuverlässig, egal ob es vor oder erst nach dem 6s-Fallback unten passiert (späte Config-Antwort
+    // korrigiert die Karte dann selbst — der Observer bleibt deshalb auch nach dem Timeout aktiv).
+    let mounted = false;
+    const observer = new MutationObserver(()=>{
+      if(!hero.querySelector("iframe")) return;
+      mounted = true;
+      hero.classList.add("widget");
+      // Ring existiert nach dem Mount meist gar nicht mehr (Host wurde geleert) — harmlos, falls doch.
+      ring.disabled = true; ring.classList.add("nopulse");
+      label.textContent = "Mikrofon freigeben, dann einfach losreden. Chat geht auch.";
+      observer.disconnect();
     });
-    if(res.ok){
-      const body = await res.json().catch(()=>({}));
-      if(body && body.ok){
-        ring.textContent = "📞";
-        label.textContent = "📞 Dein Telefon klingelt gleich…";
-        localStorage.removeItem("ct:" + jobId);
-        return;
-      }
-      throw new Error("notok");
-    }
-    if(res.status === 429){
-      ring.disabled=false; ring.classList.remove("nopulse");
-      label.textContent = "Schon ausgelöst."; return;
-    }
-    throw new Error("http"+res.status);
+    observer.observe(hero, { childList:true, subtree:true });
+
+    widgetApi().boot(key, hero);
+
+    setTimeout(()=>{
+      if(mounted) return;   // schon gemountet, bevor die 6s um waren — nichts zu tun
+      hero.classList.remove("widget");
+      ring.disabled = false; ring.classList.remove("nopulse");
+      label.textContent = "Assistent gerade nicht erreichbar — der Kontakt steht unten auf der Seite.";
+      hero.dataset.mounting = "";
+      // Observer bewusst NICHT disconnecten — ein späterer Mount soll sich selbst korrigieren können.
+    }, 6000);
   }catch(_){
+    hero.classList.remove("widget");
     ring.disabled = false; ring.classList.remove("nopulse");
-    label.textContent = "Hat nicht geklappt — ruf die Nummer aus der Mail an.";
+    label.textContent = "Assistent gerade nicht erreichbar — der Kontakt steht unten auf der Seite.";
+    hero.dataset.mounting = "";
   }
 }
 
@@ -884,8 +906,8 @@ function buildIconSlide(c){
   return card;
 }
 
-function buildSlide(c){
-  if(c && c.kind === "voice") return buildVoiceSlide(c);
+function buildSlide(c, widgetKey){
+  if(c && c.kind === "voice") return buildVoiceSlide(c, widgetKey);
   if(c && c.kind === "icon")  return buildIconSlide(c);
   return buildVisualSlide(c);   // default: visual
 }
@@ -909,6 +931,7 @@ function goTo(i){
 }
 
 function renderGallery(data){
+  const widgetKey = (data && data.voice && typeof data.voice.widget_key === "string") ? data.voice.widget_key : "";
   const cases  = (data && Array.isArray(data.cases)) ? data.cases : [];
   const voice  = cases.filter(c=> c && c.kind === "voice");
   const visual = cases.filter(c=> c && c.kind === "visual");
@@ -926,7 +949,7 @@ function renderGallery(data){
   slides.forEach((c,i)=>{
     const slideEl = el("div","slide");
     slideEl.setAttribute("role","group");
-    slideEl.appendChild(buildSlide(c));
+    slideEl.appendChild(buildSlide(c, widgetKey));
     track.appendChild(slideEl);
 
     const dot = el("button","gdot"); dot.type="button";

@@ -25,11 +25,9 @@
     font-size:1.02rem}
   form{margin:30px 0 0;display:flex;flex-direction:column;gap:14px}
   label{font-size:.85rem;color:var(--muted);display:block;margin-bottom:6px}
-  input[type=email],input[type=tel],input[type=text]{width:100%;background:var(--navy-2);border:1px solid var(--line);
+  input[type=email],input[type=text]{width:100%;background:var(--navy-2);border:1px solid var(--line);
     color:var(--ink);border-radius:10px;padding:13px 14px;font-size:1rem;font-family:inherit}
   input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-  .row-check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;color:var(--muted)}
-  .row-check input{margin-top:4px;accent-color:var(--gold);width:18px;height:18px}
   .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
   button{background:var(--gold);color:#1a1407;border:0;border-radius:10px;padding:14px 18px;
     font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .12s ease,filter .12s ease}
@@ -54,7 +52,6 @@
   .reveal h2{font-family:"Playfair Display",serif;margin:0 0 8px}
   .reveal a.cta{display:inline-block;margin-top:14px;background:var(--gold);color:#1a1407;
     padding:12px 20px;border-radius:9px;text-decoration:none;font-weight:600}
-  .reveal .phone{margin-top:14px;color:var(--gold);font-family:"IBM Plex Mono",monospace;font-size:.85rem}
   footer{margin-top:54px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
   footer a{color:var(--muted)}
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -79,26 +76,12 @@
       <input id="email" type="email" autocomplete="email" required placeholder="founder@strategyframe.ai">
     </div>
     <div>
-      <label for="phone">Telefon (optional, für den KI-Anruf · E.164)</label>
-      <input id="phone" type="tel" autocomplete="tel" placeholder="+49…">
-    </div>
-    <div>
       <label for="firstName">Vorname (optional)</label>
       <input id="firstName" type="text" autocomplete="given-name">
     </div>
     <div>
       <label for="role">Rolle (optional)</label>
       <input id="role" type="text" placeholder="z. B. CFO, Head of Sales">
-    </div>
-    <div>
-      <label for="iceCream">Lieblingseis (optional)</label>
-      <input id="iceCream" type="text" placeholder="optional, für den Anruf">
-    </div>
-    <div class="row-check">
-      <input id="consent" type="checkbox">
-      <label for="consent" style="margin:0">Ja, ein KI-Agent darf mich einmalig anrufen, um den Loop
-      zu schließen. Er identifiziert sich sofort als KI im Auftrag von Dennis Benter. (Einwilligung
-      nach UWG §7, jederzeit widerrufbar.)</label>
     </div>
     <input class="hp" id="company_url" name="company_url" tabindex="-1" autocomplete="off" aria-hidden="true">
     <button id="submit" type="submit">Pipeline live erleben</button>
@@ -111,15 +94,14 @@
     <h2>Fertig.</h2>
     <p id="reveal-text">Ihre Bewerbungsseite ist gebaut und unterwegs in Ihr Postfach.</p>
     <a class="cta" id="reveal-link" href="#" target="_blank" rel="noopener">Seite öffnen →</a>
-    <div class="phone" id="reveal-phone" hidden>📞 Ihr Telefon klingelt gleich.</div>
-    <p class="mono" style="margin-top:18px">Web · Mail · Telefon — eine Pipeline, solo gebaut.</p>
+    <p class="mono" style="margin-top:18px">Web · Mail · Sprachassistent — eine Pipeline, solo gebaut.</p>
   </section>
 
   <footer>
     <p>Dennis Benter · <a href="mailto:d.benter@djwcapitalmanagement.de">d.benter@djwcapitalmanagement.de</a></p>
     <p>Ihre Daten werden ausschließlich zur einmaligen Auslieferung dieser Bewerbung verarbeitet und
     innerhalb von 24 Stunden gelöscht. <a href="#datenschutz">Datenschutz</a>.
-    Auftragsverarbeiter: Supabase, Resend, Anthropic, Vapi, ElevenLabs, Deepgram.</p>
+    Auftragsverarbeiter: Supabase, Resend, Anthropic, Famulor.</p>
   </footer>
 </main>
 
@@ -149,14 +131,14 @@ function currentApplicationId(){
 const STAGES = ["enrich","scrape","extract","match","generate","deploy","email"];
 const LABELS = {
   enrich:"enrich", scrape:"scrape", extract:"extract", match:"match",
-  generate:"generate", deploy:"deploy", email:"email", call:"call",
+  generate:"generate", deploy:"deploy", email:"email",
 };
 const $ = (id) => document.getElementById(id);
 const consoleEl = $("console"), revealEl = $("reveal"), errEl = $("error");
 
-function buildConsole(withCall) {
+function buildConsole() {
   consoleEl.innerHTML = "";
-  const list = withCall ? [...STAGES, "call"] : STAGES;
+  const list = STAGES;
   for (const s of list) {
     const row = document.createElement("div");
     row.className = "stage"; row.id = "stage-" + s;
@@ -186,17 +168,16 @@ async function solvePow(email){
 }
 
 // ── Simulation (kein Backend konfiguriert) ────────────────────────────────────
-async function simulate(withCall){
+async function simulate(){
   const notes={enrich:"strategyframe.ai",scrape:"job-4428605958",extract:"7 Anforderungen",
-    match:"Track-Record",generate:"Sonnet · 1 Runde",deploy:"/b/demo",email:"Resend",call:"Vapi · DE"};
-  const list=withCall?[...STAGES,"call"]:STAGES;
+    match:"Track-Record",generate:"Sonnet · 1 Runde",deploy:"/b/demo",email:"Resend"};
+  const list=STAGES;
   for(const s of list){ setStage(s,notes[s],false); await new Promise(r=>setTimeout(r,650+Math.random()*500)); setStage(s,notes[s],true);}
-  showReveal(CONFIG.resultBase+"/demo", withCall);
+  showReveal(CONFIG.resultBase+"/demo");
 }
 
-function showReveal(url, withCall){
+function showReveal(url){
   $("reveal-link").href=url;
-  if(withCall){ $("reveal-phone").hidden=false; }
   revealEl.classList.add("show");
   revealEl.scrollIntoView({block:"nearest"});
 }
@@ -216,11 +197,8 @@ function loadSupabase(){
 async function realtime(payload){
   const res = await fetch(CONFIG.endpoint, {method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});
   if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(mapErr(e.error||res.status)); }
-  const {jobId, slug, callToken} = await res.json();
+  const {jobId, slug} = await res.json();
 
-  // callToken via localStorage an den Live-Tab übergeben (sessionStorage ist NICHT
-  // über window.open hinweg geteilt — daher localStorage, keyed auf jobId).
-  if(callToken) localStorage.setItem("ct:" + jobId, callToken);
   const liveUrl = `/b/${slug}?live=1&job=${jobId}`;
   window.open(liveUrl, "_blank", "noopener");
 
@@ -234,14 +212,13 @@ function showLiveOpened(url){
   link.href = url;            // echtes Ziel → Tab geschlossen? hier wieder öffnen
   link.hidden = false;
   link.textContent = "Seite wieder öffnen →";
-  $("reveal-phone").hidden = true;
   document.querySelector("#reveal h2").textContent = "Läuft.";
   $("reveal-text").textContent = "Deine Live-Bewerbung läuft in einem neuen Tab. Tab geschlossen? Hier zurück:";
   revealEl.classList.add("show");
   revealEl.scrollIntoView({block:"nearest"});
   $("submit").disabled = false; $("submit").textContent = "Pipeline live erleben";
 }
-function mapErr(c){return {email:"Bitte gültige Email eingeben.",phone:"Telefonnummer im Format +49… nötig.",
+function mapErr(c){return {email:"Bitte gültige Email eingeben.",
   rate_limited:"Zu viele Anfragen — bitte später.",already_applied:"Für diese Email läuft bereits eine Bewerbung.",
   pow:"Validierung fehlgeschlagen, bitte neu laden.",rejected:"Anfrage abgelehnt."}[c]||"Unerwarteter Fehler.";}
 
@@ -249,26 +226,20 @@ function mapErr(c){return {email:"Bitte gültige Email eingeben.",phone:"Telefon
 $("form").addEventListener("submit", async (e)=>{
   e.preventDefault(); errEl.textContent="";
   const email=$("email").value.trim();
-  const phone=$("phone").value.trim();
   const firstName=$("firstName").value.trim();
   const role=$("role").value.trim();
-  const iceCream=$("iceCream").value.trim();
-  const consent=$("consent").checked;
   if($("company_url").value) return; // Honeypot
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("Bitte gültige Email eingeben.");
-  if(consent && !/^\+[1-9]\d{7,14}$/.test(phone)) return fail("Für den Anruf bitte Nummer im Format +49… angeben.");
 
   $("submit").disabled=true; $("submit").textContent="Baut…";
 
   try{
     const configured = CONFIG.endpoint && CONFIG.supabaseUrl && CONFIG.anonKey;
-    if(!configured){ buildConsole(consent); await simulate(consent); return; }
+    if(!configured){ buildConsole(); await simulate(); return; }
     const pow = await solvePow(email);
-    const payload = {email, phone:consent?phone:null, callConsent:consent, pow,
-                     applicationId: currentApplicationId()};
+    const payload = {email, pow, applicationId: currentApplicationId()};
     if(firstName) payload.firstName = firstName;
     if(role) payload.role = role;
-    if(iceCream) payload.iceCream = iceCream;
     await realtime(payload);
   }catch(err){ fail(err.message||"Fehler beim Bauen."); }
 });
