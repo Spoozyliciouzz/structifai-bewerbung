@@ -1,34 +1,62 @@
 {
-  "_note": "n=1-Inhalt für genau eine Stellenanzeige. Die 80 % agnostischen Inhalte (Profil, Werdegang, Pilotprojekte, Aussprache) stehen NICHT hier — die kommen aus profile/dennis.json bzw. voice_agent_context. Quelle dieses Entwurfs: structifai-website/docs/scratch/lm-bewerbung/ (Codex, 2026-09-15). Noch nicht freigegeben. Voice-FAQ am 21.09.2026 mit den bestätigten Fakten vom 18.09.2026 (Führung, Budget, Microsoft, Motivation, Verfügbarkeit) zusammengeführt.",
+  "_note": "n=1-Inhalt für genau eine Stellenanzeige. Die 80 % agnostischen Inhalte (Profil, Werdegang, Pilotprojekte, Aussprache) stehen NICHT hier — die kommen aus profile/dennis.json bzw. voice_agent_context. Quelle dieses Entwurfs: structifai-website/docs/scratch/lm-bewerbung/ (Codex, 2026-09-15). Noch nicht freigegeben. Voice-FAQ am 21.09.2026 mit den bestätigten Fakten vom 18.09.2026 (Führung, Budget, Microsoft, Motivation, Verfügbarkeit) zusammengeführt. v3 (2026-09-23): Texte für Warum/Einbringen/Arbeitsprobe/Gespräch wörtlich aus Codex' Seite (Stand 18.09.) für den Stellenteil im structifai.de-Design.",
   "id": "lm-2786630",
   "company": "LM IT Services AG",
   "role_title": "Head of AI & Processes",
   "job_url": "https://lmit.jobs.personio.com/job/2786630",
   "job_source_id": "2786630",
   "enrich_domain": "lm-ag.de",
-  "version": 2,
+  "version": 3,
   "page": {
     "hero": {
       "eyebrow": "Unternehmerische Verantwortung trifft KI-Praxis",
-      "headline": "KI umsetzen. Menschen mitnehmen. Wirkung skalieren.",
+      "headline": "KI umsetzen.\nMenschen mitnehmen.\nWirkung skalieren.",
       "lead": "Ich verbinde Geschäftsführung, operative Prozesse und die Entwicklung digitaler Anwendungen. Diese Erfahrung möchte ich in die Weiterentwicklung Ihrer AI & Processes Practice einbringen."
     },
     "company_reference": {
       "label": "Der Bezug zu LM",
-      "observation": "LM veröffentlicht ein Kundenbeispiel zur Automatisierung der Fahrtkosten- und Spesenabrechnung.",
+      "observation": "Sie beschreiben einen automatisierten Spesenprozess für einen Dienstleister mit rund 4.500 Beschäftigten: von der Eingabe über die Freigabe bis zur Übergabe ins Personalsystem.",
       "source_url": "https://www.lm-ag.de/prozessautomatisierung/",
       "source_label": "Ihr veröffentlichtes Kundenbeispiel"
     },
     "work_sample": {
       "module": "expense-case",
       "eyebrow": "Ihr Kundenbeispiel. Mein Ansatz zum Ausprobieren.",
-      "headline": "Ein Beleg. Ein klarer Prozess. Die Abrechnung, die dabei herauskommt.",
+      "headline": "Ein Beleg. Ein klarer Prozess.\nDie Abrechnung im Postfach.",
       "sandbox_enabled": false,
-      "sandbox_disabled_reason": "Der Testbereich ist noch nicht eingerichtet. Der Button bleibt bis zur Bereitstellung deaktiviert."
+      "sandbox_disabled_reason": "Der Testbereich ist noch nicht eingerichtet. Der Button bleibt bis zur Bereitstellung deaktiviert.",
+      "lead": "Ihr veröffentlichtes Projekt zur Fahrtkosten- und Spesenabrechnung hat mich besonders angesprochen. An dieser Verbindung aus kaufmännischem Prozess und technischer Umsetzung arbeite ich selbst.",
+      "journey_label": "So ist der Testbereich geplant",
+      "journey": [
+        {
+          "title": "Beleg hochladen",
+          "body": "Ein eigenes Foto oder PDF verwenden. Oder mit vorbereiteten Bahn-, Hotel- und Bewirtungsbelegen starten."
+        },
+        {
+          "title": "Ergebnis prüfen",
+          "body": "Erkannte Angaben mit dem Original vergleichen, korrigieren und fehlende Angaben ergänzen."
+        },
+        {
+          "title": "Perspektive wechseln",
+          "body": "Die Abrechnung einreichen und im selben Testbereich aus Sicht der freigebenden Person prüfen."
+        },
+        {
+          "title": "PDF erhalten",
+          "body": "Die eigene E-Mail-Adresse per Code bestätigen. Die fertige Testabrechnung landet im eigenen Postfach."
+        }
+      ],
+      "note": [
+        "Wie aus einem Beleg eine nachvollziehbare Abrechnung wird: mit sichtbaren Prüfschritten, klarer Zuständigkeit und einem Ergebnis, das Sie selbst in der Hand haben. Sie können auch einen unvollständigen Beleg verwenden und prüfen, welche Angaben ergänzt werden müssen.",
+        "LMs Referenz beschreibt eine SharePoint-basierte Kundenlösung. Diese Arbeitsprobe zeigt meine eigene Anwendung. Sie bildet keine interne LM-Lösung nach und verwendet keine Daten des genannten Kunden."
+      ],
+      "takeaway": {
+        "label": "Die Frage über den Einzelfall hinaus",
+        "text": "Wie wird daraus ein verlässliches Angebot für den nächsten Kunden – mit klaren Zuständigkeiten, wiederverwendbaren Bausteinen und messbarer Entlastung?"
+      }
     },
     "ninety_days": {
       "eyebrow": "Mein Einstieg — Diskussionsgrundlage",
-      "headline": "Erst verstehen. Gemeinsam priorisieren. Dann am Ergebnis lernen.",
+      "headline": "Erst verstehen. Gemeinsam priorisieren.\nDann am Ergebnis lernen.",
       "steps": [
         {
           "range": "01–30",
@@ -83,7 +111,8 @@
     "conversation_starters": [
       "Was übernimmt die KI bei meinem Beleg — und was prüft ein Mensch?",
       "Wie würdest du den Spesenprozess bei weiteren Kunden einführen?",
-      "Welche Erfahrung bringst du im Microsoft-Ökosystem mit?"
+      "Welche Erfahrung bringst du im Microsoft-Ökosystem mit?",
+      "Wie führst du Spezialisten, die fachlich tiefer sind als du?"
     ],
     "sources": [
       {
@@ -104,7 +133,60 @@
         "finding": "Gestuftes Copilot-/Agent-Angebot, darunter Copilot Explorer und Agent Builder",
         "retrieved": "2026-09-15"
       }
-    ]
+    ],
+    "why": {
+      "eyebrow": "Warum diese Aufgabe",
+      "headline": "Viel gesehen. Selbst gebaut.\nJetzt mit einer Mannschaft mehr bewegen.",
+      "body": [
+        "Seit 2008 arbeite ich im Digitalgeschäft, seit 2019 führe ich als Gründer und Co-Geschäftsführer mehrere Gesellschaften parallel – Finance, Controlling, Restrukturierung, Zu- und Verkäufe. In den letzten sechs Monaten bin ich tief in die KI-Technik eingestiegen und habe eigene Anwendungen bis in den Pilotbetrieb gebracht. Ich weiß daher aus beiden Richtungen, wo Prozesse im Unternehmen haken und was Automatisierung dort leisten muss – als Geschäftsführer, der sie verantwortet hat, und als Entwickler, der sie gebaut hat.",
+        "An Ihrer Ausschreibung reizt mich die Logik dahinter: eine bestehende Practice mit Team, Kunden und Portfolio, die über Projekte wächst, die im Kundenbetrieb funktionieren. Ich möchte in einem etablierten Unternehmen größere Vorhaben umsetzen, Lösungen entwickeln, die branchenspezifisch und übergreifend tragen – und das mit einer Mannschaft, die mehr bewegt, als ich es allein kann. Ich glaube, mein Profil passt zu dieser Aufgabe."
+      ],
+      "source_url": "https://lmit.jobs.personio.com/job/2786630",
+      "source_label": "Bezug: Ihre Ausschreibung"
+    },
+    "contributions": {
+      "eyebrow": "Was ich einbringe",
+      "headline": "Verantwortung und Umsetzung\ngehören für mich zusammen.",
+      "items": [
+        {
+          "title": "Kaufmännisch steuern",
+          "body": "Als Gründer und Co-Geschäftsführer verantworte ich gesellschaftsübergreifend 15–20 Mio. € Umsatz, Technik- und Prozessbudgets sowie Finance, Controlling und Restrukturierung."
+        },
+        {
+          "title": "Prozesse greifbar machen",
+          "body": "Ich übersetze fachliche Anforderungen in digitale Anwendungen und begleite den Weg bis zum Einsatz im realen Ablauf."
+        },
+        {
+          "title": "Übertragbarkeit erkennen",
+          "body": "Bei jeder Lösung interessiert mich auch: Was davon lässt sich als Baustein nutzen, und wo braucht der nächste Kunde eine andere Antwort?"
+        }
+      ],
+      "cases": [
+        {
+          "pill": "Pilot · im Feld erprobt",
+          "title": "GartenAIden",
+          "body": "Von einer offenen Gartenanfrage zu einem strukturierten Projektbriefing. Von mir konzipiert und gebaut.",
+          "caption": "Gesprächspunkt: vom Kundenwunsch zum nutzbaren Prozess",
+          "url": "https://structifai.de/gartenaiden/"
+        },
+        {
+          "pill": "Pilotbetrieb",
+          "title": "Documatch",
+          "body": "Dokumentation und Compliance für Elektroprojekte als digitale Anwendung. Von mir konzipiert und umgesetzt.",
+          "caption": "Gesprächspunkt: fachliche Anforderungen in Software übersetzen",
+          "url": "https://structifai.de/documatch/"
+        }
+      ]
+    },
+    "fit_heading": {
+      "eyebrow": "Klartext zu den Punkten, die Sie fragen werden",
+      "headline": "Was belegt ist –\nund was ich noch nicht kann."
+    },
+    "conversation": {
+      "eyebrow": "Die Bewerbung im Gespräch",
+      "headline": "Fragen Sie ruhig\ngenauer nach.",
+      "body": "Mein KI-Assistent soll meine Erfahrung und diese Arbeitsprobe erklären können. Er macht kenntlich, was belegt ist und welche Fragen wir persönlich besprechen sollten."
+    }
   },
   "voice": {
     "intro": "Guten Tag, ich bin der KI-Assistent von Dennis Benter. Ich kann seine Bewerbung als Head of AI & Processes bei LM und die zugehörige Arbeitsprobe erläutern. Welche Frage interessiert Sie?",
