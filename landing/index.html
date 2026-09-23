@@ -1,248 +1,49 @@
 <!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bewerbung als Maschine — Dennis Benter</title>
-<meta name="description" content="Eine Bewerbung, die das Produkt ist, nicht beschreibt. Email rein, Agent baut live, Seite per Mail in unter 60 Sekunden.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --navy:#0e121b;--navy-2:#141a26;--gold:#cead60;--ink:#e8eaf0;--muted:#9aa3b2;
-    --line:#222a38;--ok:#7fd1a3;--err:#e08a8a;--card:#141a26;
-  }
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#16203200,#0e121b),var(--navy);
-    color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:680px;margin:0 auto;padding:56px 22px 90px}
-  .mono{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
-  h1{font-family:"Playfair Display",serif;font-size:clamp(2rem,6vw,3.2rem);line-height:1.08;margin:.35em 0 .25em}
-  .lead{color:var(--muted);font-size:1.08rem;max-width:42ch}
-  .hook{margin:22px 0 8px;padding:16px 18px;border-left:2px solid var(--gold);background:#cead600d;
-    font-size:1.02rem}
-  form{margin:30px 0 0;display:flex;flex-direction:column;gap:14px}
-  label{font-size:.85rem;color:var(--muted);display:block;margin-bottom:6px}
-  input[type=email],input[type=text]{width:100%;background:var(--navy-2);border:1px solid var(--line);
-    color:var(--ink);border-radius:10px;padding:13px 14px;font-size:1rem;font-family:inherit}
-  input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-  button{background:var(--gold);color:#1a1407;border:0;border-radius:10px;padding:14px 18px;
-    font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .12s ease,filter .12s ease}
-  button:hover:not(:disabled){filter:brightness(1.06)}
-  button:active:not(:disabled){transform:translateY(1px)}
-  button:disabled{opacity:.55;cursor:not-allowed}
-  .err{color:var(--err);font-size:.88rem;min-height:1.1em}
-  .console{margin-top:30px;background:#0a0e15;border:1px solid var(--line);border-radius:12px;
-    padding:8px 4px;display:none}
-  .console.show{display:block}
-  .stage{display:flex;align-items:center;gap:12px;padding:9px 16px;font-family:"IBM Plex Mono",monospace;
-    font-size:.86rem;color:var(--muted);opacity:.45;transition:opacity .3s ease,color .3s ease}
-  .stage .dot{width:9px;height:9px;border-radius:50%;background:var(--line);flex:0 0 auto;transition:background .3s}
-  .stage.active{opacity:1;color:var(--ink)}
-  .stage.active .dot{background:var(--gold);box-shadow:0 0 0 4px #cead6022}
-  .stage.done{opacity:1;color:var(--ok)}
-  .stage.done .dot{background:var(--ok)}
-  .stage .note{color:var(--muted);font-size:.78rem;margin-left:auto;text-align:right}
-  .reveal{margin-top:26px;display:none;background:var(--card);border:1px solid var(--line);
-    border-radius:14px;padding:24px}
-  .reveal.show{display:block;animation:fade .5s ease}
-  .reveal h2{font-family:"Playfair Display",serif;margin:0 0 8px}
-  .reveal a.cta{display:inline-block;margin-top:14px;background:var(--gold);color:#1a1407;
-    padding:12px 20px;border-radius:9px;text-decoration:none;font-weight:600}
-  footer{margin-top:54px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
-  footer a{color:var(--muted)}
-  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion: reduce){
-    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dennis Benter · Bewerbung</title>
+  <meta name="description" content="Dennis Benter – Unternehmensführung und eigene KI-Anwendungen. Ankunftsseite für meine Bewerbungen.">
+  <link rel="icon" href="/assets/portrait.webp" type="image/webp">
+  <link rel="preload" href="/assets/fonts/newsreader-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/arrival.js" defer></script>
 </head>
 <body>
-<main class="wrap">
-  <p class="mono">Bewerbung · Chief of Staff</p>
-  <h1>Eine Bewerbung,<br>die sich selbst baut.</h1>
-  <p class="lead">Keine PDF. Sie geben Ihre Email ein, ein Agent baut live, und in unter 60 Sekunden
-  liegt eine auf Sie zugeschnittene Bewerbungsseite in Ihrem Postfach.</p>
-
-  <p class="hook">„Sie haben 30 Berater durch 3 Menschen + 40 Agenten ersetzt — ich baue genau
-  solche Flotten, solo, in Produktion. Das hier ist eine davon, live."</p>
-
-  <form id="form" novalidate>
-    <div>
-      <label for="email">Ihre Email</label>
-      <input id="email" type="email" autocomplete="email" required placeholder="founder@strategyframe.ai">
-    </div>
-    <div>
-      <label for="firstName">Vorname (optional)</label>
-      <input id="firstName" type="text" autocomplete="given-name">
-    </div>
-    <div>
-      <label for="role">Rolle (optional)</label>
-      <input id="role" type="text" placeholder="z. B. CFO, Head of Sales">
-    </div>
-    <input class="hp" id="company_url" name="company_url" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <button id="submit" type="submit">Pipeline live erleben</button>
-    <div class="err" id="error" role="alert"></div>
-  </form>
-
-  <section class="console" id="console" aria-live="polite"></section>
-
-  <section class="reveal" id="reveal">
-    <h2>Fertig.</h2>
-    <p id="reveal-text">Ihre Bewerbungsseite ist gebaut und unterwegs in Ihr Postfach.</p>
-    <a class="cta" id="reveal-link" href="#" target="_blank" rel="noopener">Seite öffnen →</a>
-    <p class="mono" style="margin-top:18px">Web · Mail · Sprachassistent — eine Pipeline, solo gebaut.</p>
-  </section>
-
-  <footer>
-    <p>Dennis Benter · <a href="mailto:d.benter@djwcapitalmanagement.de">d.benter@djwcapitalmanagement.de</a></p>
-    <p>Ihre Daten werden ausschließlich zur einmaligen Auslieferung dieser Bewerbung verarbeitet und
-    innerhalb von 24 Stunden gelöscht. <a href="#datenschutz">Datenschutz</a>.
-    Auftragsverarbeiter: Supabase, Resend, Anthropic, Famulor.</p>
-  </footer>
-</main>
-
-<!-- supabase-js nur im Realtime-Modus nachgeladen (Simulationsmodus braucht es nicht).
-     HÄRTUNG vor Live (§15/§16): self-hosten unter ./vendor/ ODER hier SRI ergänzen —
-     integrity="sha384-…" crossorigin="anonymous" für die GEPINNTE Version berechnen
-     (`openssl dgst -sha384 -binary file | openssl base64 -A`). Floating @2 = kein SRI. -->
-<script>
-// ── CONFIG — leer lassen ⇒ Simulationsmodus (Demo ohne Backend) ──────────────
-const CONFIG = {
-  endpoint:    "https://hhxwojewbtegovzdxpfw.supabase.co/functions/v1/build",
-  supabaseUrl: "https://hhxwojewbtegovzdxpfw.supabase.co",
-  anonKey:     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhoeHdvamV3YnRlZ292emR4cGZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MDEzMTMsImV4cCI6MjA5NDA3NzMxM30.JbekGiW57qaICDdhg5NMFJ91zmT5grRdRw1xPsXRBNQ",   // ← Anon/Publishable-Key eintragen ⇒ schaltet von Simulation auf Live
-  resultBase:  "https://bewerbung.structifai.de/b",
-  // Welche Bewerbung gebaut wird. Über ?a=<slug> je Aufruf überschreibbar, damit dieselbe
-  // Seite mehrere Stellen bedienen kann. Ohne diesen Wert weist der Build jede Einreichung
-  // mit 400 ab — er hat bewusst keinen Standard auf irgendeine Firma.
-  applicationId: "lm-2786630",
-};
-
-/** Bewerbung aus der Adresszeile, sonst die konfigurierte. Form prüft der Server erneut. */
-function currentApplicationId(){
-  const p = new URLSearchParams(location.search).get("a");
-  return (p && /^[a-z0-9][a-z0-9-]{1,62}$/.test(p)) ? p : CONFIG.applicationId;
-}
-
-const STAGES = ["enrich","scrape","extract","match","generate","deploy","email"];
-const LABELS = {
-  enrich:"enrich", scrape:"scrape", extract:"extract", match:"match",
-  generate:"generate", deploy:"deploy", email:"email",
-};
-const $ = (id) => document.getElementById(id);
-const consoleEl = $("console"), revealEl = $("reveal"), errEl = $("error");
-
-function buildConsole() {
-  consoleEl.innerHTML = "";
-  const list = STAGES;
-  for (const s of list) {
-    const row = document.createElement("div");
-    row.className = "stage"; row.id = "stage-" + s;
-    row.innerHTML = `<span class="dot"></span><span>${LABELS[s]}</span><span class="note"></span>`;
-    consoleEl.appendChild(row);
-  }
-  consoleEl.classList.add("show");
-}
-function setStage(stage, note, done) {
-  const el = $("stage-" + stage);
-  if (!el) return;
-  // vorherige aktive auf done
-  document.querySelectorAll(".stage.active").forEach((s) => { if (s !== el) { s.classList.remove("active"); s.classList.add("done"); }});
-  el.classList.add("active");
-  if (done) { el.classList.remove("active"); el.classList.add("done"); }
-  if (note) el.querySelector(".note").textContent = note;
-}
-function fail(msg) { errEl.textContent = msg; $("submit").disabled = false; $("submit").textContent = "Pipeline live erleben"; }
-
-// ── Proof-of-Work: sha256(email:ts:nonce) mit 4 führenden Hex-Nullen ─────────
-async function sha256hex(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
-  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
-async function solvePow(email){
-  const ts=Date.now(); let nonce=0;
-  for(;;){ const h=await sha256hex(`${email.toLowerCase()}:${ts}:${nonce}`);
-    if(h.startsWith("0000")) return {ts,nonce:String(nonce)}; nonce++; if(nonce%5000===0)await new Promise(r=>setTimeout(r));}
-}
-
-// ── Simulation (kein Backend konfiguriert) ────────────────────────────────────
-async function simulate(){
-  const notes={enrich:"strategyframe.ai",scrape:"job-4428605958",extract:"7 Anforderungen",
-    match:"Track-Record",generate:"Sonnet · 1 Runde",deploy:"/b/demo",email:"Resend"};
-  const list=STAGES;
-  for(const s of list){ setStage(s,notes[s],false); await new Promise(r=>setTimeout(r,650+Math.random()*500)); setStage(s,notes[s],true);}
-  showReveal(CONFIG.resultBase+"/demo");
-}
-
-function showReveal(url){
-  $("reveal-link").href=url;
-  revealEl.classList.add("show");
-  revealEl.scrollIntoView({block:"nearest"});
-}
-
-// ── supabase-js bei Bedarf laden (gepinnte Version; vor Live self-hosten/SRI, s.o.) ──
-const SUPABASE_JS = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";
-function loadSupabase(){
-  return new Promise((resolve,reject)=>{
-    if(window.supabase) return resolve();
-    const s=document.createElement("script"); s.src=SUPABASE_JS;
-    s.onload=resolve; s.onerror=()=>reject(new Error("supabase-js konnte nicht geladen werden."));
-    document.head.appendChild(s);
-  });
-}
-
-// ── Live-Modus: Build anstoßen, Live-Seite in neuem Tab öffnen ───────────────
-async function realtime(payload){
-  const res = await fetch(CONFIG.endpoint, {method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)});
-  if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(mapErr(e.error||res.status)); }
-  const {jobId, slug} = await res.json();
-
-  const liveUrl = `/b/${slug}?live=1&job=${jobId}`;
-  window.open(liveUrl, "_blank", "noopener");
-
-  showLiveOpened(liveUrl);
-}
-
-// ── Inline-Bestätigung auf der Landing (Live-Tab läuft separat) ──────────────
-function showLiveOpened(url){
-  consoleEl.classList.remove("show");
-  const link = $("reveal-link");
-  link.href = url;            // echtes Ziel → Tab geschlossen? hier wieder öffnen
-  link.hidden = false;
-  link.textContent = "Seite wieder öffnen →";
-  document.querySelector("#reveal h2").textContent = "Läuft.";
-  $("reveal-text").textContent = "Deine Live-Bewerbung läuft in einem neuen Tab. Tab geschlossen? Hier zurück:";
-  revealEl.classList.add("show");
-  revealEl.scrollIntoView({block:"nearest"});
-  $("submit").disabled = false; $("submit").textContent = "Pipeline live erleben";
-}
-function mapErr(c){return {email:"Bitte gültige Email eingeben.",
-  rate_limited:"Zu viele Anfragen — bitte später.",already_applied:"Für diese Email läuft bereits eine Bewerbung.",
-  pow:"Validierung fehlgeschlagen, bitte neu laden.",rejected:"Anfrage abgelehnt."}[c]||"Unerwarteter Fehler.";}
-
-// ── Submit ────────────────────────────────────────────────────────────────
-$("form").addEventListener("submit", async (e)=>{
-  e.preventDefault(); errEl.textContent="";
-  const email=$("email").value.trim();
-  const firstName=$("firstName").value.trim();
-  const role=$("role").value.trim();
-  if($("company_url").value) return; // Honeypot
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("Bitte gültige Email eingeben.");
-
-  $("submit").disabled=true; $("submit").textContent="Baut…";
-
-  try{
-    const configured = CONFIG.endpoint && CONFIG.supabaseUrl && CONFIG.anonKey;
-    if(!configured){ buildConsole(); await simulate(); return; }
-    const pow = await solvePow(email);
-    const payload = {email, pow, applicationId: currentApplicationId()};
-    if(firstName) payload.firstName = firstName;
-    if(role) payload.role = role;
-    await realtime(payload);
-  }catch(err){ fail(err.message||"Fehler beim Bauen."); }
-});
-</script>
+  <a class="skip" href="#inhalt">Zum Inhalt</a>
+  <header class="wrap masthead"><a class="wordmark" href="https://structifai.de/profil/">Dennis Benter<span>structifai · Bewerbung</span></a><a class="text-link" href="https://structifai.de/">structifai.de ↗</a></header>
+  <main id="inhalt">
+    <section class="wrap hero welcome">
+      <div>
+        <p class="eyebrow">Willkommen</p>
+        <h1>Schön, dass<br>Sie da sind.</h1>
+        <p class="lead">Ich verbinde Unternehmensführung mit der Entwicklung digitaler Anwendungen. Seit 2008 arbeite ich im Digitalgeschäft, seit 2019 führe ich als Gründer und Co-Geschäftsführer mehrere Gesellschaften parallel. In den letzten Monaten habe ich eigene KI-Anwendungen gebaut und bis in den Pilotbetrieb gebracht.</p>
+        <div class="codebox" id="code">
+          <p class="eyebrow">Ihre Bewerbung</p>
+          <h2>Sie haben eine Bewerbung von mir erhalten?</h2>
+          <form id="code-form" novalidate hidden>
+            <label for="code-input" class="sr-only">Code aus dem Anschreiben</label>
+            <input id="code-input" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="Code, z. B. AB-7Q4K" required>
+            <button type="submit" id="code-submit">Öffnen →</button>
+          </form>
+          <p class="hint">Den Code finden Sie in meinem Anschreiben.</p>
+          <p class="msg" id="code-msg" role="status" aria-live="polite"></p>
+          <noscript><p class="hint">Diese Eingabe benötigt JavaScript. Schreiben Sie mir gern direkt: <a href="mailto:d.benter@djwcapitalmanagement.de">d.benter@djwcapitalmanagement.de</a></p></noscript>
+        </div>
+      </div>
+      <figure class="portrait"><img src="/assets/portrait.webp" alt="Dennis Benter" width="800" height="1000"><figcaption><span>Die Perspektive, die ich mitbringe</span>Geschäft verstehen.<br>Verantwortung übernehmen.<br>Selbst ins Bauen kommen.</figcaption></figure>
+    </section>
+    <section class="wrap section">
+      <p class="eyebrow">Kurzprofil</p>
+      <h2>Verantwortung und Umsetzung<br>gehören für mich zusammen.</h2>
+      <div class="contributions">
+        <article><span class="number">01</span><h3>Unternehmen führen</h3><p>Seit 2019 Gründer und Co-Geschäftsführer mehrerer Gesellschaften: Finance, Controlling, Restrukturierung, Zu- und Verkäufe.</p></article>
+        <article><span class="number">02</span><h3>Menschen führen</h3><p>Rund 15 Personen fachlich und disziplinarisch geführt, meist in Teams von drei bis fünf, über Gesellschaftsgrenzen hinweg.</p></article>
+        <article><span class="number">03</span><h3>Selbst bauen</h3><p>Eigene KI-Anwendungen bis in den Pilotbetrieb – darunter diese Bewerbung, die Sie gerade nutzen.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap"><span>Dennis Benter · Düsseldorf · <a href="mailto:d.benter@djwcapitalmanagement.de">d.benter@djwcapitalmanagement.de</a></span><div><a href="https://structifai.de/impressum/">Impressum</a><a href="https://structifai.de/datenschutz/">Datenschutz</a></div></footer>
 </body>
 </html>
