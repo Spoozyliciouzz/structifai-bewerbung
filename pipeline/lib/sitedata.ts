@@ -22,12 +22,23 @@ export interface SiteCase {
  */
 export interface ApplicationPage {
   hero?: { eyebrow?: string; headline?: string; lead?: string };
+  why?: { eyebrow?: string; headline?: string; body?: string[]; source_url?: string; source_label?: string };
+  contributions?: {
+    eyebrow?: string; headline?: string;
+    items?: Array<{ title?: string; body?: string }>;
+    cases?: Array<{ pill?: string; title?: string; body?: string; caption?: string; url?: string }>;
+  };
+  fit_heading?: { eyebrow?: string; headline?: string };
+  conversation?: { eyebrow?: string; headline?: string; body?: string };
   company_reference?: {
     label?: string; observation?: string; source_url?: string; source_label?: string;
   };
   work_sample?: {
     module?: string; eyebrow?: string; headline?: string;
     sandbox_enabled?: boolean; sandbox_disabled_reason?: string;
+    lead?: string; journey_label?: string;
+    journey?: Array<{ title?: string; body?: string }>;
+    note?: string[]; takeaway?: { label?: string; text?: string };
   };
   ninety_days?: {
     eyebrow?: string; headline?: string;
@@ -113,7 +124,23 @@ function keep<T extends Record<string, unknown>>(o: T): T | undefined {
   return Object.values(o).some((v) => v !== undefined) ? o : undefined;
 }
 
-function coercePage(raw: unknown): ApplicationPage | undefined {
+/** Leere Liste ⇒ undefined, damit keep() den Block nicht wegen [] für befüllt hält. */
+function nonEmpty<T>(xs: T[] | undefined): T[] | undefined {
+  return xs && xs.length ? xs : undefined;
+}
+
+/** Liste aus Texten, jeder begrenzt; Nicht-Texte fallen weg. */
+function strList(v: unknown, maxItems: number, max: number): string[] | undefined {
+  if (!Array.isArray(v)) return undefined;
+  return nonEmpty(v.map((s) => str(s, max)).filter((s): s is string => !!s).slice(0, maxItems));
+}
+
+/** Überschrift-Paar, das mehrere Abschnitte teilen. */
+function heading(v: unknown): { eyebrow?: string; headline?: string } | undefined {
+  return isRecord(v) ? keep({ eyebrow: str(v.eyebrow, 160), headline: str(v.headline, 240) }) : undefined;
+}
+
+export function coercePage(raw: unknown): ApplicationPage | undefined {
   if (!isRecord(raw)) return undefined;
 
   const hero = isRecord(raw.hero)
@@ -138,6 +165,17 @@ function coercePage(raw: unknown): ApplicationPage | undefined {
         // Testbereich freischalten, der nicht existiert.
         sandbox_enabled: raw.work_sample.sandbox_enabled === true,
         sandbox_disabled_reason: str(raw.work_sample.sandbox_disabled_reason, 400),
+        lead: str(raw.work_sample.lead, 800),
+        journey_label: str(raw.work_sample.journey_label, 160),
+        journey: Array.isArray(raw.work_sample.journey)
+          ? nonEmpty(raw.work_sample.journey.filter(isRecord)
+              .map((s) => ({ title: str(s.title, 120), body: str(s.body, 600) }))
+              .filter((s) => s.title).slice(0, 6))
+          : undefined,
+        note: strList(raw.work_sample.note, 4, 900),
+        takeaway: isRecord(raw.work_sample.takeaway)
+          ? keep({ label: str(raw.work_sample.takeaway.label, 160), text: str(raw.work_sample.takeaway.text, 400) })
+          : undefined,
       })
     : undefined;
 
@@ -166,6 +204,40 @@ function coercePage(raw: unknown): ApplicationPage | undefined {
       }).filter((f) => f.requirement)
     : undefined;
 
+  const why = isRecord(raw.why)
+    ? keep({
+        eyebrow: str(raw.why.eyebrow, 160), headline: str(raw.why.headline, 240),
+        body: strList(raw.why.body, 4, 1200),
+        source_url: url(raw.why.source_url), source_label: str(raw.why.source_label, 160),
+      })
+    : undefined;
+
+  const contributions = isRecord(raw.contributions)
+    ? keep({
+        eyebrow: str(raw.contributions.eyebrow, 160), headline: str(raw.contributions.headline, 240),
+        items: Array.isArray(raw.contributions.items)
+          ? nonEmpty(raw.contributions.items.filter(isRecord)
+              .map((s) => ({ title: str(s.title, 120), body: str(s.body, 600) }))
+              .filter((s) => s.title).slice(0, 3))
+          : undefined,
+        cases: Array.isArray(raw.contributions.cases)
+          ? nonEmpty(raw.contributions.cases.filter(isRecord)
+              .map((s) => ({
+                pill: str(s.pill, 60), title: str(s.title, 120), body: str(s.body, 600),
+                caption: str(s.caption, 200), url: url(s.url),
+              }))
+              .filter((s) => s.title).slice(0, 4))
+          : undefined,
+      })
+    : undefined;
+
+  const conversation = isRecord(raw.conversation)
+    ? keep({
+        eyebrow: str(raw.conversation.eyebrow, 160), headline: str(raw.conversation.headline, 240),
+        body: str(raw.conversation.body, 800),
+      })
+    : undefined;
+
   const starters = Array.isArray(raw.conversation_starters)
     ? raw.conversation_starters.slice(0, 6).map((s) => str(s, 240)).filter((s): s is string => !!s)
     : undefined;
@@ -177,7 +249,8 @@ function coercePage(raw: unknown): ApplicationPage | undefined {
     : undefined;
 
   return keep({
-    hero, company_reference: ref, work_sample: ws, ninety_days: nd,
+    hero, why, contributions, fit_heading: heading(raw.fit_heading), conversation,
+    company_reference: ref, work_sample: ws, ninety_days: nd,
     fit: fit?.length ? fit : undefined,
     conversation_starters: starters?.length ? starters : undefined,
     sources: sources?.length ? sources : undefined,
@@ -210,6 +283,27 @@ export function buildSiteData(a: BuildArgs): SiteData {
       ...(s.url ? { url: s.url } : {}),
       ...(s.image ? { image: s.image } : {}),
     })),
+    ...(page ? { page } : {}),
+    ...(key ? { voice: { widget_key: key } } : {}),
+  };
+}
+
+/** Was der Stellenteil bekommt: freigegebene Seite + Firma/Titel + Widget. Kein Profil, keine Scores. */
+export interface ReleasedPage {
+  company: string;
+  title: string;
+  page?: ApplicationPage;
+  voice?: { widget_key: string };
+}
+
+export function buildReleasedPage(a: {
+  company: string; title: string; page: unknown; widgetKey?: string | null;
+}): ReleasedPage {
+  const page = coercePage(a.page);
+  const key = widgetKey(a.widgetKey);
+  return {
+    company: a.company,
+    title: a.title,
     ...(page ? { page } : {}),
     ...(key ? { voice: { widget_key: key } } : {}),
   };
