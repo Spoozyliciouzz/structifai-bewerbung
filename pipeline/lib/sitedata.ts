@@ -36,6 +36,8 @@ export interface ApplicationPage {
   work_sample?: {
     module?: string; eyebrow?: string; headline?: string;
     sandbox_enabled?: boolean; sandbox_disabled_reason?: string;
+    /** Ziel des Knopfs, nur https. Ohne Ziel bleibt der Testbereich aus. */
+    sandbox_url?: string; sandbox_text?: string;
     lead?: string; journey_label?: string;
     journey?: Array<{ title?: string; body?: string }>;
     note?: string[]; takeaway?: { label?: string; text?: string };
@@ -119,6 +121,12 @@ function url(v: unknown): string | undefined {
   return s && /^https?:\/\//i.test(s) ? s : undefined;
 }
 
+/** Nur https — für Ziele, die Besucher mit eigenen Dateien bedienen. */
+function httpsUrl(v: unknown): string | undefined {
+  const s = str(v, 500);
+  return s && /^https:\/\//i.test(s) ? s : undefined;
+}
+
 /** Objekt nur übernehmen, wenn mindestens ein Feld übrig bleibt. */
 function keep<T extends Record<string, unknown>>(o: T): T | undefined {
   return Object.values(o).some((v) => v !== undefined) ? o : undefined;
@@ -163,8 +171,11 @@ export function coercePage(raw: unknown): ApplicationPage | undefined {
         headline: str(raw.work_sample.headline, 240),
         // Standard ist AUS: ein fehlendes oder kaputtes Feld darf nie versehentlich einen
         // Testbereich freischalten, der nicht existiert.
-        sandbox_enabled: raw.work_sample.sandbox_enabled === true,
+        // Freigeschaltet nur mit gültigem https-Ziel — sonst gäbe es einen Knopf ins Leere.
+        sandbox_enabled: raw.work_sample.sandbox_enabled === true && httpsUrl(raw.work_sample.sandbox_url) !== undefined,
         sandbox_disabled_reason: str(raw.work_sample.sandbox_disabled_reason, 400),
+        sandbox_url: httpsUrl(raw.work_sample.sandbox_url),
+        sandbox_text: str(raw.work_sample.sandbox_text, 600),
         lead: str(raw.work_sample.lead, 800),
         journey_label: str(raw.work_sample.journey_label, 160),
         journey: Array.isArray(raw.work_sample.journey)

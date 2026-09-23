@@ -37,8 +37,17 @@ test("Sandbox ist aus, solange sie nicht ausdrücklich an ist", () => {
     const sd = buildSiteData({ ...basis, page: { work_sample: { module: "x", ...ws } } });
     expect(sd.page?.work_sample?.sandbox_enabled).toBe(false);
   }
-  const an = buildSiteData({ ...basis, page: { work_sample: { sandbox_enabled: true } } });
+  const url = "https://reisekosten.structifai.de/demo";
+  const an = buildSiteData({ ...basis, page: { work_sample: { sandbox_enabled: true, sandbox_url: url } } });
   expect(an.page?.work_sample?.sandbox_enabled).toBe(true);
+  expect(an.page?.work_sample?.sandbox_url).toBe(url);
+});
+
+test("Sandbox ohne gültiges https-Ziel bleibt aus", () => {
+  for (const sandbox_url of [undefined, "", "http://reisekosten.structifai.de/demo", "javascript:alert(1)"]) {
+    const sd = buildSiteData({ ...basis, page: { work_sample: { sandbox_enabled: true, sandbox_url } } });
+    expect(sd.page?.work_sample?.sandbox_enabled).toBe(false);
+  }
 });
 
 test("nur http(s) überlebt als Link", () => {

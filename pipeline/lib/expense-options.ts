@@ -55,3 +55,17 @@ export function describeExpenseOptions(sel: ExpenseSelection): string[] {
   if (!lines.length) lines.push("Abrechnung der Belege ohne die drei Zusatzangaben.");
   return lines;
 }
+
+/**
+ * Adresse der Reisekosten-Demo mit der Auswahl des Besuchers — gelesen von
+ * leseDemoAngaben im Reisekosten-Repo (src/lib/demo.ts): verpflegung=ja|nein,
+ * kostenstelle, personalnummer. Abgewählte oder leere Freitexte fehlen ganz.
+ */
+export function demoHref(base: string, sel: ExpenseSelection): string {
+  const o = normalizeExpenseOptions(sel);
+  const q = new URLSearchParams();
+  q.set("verpflegung", o.includePerDiem ? "ja" : "nein");
+  if (o.costCenter?.trim()) q.set("kostenstelle", o.costCenter.trim());
+  if (o.employeeNumber?.trim()) q.set("personalnummer", o.employeeNumber.trim());
+  return `${base}?${q.toString()}`;
+}

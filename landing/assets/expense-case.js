@@ -53,6 +53,17 @@
         if (wrap) wrap.hidden = !pair[1];
       });
 
+    // Knopf zur Demo: Auswahl als Adressparameter mitgeben (Regeln wie demoHref in
+    // pipeline/lib/expense-options.ts). Abgewählte oder leere Freitexte fehlen ganz.
+    var link = document.getElementById("sandbox-link");
+    if (link && link.getAttribute("data-base")) {
+      var q = new URLSearchParams();
+      q.set("verpflegung", sel.includePerDiem ? "ja" : "nein");
+      if (sel.includeCostCenter && sel.costCenter.trim()) q.set("kostenstelle", sel.costCenter.trim());
+      if (sel.includeEmployeeNumber && sel.employeeNumber.trim()) q.set("personalnummer", sel.employeeNumber.trim());
+      link.href = link.getAttribute("data-base") + "?" + q.toString();
+    }
+
     while (preview.firstChild) preview.removeChild(preview.firstChild);
     describe(sel).forEach(function (line) {
       var li = document.createElement("li");

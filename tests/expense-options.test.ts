@@ -4,7 +4,7 @@
  * vollständig, statt leer mitgeführt zu werden.
  */
 import { test, expect } from "bun:test";
-import { normalizeExpenseOptions, describeExpenseOptions } from "../pipeline/lib/expense-options.ts";
+import { normalizeExpenseOptions, describeExpenseOptions, demoHref } from "../pipeline/lib/expense-options.ts";
 
 const combos = [false, true].flatMap((a) =>
   [false, true].flatMap((b) => [false, true].map((c) => ({
@@ -126,5 +126,27 @@ test("Elemente mit eigenem display werden von [hidden] wirklich verborgen", asyn
   expect(regel).not.toBeNull();
   for (const sel of ["\\.ap-options\\[hidden\\]", "\\.ap-ref\\[hidden\\]", "section\\.ap\\[hidden\\]"]) {
     expect(html).toMatch(new RegExp(sel));
+  }
+});
+
+const DEMO = "https://reisekosten.structifai.de/demo";
+
+test("Demo-Adresse trägt nur, was ausgewählt und ausgefüllt ist", () => {
+  expect(demoHref(DEMO, { includePerDiem: false, includeCostCenter: false, includeEmployeeNumber: false,
+    costCenter: "Altwert", employeeNumber: "Altwert" })).toBe(`${DEMO}?verpflegung=nein`);
+  expect(demoHref(DEMO, { includePerDiem: true, includeCostCenter: true, includeEmployeeNumber: true,
+    costCenter: "  ", employeeNumber: "" })).toBe(`${DEMO}?verpflegung=ja`);
+  const voll = new URL(demoHref(DEMO, { includePerDiem: true, includeCostCenter: true, includeEmployeeNumber: true,
+    costCenter: "Testabteilung 42 & Co", employeeNumber: "001-LM" }));
+  expect(voll.searchParams.get("verpflegung")).toBe("ja");
+  expect(voll.searchParams.get("kostenstelle")).toBe("Testabteilung 42 & Co");
+  expect(voll.searchParams.get("personalnummer")).toBe("001-LM");
+});
+
+test("expense-case.js baut die Demo-Adresse nach denselben Regeln", async () => {
+  // Die Landingpage hat keinen Bundler; das Skript führt die Regeln von demoHref selbst.
+  const js = await Bun.file("landing/assets/expense-case.js").text();
+  for (const teil of ['"verpflegung"', '"ja" : "nein"', '"kostenstelle"', '"personalnummer"', "URLSearchParams", "sandbox-link"]) {
+    expect(js).toContain(teil);
   }
 });

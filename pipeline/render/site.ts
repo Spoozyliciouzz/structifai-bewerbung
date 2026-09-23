@@ -264,6 +264,7 @@ export function renderSite(input: SiteInput): string {
       ${refHref ? `<p><a href="${esc(refHref)}" target="_blank" rel="noopener noreferrer">${esc(ref.source_label || refHref)} ↗</a></p>` : ""}
     </div>` : ""}
     ${ws.module === "expense-case" ? renderExpenseCase() : ""}
+    ${ws.sandbox_enabled && safeHref(ws.sandbox_url) ? `<p><a href="${esc(safeHref(ws.sandbox_url)!)}" target="_blank" rel="noopener noreferrer">Reisekosten-Demo öffnen ↗</a></p>${ws.sandbox_text ? `<p class="hint">${esc(ws.sandbox_text)}</p>` : ""}` : ""}
     ${!ws.sandbox_enabled && ws.sandbox_disabled_reason ? `<p class="hint">${esc(ws.sandbox_disabled_reason)}</p>` : ""}`);
   }
 

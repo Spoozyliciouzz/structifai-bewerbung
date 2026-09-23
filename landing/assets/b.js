@@ -243,7 +243,26 @@
     }
     if (w.module === "expense-case") wrap.appendChild(expenseOptions());
 
-    if (!w.sandbox_enabled && w.sandbox_disabled_reason) {
+    if (w.sandbox_enabled && w.sandbox_url) {
+      var live = el("div", "sandbox-invite");
+      var lt = el("div");
+      lt.appendChild(el("p", "eyebrow", "Demo ohne Anmeldung"));
+      lt.appendChild(el("h3", null, "Mit eigenen Belegen wird es konkret."));
+      if (w.sandbox_text) lt.appendChild(el("p", null, w.sandbox_text));
+      live.appendChild(lt);
+      var le = el("div", "sandbox-entry");
+      // Ziel ohne Parameter; expense-case.js ergänzt die Auswahl aus dem Formular oben.
+      var a = el("a", "primary", "Reisekosten-Demo öffnen ↗");
+      a.id = "sandbox-link";
+      a.href = w.sandbox_url;
+      a.setAttribute("data-base", w.sandbox_url);
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      le.appendChild(a);
+      le.appendChild(el("p", "sandbox-limits", "Bis zu 3 Belege · PDF zum Herunterladen · nichts wird gespeichert"));
+      live.appendChild(le);
+      wrap.appendChild(live);
+    } else if (w.sandbox_disabled_reason) {
       var inv = el("div", "sandbox-invite");
       var t = el("div");
       t.appendChild(el("p", "eyebrow", "Persönlicher Testbereich"));

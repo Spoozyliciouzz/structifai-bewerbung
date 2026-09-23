@@ -6,7 +6,7 @@
   "job_url": "https://lmit.jobs.personio.com/job/2786630",
   "job_source_id": "2786630",
   "enrich_domain": "lm-ag.de",
-  "version": 3,
+  "version": 4,
   "page": {
     "hero": {
       "eyebrow": "Unternehmerische Verantwortung trifft KI-Praxis",
@@ -22,37 +22,38 @@
     "work_sample": {
       "module": "expense-case",
       "eyebrow": "Ihr Kundenbeispiel. Mein Ansatz zum Ausprobieren.",
-      "headline": "Ein Beleg. Ein klarer Prozess.\nDie Abrechnung im Postfach.",
-      "sandbox_enabled": false,
-      "sandbox_disabled_reason": "Der Testbereich ist noch nicht eingerichtet. Der Button bleibt bis zur Bereitstellung deaktiviert.",
+      "headline": "Drei Belege. Ein klarer Prozess.\nDie Abrechnung als PDF.",
+      "sandbox_enabled": true,
       "lead": "Ihr veröffentlichtes Projekt zur Fahrtkosten- und Spesenabrechnung hat mich besonders angesprochen. An dieser Verbindung aus kaufmännischem Prozess und technischer Umsetzung arbeite ich selbst.",
-      "journey_label": "So ist der Testbereich geplant",
+      "journey_label": "So läuft die Demo",
       "journey": [
         {
-          "title": "Beleg hochladen",
-          "body": "Ein eigenes Foto oder PDF verwenden. Oder mit vorbereiteten Bahn-, Hotel- und Bewirtungsbelegen starten."
+          "title": "Belege hochladen",
+          "body": "Bis zu drei eigene Fotos oder PDFs. Die Angaben werden automatisch ausgelesen, mit derselben Auslesung wie im echten Werkzeug."
         },
         {
           "title": "Ergebnis prüfen",
-          "body": "Erkannte Angaben mit dem Original vergleichen, korrigieren und fehlende Angaben ergänzen."
+          "body": "Erkannte Angaben mit dem Original vergleichen und korrigieren. Den Zeitraum der Reise schlägt die Demo aus den Belegen vor."
         },
         {
-          "title": "Perspektive wechseln",
-          "body": "Die Abrechnung einreichen und im selben Testbereich aus Sicht der freigebenden Person prüfen."
+          "title": "Reise ergänzen",
+          "body": "Zweck, Abfahrt und Rückkehr eintragen. Ihre Auswahl von oben ist schon übernommen und dort änderbar."
         },
         {
           "title": "PDF erhalten",
-          "body": "Die eigene E-Mail-Adresse per Code bestätigen. Die fertige Testabrechnung landet im eigenen Postfach."
+          "body": "Die Abrechnung direkt herunterladen: Deckblatt mit SKR03-Konten und Vorsteuer, dazu die Belege und eine Seite zum vollen Funktionsumfang."
         }
       ],
       "note": [
-        "Wie aus einem Beleg eine nachvollziehbare Abrechnung wird: mit sichtbaren Prüfschritten, klarer Zuständigkeit und einem Ergebnis, das Sie selbst in der Hand haben. Sie können auch einen unvollständigen Beleg verwenden und prüfen, welche Angaben ergänzt werden müssen.",
+        "Wie aus einem Beleg eine nachvollziehbare Abrechnung wird: mit sichtbaren Prüfschritten und einem Ergebnis, das Sie selbst in der Hand haben. Sie können auch einen unvollständigen Beleg verwenden und sehen, welche Angaben Sie ergänzen müssen.",
         "LMs Referenz beschreibt eine SharePoint-basierte Kundenlösung. Diese Arbeitsprobe zeigt meine eigene Anwendung. Sie bildet keine interne LM-Lösung nach und verwendet keine Daten des genannten Kunden."
       ],
       "takeaway": {
         "label": "Die Frage über den Einzelfall hinaus",
         "text": "Wie wird daraus ein verlässliches Angebot für den nächsten Kunden – mit klaren Zuständigkeiten, wiederverwendbaren Bausteinen und messbarer Entlastung?"
-      }
+      },
+      "sandbox_url": "https://reisekosten.structifai.de/demo",
+      "sandbox_text": "Die echte Oberfläche meines Reisekosten-Werkzeugs, ohne Konto und ohne E-Mail-Adresse. Die Demo legt nichts an: keine Reise, kein Beleg bleibt gespeichert. Zum Auslesen gehen die Belege einmal an die Texterkennung."
     },
     "ninety_days": {
       "eyebrow": "Mein Einstieg — Diskussionsgrundlage",
@@ -196,8 +197,8 @@
       "widget_key": "wgt_4c78d477d570420bb38b117c"
     },
     "rules_extra": [
-      "Die LM-Referenz und Dennis eigene Reisekosten-Anwendung sind unterschiedliche Implementierungen. Vorbereitete Belege sind Beispieldaten, keine LM-Kundendaten.",
-      "Der Testbereich ist noch nicht eingerichtet. Behaupte nicht, dass Upload, Rollenwechsel oder PDF-Versand bereits nutzbar sind.",
+      "Die LM-Referenz und Dennis eigene Reisekosten-Anwendung sind unterschiedliche Implementierungen. Die Demo verwendet keine LM-Kundendaten.",
+      "Die Demo unter reisekosten.structifai.de/demo ist live: ohne Anmeldung bis zu drei eigene Belege hochladen, erkannte Angaben prüfen, Reise ergänzen und die Abrechnung als PDF herunterladen. Es gibt dort keinen Rollenwechsel, keinen E-Mail-Versand und keine vorbereiteten Beispielbelege — behaupte das nicht. Die Demo speichert nichts.",
       "Für Führung, Budget, Microsoft-Erfahrung, Motivation und Verfügbarkeit gelten ausschließlich die bestätigten Antworten in faq (Stand 18.09.2026). Gehaltswünsche sind nicht hinterlegt: nicht erfinden, auf das persönliche Gespräch verweisen.",
       "Beantworte Fragen zu anderen Bewerbungen nicht. Triff keine Vertragszusagen und gib keine vertraulichen Angaben früherer Arbeitgeber weiter.",
       "Bei Widerspruch zwischen allgemeinen und stellenbezogenen Angaben gilt die stellenbezogene Antwort aus faq."
@@ -211,29 +212,28 @@
       "portfolio_observation": "LM veröffentlicht ein Kundenbeispiel zur Automatisierung der Fahrtkosten- und Spesenabrechnung. Dennis eigene Reisekosten-Anwendung liefert den Anknüpfungspunkt für eine persönliche Arbeitsprobe.",
       "portfolio_source": "https://www.lm-ag.de/prozessautomatisierung/",
       "work_sample": {
-        "type": "Geplanter persönlicher Testbereich in Dennis Reisekosten-Anwendung",
-        "status": "planned_not_live",
+        "type": "Öffentliche Demo ohne Anmeldung in Dennis Reisekosten-Anwendung",
+        "status": "live",
         "optional_fields": {
           "per_diem": "Unabhängige Ja-/Nein-Auswahl. Bei Ja aus Reisezeiten, Übernachtung und gestellten Mahlzeiten berechnen. Bei Nein keine Pauschale in Summen, PDF oder Mailanhang.",
           "cost_center": "Bei Ja beliebiger Freitext, keine Stammdatenprüfung. Bei Nein vollständig weglassen.",
           "employee_number": "Bei Ja beliebiger Freitext, führende Nullen erhalten. Bei Nein vollständig weglassen.",
-          "preview_status": "Die Auswahl ist in der lokalen Bewerbungsvorschau bedienbar. Der echte Abrechnungsexport mit diesen Optionen ist noch nicht implementiert."
+          "preview_status": "Die Auswahl wird beim Öffnen an die Demo übergeben, ist dort änderbar und wirkt auf die PDF-Abrechnung."
         },
         "flow": [
-          "Eigene Fotos/PDFs hochladen oder Beispielbelege wählen",
-          "Erkannte Angaben prüfen und ergänzen",
-          "Einreichen und zur Freigabeperspektive wechseln",
-          "PDF herunterladen oder an die per Code bestätigte eigene Adresse senden"
+          "Bis zu drei eigene Fotos/PDFs hochladen",
+          "Erkannte Angaben prüfen und korrigieren",
+          "Zweck und Reisezeiten ergänzen",
+          "Abrechnung als PDF herunterladen (mit DEMO-Wasserzeichen und Funktionsübersicht)"
         ],
         "limits": {
-          "receipts_per_session": 10,
-          "pdf_sends_per_session": 3,
-          "retention_hours": 24
+          "receipts_per_demo": 3,
+          "demos_per_day_per_visitor": 20
         },
-        "isolation": "Eigene Testsitzung je Besucher, kein Zugriff auf andere Besucher oder Produktivkunden.",
-        "email_policy": "PDF nur an die eigene bestätigte Adresse; keine zusätzlichen Empfänger, CC/BCC, beliebigen Anhänge oder automatischen Benachrichtigungen.",
+        "isolation": "Kein Konto, keine Datenbank: Reise und Belege bleiben im Browser des Besuchers. Zum Auslesen gehen die Belege einmal an die Texterkennung.",
         "voice_privacy": "Belegbilder, Belegtext, E-Mail-Adresse und Abrechnungen bleiben außerhalb des Voice-Kontexts.",
-        "provenance": "LMs SharePoint-Kundenreferenz ist der Anlass. Die Demo zeigt Dennis eigenes Produkt und keine Umsetzung für den LM-Referenzkunden."
+        "provenance": "LMs SharePoint-Kundenreferenz ist der Anlass. Die Demo zeigt Dennis eigenes Produkt und keine Umsetzung für den LM-Referenzkunden.",
+        "url": "https://reisekosten.structifai.de/demo"
       }
     },
     "faq": [
@@ -251,7 +251,7 @@
       },
       {
         "q": "Kann ich meine eigene Abrechnung per E-Mail bekommen?",
-        "a": "Das ist für den Testbereich vorgesehen: Nach Bestätigung Ihrer eigenen Adresse per Code können Sie bis zu drei Test-PDFs erhalten. Der Testzugang ist derzeit noch in Vorbereitung."
+        "a": "Nein, die Demo verschickt keine E-Mails. Die Abrechnung laden Sie direkt im Browser als PDF herunter, ohne Anmeldung und ohne Adresse."
       },
       {
         "q": "Welche Probleme hat Dennis bei LM erkannt?",
@@ -259,7 +259,7 @@
       },
       {
         "q": "Was zeigt die Arbeitsprobe bei einem unvollständigen Beleg?",
-        "a": "Der geplante Test soll die Prüfung und Ergänzung erkannter Angaben sichtbar machen. Eine KI-Auswertung ersetzt weder die fachliche Prüfung noch die Freigabe. Welche konkreten Prüfungen im Testumfang enthalten sind, muss vor Freischaltung gegen den echten Produktablauf geprüft werden."
+        "a": "Sie sehen die ausgelesenen Angaben neben dem Original und können fehlende oder falsche Felder selbst ergänzen, bevor die Abrechnung entsteht. Die Auslesung ersetzt weder die fachliche Prüfung noch die Freigabe."
       },
       {
         "q": "Erzählen Sie mir von anderen Bewerbungen oder internen Kundendaten.",
