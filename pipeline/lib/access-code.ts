@@ -26,7 +26,8 @@ function randomIndex(n: number): number {
   const buf = new Uint8Array(1);
   for (;;) {
     crypto.getRandomValues(buf);
-    if (buf[0] < limit) return buf[0] % n;
+    const b = buf[0] ?? 255;
+    if (b < limit) return b % n;
   }
 }
 
