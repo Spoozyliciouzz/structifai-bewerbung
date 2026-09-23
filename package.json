@@ -10,6 +10,7 @@
     "typecheck": "bun --filter '*' typecheck",
     "test": "bun test",
     "seed:application": "bun scripts/seed-application.ts",
+    "seed:voice-context": "bun scripts/seed-voice-context.ts",
     "famulor:prompt": "bun scripts/famulor-prompt.ts",
     "scrape:auth": "bun scraper/src/auth.ts",
     "scrape:job": "bun scraper/src/scrapeJob.ts",

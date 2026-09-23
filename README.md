@@ -76,7 +76,10 @@ Bucket-Upload. Job-Cache hochladen: `scraper/cache/job-4428605958.json` → priv
 
 ### 3. Sprachassistent (Famulor)
 - Ein Famulor-Assistent je Bewerbung: `bun run famulor:prompt applications/<id>.json` erzeugt
-  den Prompt, per MCP `update_assistant` einspielen. Der Widget-Key ist kein CONFIG-Wert,
+  den Prompt (nur Regeln), per MCP `update_assistant` einspielen. Fakten liefert der Assistent
+  sich selbst live: Mid-Call-Tool `kontext_laden` → EF `bw-famulor-context/<application_id>` liest
+  den aktuellen, freigegebenen Stand aus `bw_voice_agent_context` (`bun run seed:voice-context`)
+  und der freigegebenen `bw_application_content.voice`. Der Widget-Key ist kein CONFIG-Wert,
   sondern läuft mit dem Inhalt selbst durch die Pipeline: `applications/<id>.json › voice.famulor`
   → `seed:application` → `bw_applications.famulor_widget_key` → `build` → Site-JSON
   `voice.widget_key` → `build.html` mountet das Widget damit. `app.famulor.io` in CSP

@@ -3,9 +3,17 @@
 Gespräch im Browser auf `/b/{slug}`, gestartet von der Besucherin. Kein Anruf, keine Nummer,
 kein Consent-Gate (UWG §7 greift nicht — sie initiiert). Encore, nicht im 60s-Budget.
 
-- **Ein Assistent je Bewerbung.** Prompt kommt aus `bun run famulor:prompt applications/<id>.json`
-  (Quelle: `pipeline/voice/context-fallback.json` + `applications/<id>.json › voice`) und wird per
-  MCP `update_assistant` eingespielt — nie von Hand im Famulor-Editor pflegen, sonst driftet er.
+- **Prompt = nur Regeln, Fakten kommen live aus der DB.** Generator: `bun run famulor:prompt
+  applications/<id>.json` (Quelle: nur `speakableRole`/Regeltext aus `famulor-prompt.ts`) → MCP
+  `update_assistant` — nie von Hand im Famulor-Editor pflegen, sonst driftet er. Zu Beginn jedes
+  Gesprächs ruft der Assistent das Mid-Call-Tool `kontext_laden` → EF
+  `bw-famulor-context/<application_id>` auf, das den AKTUELLEN, freigegebenen Stand aus der DB
+  liefert (`buildContextPayload`). Globale Fakten stehen in `bw_voice_agent_context`
+  (`bun run seed:voice-context`, nach jeder Änderung an `context-fallback.json`);
+  bewerbungsspezifische Fakten in der freigegebenen Version von `bw_application_content.voice`
+  (`bun run seed:application … --release`). Nichts Inhaltliches steckt mehr im Prompt selbst —
+  einzige Ausnahme ist `first_message` (= `voice.intro`), die weiterhin mit dem Prompt
+  ausgeliefert wird, weil sie vor dem ersten Tool-Aufruf gesprochen wird.
 - **IDs stehen in `applications/<id>.json › voice.famulor`** und in `bw_applications`
   (`famulor_assistant_id`, `famulor_widget_key`). Widget-Key ist public; Assistant-ID unkritisch.
 - **Widget nur auf `/b/*`.** Site-JSON trägt `voice.widget_key`; `build.html › buildVoiceSlide`

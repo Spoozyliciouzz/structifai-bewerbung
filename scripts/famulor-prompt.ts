@@ -63,5 +63,15 @@ const voice = parseVoice(isRecord(appRaw) ? appRaw.voice : undefined, file);
 const p = buildFamulorPrompt({ context: ctx, voice });
 
 process.stdout.write(
-  JSON.stringify({ system_prompt: p.systemPrompt, first_message: p.firstMessage }, null, 2) + "\n",
+  JSON.stringify(
+    {
+      system_prompt: p.systemPrompt,
+      first_message: p.firstMessage,
+      response_by_channel: { version: 1, overrides: { web_chat: p.webChatInstructions } },
+      // Nur zur Inspektion: das, was `kontext_laden`/bw-famulor-context zur Laufzeit liefern muss.
+      context_payload: p.payload,
+    },
+    null,
+    2,
+  ) + "\n",
 );

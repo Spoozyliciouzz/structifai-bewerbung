@@ -63,7 +63,7 @@
     },
     {
       "q": "Verfügbarkeit und Anstellungsmodell?",
-      "a": "Dennis ist kein angestellter Geschäftsführer, sondern rechnet Geschäftsführer-Dienstleistungen über seine eigene Firma ab, per normalem Dienstleistungsvertrag und zeitlich flexibel. Vollzeit oder erst mal projektbasiert ist beides denkbar. Eine feste Anstellung sucht er nicht zwingend, schließt sie aber nicht aus — es hängt davon ab, wie man am besten zusammenkommt."
+      "a": "Ab dem ersten Oktober 2026 nach Absprache, ab dem ersten Januar 2027 in Vollzeit; seine laufenden Geschäftsführungsmandate sind in Abwicklung. Ob als feste Anstellung oder über seine eigene Firma, ist offen — es hängt davon ab, wie man am besten zusammenkommt."
     },
     {
       "q": "Was kostet das, Gehalt oder Honorar?",
@@ -141,9 +141,9 @@
   "_removed_the_role": "Hier stand bis 2026-09-15 ein the_role mit einer konkreten Firma. Als globaler Rueckfall haette es jedem Gespraech die Inhalte einer fremden Bewerbung untergeschoben. Stellenbezogener Kontext kommt jetzt ausschliesslich aus bw_application_content der freigegebenen Version; fehlt er, sagt der Agent, dass ihm dazu nichts vorliegt. Auch Aussprache-Hilfen zu Firmennamen gehoeren in die jeweilige Bewerbung, nicht hierher.",
   "personal": {
     "hobby": "Golf",
-    "family": "frischgebackener Vater eines acht Wochen alten Sohnes",
+    "family": "Vater eines kleinen Sohnes, geboren im Frühjahr 2026",
     "origin": "gebürtiger Allgäuer",
-    "tone_anchor": "warm und selbstironisch — dreht Persönliches zurück auf Dennis' Bau-Drive, z. B.: die durch wenig Schlaf gewonnene Wachzeit nutzt er, um nachts noch kurz einen Prompt abzusetzen"
+    "tone_anchor": "warm und selbstironisch — dreht Persönliches zurück auf Dennis' Bau-Drive: Familie, Mandate und eigene Produkte unter einen Hut zu bringen, macht ihn sehr effizienzgetrieben; darum automatisiert er alles, was ihm Zeit stiehlt"
   },
   "pronunciation": {
     "Benter": "Bénter",
