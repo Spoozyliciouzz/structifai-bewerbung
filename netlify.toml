@@ -1,30 +1,28 @@
-# Netlify — Site-Root liegt im Unterordner landing/. Base-Directory in Netlify LEER lassen.
-# Landing unter bewerbung.structifai.de, generierte Seiten unter /b/*.
-
+# Netlify — Site-Root ist landing/. Base-Directory in Netlify LEER lassen.
+# /            Ankunftsseite (indexierbar)
+# /b/<slug>    Stellenteil (noindex), Daten via Edge Function bw-page
 [build]
   publish = "landing"
 
-# /b/<slug> rendert die SPA build.html (Live-Build + statische Ansicht). build.html
-# liest den Slug aus dem Pfad und holt die Daten aus dem öffentlichen sites-Bucket.
 [[redirects]]
   from = "/b/*"
-  to = "/build.html"
+  to = "/b.html"
   status = 200
 
-# Landing auch unter /bewerbung erreichbar.
-[[redirects]]
-  from = "/bewerbung"
-  to = "/index.html"
-  status = 200
+# Ankunftsseite: nur eigene Assets + bw-open.
+[[headers]]
+  for = "/"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; img-src 'self'; style-src 'self'; font-src 'self'; script-src 'self'; connect-src https://hhxwojewbtegovzdxpfw.supabase.co; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
 
-# CSP + Hardening auf die Build-Ansicht (build.html setzt zusätzlich eine eigene CSP-Meta).
+# Stellenteil: zusätzlich Famulor-Widget. style-src 'unsafe-inline' braucht das Widget (Inline-Styles).
 [[headers]]
   for = "/b/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https://hhxwojewbtegovzdxpfw.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://app.famulor.io; connect-src 'self' https://hhxwojewbtegovzdxpfw.supabase.co wss://hhxwojewbtegovzdxpfw.supabase.co https://app.famulor.io; frame-src https://app.famulor.io; base-uri 'none'; form-action 'none'"
-    X-Content-Type-Options = "nosniff"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https://app.famulor.io; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' https://app.famulor.io; connect-src https://hhxwojewbtegovzdxpfw.supabase.co https://app.famulor.io wss://app.famulor.io; frame-src https://app.famulor.io; media-src 'self' blob: https://app.famulor.io; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+    X-Robots-Tag = "noindex, nofollow"
     Referrer-Policy = "no-referrer"
-    X-Frame-Options = "DENY"
+    Cache-Control = "no-store"
 
 [[headers]]
   for = "/*"
