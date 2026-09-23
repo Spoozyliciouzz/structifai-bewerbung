@@ -104,6 +104,19 @@ test("die n=1-Abschnitte hängen an renderHeader, nicht nur an renderShell", asy
   expect(body).toContain("renderApplicationPage(data)");
 });
 
+test("renderFit zeigt den freigegebenen Abgleich vor den Modell-Punktzahlen", async () => {
+  // Gefunden vor dem LM-Versand: page.fit (stark/solide/Lücke) kam in der Seiten-JSON an,
+  // build.html zeigte aber nur die zur Laufzeit erzeugten x/10-Werte. renderFit ist der
+  // gemeinsame Punkt aller Render-Wege — dort muss der Vorrang stehen, und zwar zuerst.
+  const html = await Bun.file("landing/build.html").text();
+  const fn = html.slice(html.indexOf("function renderFit(data, animate){"));
+  const body = fn.slice(0, fn.indexOf("\n}\n"));
+  expect(body.indexOf("releasedFit(data)")).toBeGreaterThan(-1);
+  expect(body.indexOf("releasedFit(data)")).toBeLessThan(body.indexOf("data.fit"));
+  // Unbekannte Stufe fällt auf solide, nie auf stark.
+  expect(html).toContain('FIT_LEVELS[f && f.level] || FIT_LEVELS["solide"]');
+});
+
 test("Elemente mit eigenem display werden von [hidden] wirklich verborgen", async () => {
   // Im Browser gefunden: `.ap-free{display:flex}` schlug die Browser-Regel für [hidden],
   // das abgewählte Freitextfeld blieb sichtbar stehen. Ohne diese Regel kommt das zurück,

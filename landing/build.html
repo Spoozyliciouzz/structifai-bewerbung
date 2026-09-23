@@ -133,6 +133,17 @@
   .fill.low{background:var(--muted)}
   .fill.mid{background:var(--gold);opacity:.8}
 
+  /* Freigegebener Abgleich (page.fit): Stufe in Worten statt Punktzahl. Optik wie render/site.ts. */
+  ul.matches{list-style:none;padding:0;margin:0}
+  .match{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px;margin:10px 0}
+  .match-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+  .match .req{font-weight:600}
+  .match .evidence{color:var(--muted);margin:.5em 0 0;font-size:.95rem}
+  .badge{font-family:"IBM Plex Mono",monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .b-stark{background:rgba(206,173,96,.16);color:var(--gold);border:1px solid rgba(206,173,96,.4)}
+  .b-solide{background:rgba(154,163,178,.14);color:var(--ink);border:1px solid var(--line)}
+  .b-luecke{background:rgba(154,163,178,.06);color:var(--muted);border:1px dashed var(--line)}
+
   /* Skeleton */
   .skeleton{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
   .sk{background:linear-gradient(90deg,#1b2230 25%,#222b3b 37%,#1b2230 63%);background-size:400% 100%;
@@ -711,7 +722,38 @@ function finishProgressInto(data, animate){
   setTimeout(swap, 480);
 }
 
+// Freigegebener Abgleich der Bewerbung. Hat Vorrang vor den Modell-Punktzahlen: die sind zur
+// Laufzeit erzeugt und nicht geprüft, page.fit ist redaktionell freigegeben.
+const FIT_LEVELS = { "stark": ["stark","b-stark"], "solide": ["solide","b-solide"], "lücke": ["Lücke","b-luecke"] };
+
+function releasedFit(data){
+  const f = data && data.page && data.page.fit;
+  return Array.isArray(f) && f.length ? f : null;
+}
+
+function renderReleasedFit(host, items){
+  const list = el("ul","matches");
+  items.forEach(f=>{
+    // Unbekannte Stufe ⇒ "solide", nie "stark" (wie coercePage).
+    const lv = FIT_LEVELS[f && f.level] || FIT_LEVELS["solide"];
+    const li = el("li","match");
+    const head = el("div","match-head");
+    head.appendChild(txt(el("span","req"), f && f.requirement));
+    head.appendChild(txt(el("span","badge " + lv[1]), lv[0]));
+    li.appendChild(head);
+    if(f && f.evidence) li.appendChild(txt(el("p","evidence"), f.evidence));
+    list.appendChild(li);
+  });
+  host.appendChild(list);
+}
+
 function renderFit(data, animate){
+  const released = releasedFit(data);
+  if(released){
+    const h = $("fit-host"); h.textContent = "";
+    renderReleasedFit(h, released);
+    return;
+  }
   const fit = (data && data.fit) || {};
   const overall = clamp10(fit.overall);
   const dims = Array.isArray(fit.dimensions) ? fit.dimensions : [];
