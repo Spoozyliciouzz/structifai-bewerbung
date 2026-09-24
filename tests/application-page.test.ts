@@ -26,7 +26,7 @@ test("der echte LM-Inhalt kommt vollständig durch", () => {
   expect(sd.page?.company_reference?.source_url).toBe("https://www.lm-ag.de/prozessautomatisierung/");
   expect(sd.page?.work_sample?.module).toBe("expense-case");
   expect(sd.page?.ninety_days?.steps).toHaveLength(3);
-  expect(sd.page?.conversation_starters).toHaveLength(3);
+  expect(sd.page?.conversation_starters).toHaveLength(4);
   expect(sd.page?.sources).toHaveLength(3);
 });
 

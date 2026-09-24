@@ -3,7 +3,7 @@
  *
  * Drei unabhängige Ja/Nein-Fragen. Bei „Nein" verschwindet die Angabe vollständig aus
  * Abrechnung, Summen und PDF — sie wird nicht auf null gesetzt und weiter mitgeführt.
- * Kostenstelle und Mitarbeiternummer sind freier Text ohne Stammdatenprüfung: es sind
+ * Kostenstelle und Personalnummer sind freier Text ohne Stammdatenprüfung: es sind
  * Beispielangaben des Besuchers, keine echten Organisationskennungen. Deshalb bleiben sie
  * Text, damit führende Nullen und erfundene Namen erhalten bleiben.
  *
@@ -50,7 +50,7 @@ export function describeExpenseOptions(sel: ExpenseSelection): string[] {
   if (o.includePerDiem) lines.push("Verpflegungsmehraufwand: anhand Ihrer Reiseangaben berechnen");
   if (o.costCenter !== null) lines.push(`Kostenstelle: ${o.costCenter || "bitte frei eingeben"}`);
   if (o.employeeNumber !== null) {
-    lines.push(`Mitarbeiternummer: ${o.employeeNumber || "bitte frei eingeben"}`);
+    lines.push(`Personalnummer: ${o.employeeNumber || "bitte frei eingeben"}`);
   }
   if (!lines.length) lines.push("Abrechnung der Belege ohne die drei Zusatzangaben.");
   return lines;

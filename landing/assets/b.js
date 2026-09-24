@@ -191,7 +191,7 @@
     form.appendChild(optionSet("Verpflegungsmehraufwendungen berücksichtigen?", "includePerDiem"));
     form.appendChild(optionSet("Kostenstelle berücksichtigen?", "includeCostCenter", "costCenter", "Ihre Kostenstelle",
       "Zum Beispiel: Testabteilung 42", "Frei wählbar. Eine erfundene Angabe funktioniert genauso."));
-    form.appendChild(optionSet("Mitarbeiternummer berücksichtigen?", "includeEmployeeNumber", "employeeNumber", "Ihre Mitarbeiternummer",
+    form.appendChild(optionSet("Personalnummer berücksichtigen?", "includeEmployeeNumber", "employeeNumber", "Ihre Personalnummer",
       "Zum Beispiel: 001-LM", "Beliebiger Text ist möglich; keine Stammdatenprüfung."));
     box.appendChild(form);
     var prev = el("div", "options-preview");

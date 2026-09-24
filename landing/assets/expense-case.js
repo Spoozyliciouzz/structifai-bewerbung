@@ -27,7 +27,7 @@
     var lines = [];
     if (sel.includePerDiem) lines.push("Verpflegungsmehraufwand: anhand Ihrer Reiseangaben berechnen");
     if (sel.includeCostCenter) lines.push("Kostenstelle: " + (sel.costCenter || "bitte frei eingeben"));
-    if (sel.includeEmployeeNumber) lines.push("Mitarbeiternummer: " + (sel.employeeNumber || "bitte frei eingeben"));
+    if (sel.includeEmployeeNumber) lines.push("Personalnummer: " + (sel.employeeNumber || "bitte frei eingeben"));
     if (!lines.length) lines.push("Abrechnung der Belege ohne die drei Zusatzangaben.");
     return lines;
   }

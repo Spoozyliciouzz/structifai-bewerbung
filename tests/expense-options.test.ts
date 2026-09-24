@@ -60,7 +60,7 @@ test("leerer Freitext fordert zur Eingabe auf, statt leer zu bleiben", () => {
   });
   expect(lines).toEqual([
     "Kostenstelle: bitte frei eingeben",
-    "Mitarbeiternummer: bitte frei eingeben",
+    "Personalnummer: bitte frei eingeben",
   ]);
 });
 
@@ -72,25 +72,26 @@ test("volle Auswahl zeigt alle drei Zeilen in fester Reihenfolge", () => {
   expect(lines).toEqual([
     "Verpflegungsmehraufwand: anhand Ihrer Reiseangaben berechnen",
     "Kostenstelle: KST 4711",
-    "Mitarbeiternummer: MA-0815",
+    "Personalnummer: MA-0815",
   ]);
 });
 
-test("build.html führt dieselben Vorschau-Texte wie dieses Modul", async () => {
-  // Die statische Seite hat keinen Bundler und trägt die Regeln inline. Laufen die Texte
-  // auseinander, zeigt die Seite etwas anderes an als hier geprüft wird.
-  const html = await Bun.file("landing/build.html").text();
+test("expense-case.js führt dieselben Vorschau-Texte wie dieses Modul", async () => {
+  // Die statische Seite hat keinen Bundler und trägt die Regeln im Skript. Laufen die Texte
+  // auseinander, zeigt die Seite etwas anderes an als hier geprüft wird. Geprüft wird die
+  // Datei, die der Stellenteil (b.js) tatsächlich lädt — nicht mehr das alte build.html.
+  const html = await Bun.file("landing/assets/expense-case.js").text();
   for (const satz of [
     "Verpflegungsmehraufwand: anhand Ihrer Reiseangaben berechnen",
     "bitte frei eingeben",
     "Abrechnung der Belege ohne die drei Zusatzangaben.",
     "Kostenstelle: ",
-    "Mitarbeiternummer: ",
+    "Personalnummer: ",
   ]) {
     expect(html).toContain(satz);
   }
   // Und die Regel selbst: abgewählte Felder werden deaktiviert, nicht nur versteckt.
-  expect(html).toContain("$(name).disabled = !an;");
+  expect(html).toContain("if (input) input.disabled = !pair[1];");
 });
 
 test("die n=1-Abschnitte hängen an renderHeader, nicht nur an renderShell", async () => {

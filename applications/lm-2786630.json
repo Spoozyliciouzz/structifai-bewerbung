@@ -1,12 +1,12 @@
 {
-  "_note": "n=1-Inhalt für genau eine Stellenanzeige. Die 80 % agnostischen Inhalte (Profil, Werdegang, Pilotprojekte, Aussprache) stehen NICHT hier — die kommen aus profile/dennis.json bzw. voice_agent_context. Quelle dieses Entwurfs: structifai-website/docs/scratch/lm-bewerbung/ (Codex, 2026-09-15). Noch nicht freigegeben. Voice-FAQ am 21.09.2026 mit den bestätigten Fakten vom 18.09.2026 (Führung, Budget, Microsoft, Motivation, Verfügbarkeit) zusammengeführt. v3 (2026-09-23): Texte für Warum/Einbringen/Arbeitsprobe/Gespräch wörtlich aus Codex' Seite (Stand 18.09.) für den Stellenteil im structifai.de-Design.",
+  "_note": "n=1-Inhalt für genau eine Stellenanzeige. Die 80 % agnostischen Inhalte (Profil, Werdegang, Pilotprojekte, Aussprache) stehen NICHT hier — die kommen aus profile/dennis.json bzw. voice_agent_context. Quelle dieses Entwurfs: structifai-website/docs/scratch/lm-bewerbung/ (Codex, 2026-09-15). Noch nicht freigegeben. Voice-FAQ am 21.09.2026 mit den bestätigten Fakten vom 18.09.2026 (Führung, Budget, Microsoft, Motivation, Verfügbarkeit) zusammengeführt. v3 (2026-09-23): Texte für Warum/Einbringen/Arbeitsprobe/Gespräch wörtlich aus Codex' Seite (Stand 18.09.) für den Stellenteil im structifai.de-Design. v5 (2026-09-24): gegen den Live-Code der Demo geprüft — Limits, vorbelegte Reiseangaben, Dateiformate, Personalnummer, Verarbeitungsort.",
   "id": "lm-2786630",
   "company": "LM IT Services AG",
   "role_title": "Head of AI & Processes",
   "job_url": "https://lmit.jobs.personio.com/job/2786630",
   "job_source_id": "2786630",
   "enrich_domain": "lm-ag.de",
-  "version": 4,
+  "version": 5,
   "page": {
     "hero": {
       "eyebrow": "Unternehmerische Verantwortung trifft KI-Praxis",
@@ -29,7 +29,7 @@
       "journey": [
         {
           "title": "Belege hochladen",
-          "body": "Bis zu drei eigene Fotos oder PDFs. Die Angaben werden automatisch ausgelesen, mit derselben Auslesung wie im echten Werkzeug."
+          "body": "Bis zu drei eigene Belege als Foto (JPG, PNG) oder PDF, je bis 3,5 MB; iPhone-Fotos im HEIC-Format vorher als JPG sichern. Die Angaben werden automatisch ausgelesen, mit derselben Auslesung wie im echten Werkzeug."
         },
         {
           "title": "Ergebnis prüfen",
@@ -37,7 +37,7 @@
         },
         {
           "title": "Reise ergänzen",
-          "body": "Zweck, Abfahrt und Rückkehr eintragen. Ihre Auswahl von oben ist schon übernommen und dort änderbar."
+          "body": "Zweck, Abfahrt und Rückkehr sind vorbelegt – prüfen und anpassen. Ihre Auswahl von oben ist schon übernommen und dort änderbar."
         },
         {
           "title": "PDF erhalten",
@@ -53,7 +53,7 @@
         "text": "Wie wird daraus ein verlässliches Angebot für den nächsten Kunden – mit klaren Zuständigkeiten, wiederverwendbaren Bausteinen und messbarer Entlastung?"
       },
       "sandbox_url": "https://reisekosten.structifai.de/demo",
-      "sandbox_text": "Die echte Oberfläche meines Reisekosten-Werkzeugs, ohne Konto und ohne E-Mail-Adresse. Die Demo legt nichts an: keine Reise, kein Beleg bleibt gespeichert. Zum Auslesen gehen die Belege einmal an die Texterkennung."
+      "sandbox_text": "Die echte Oberfläche meines Reisekosten-Werkzeugs, ohne Konto und ohne E-Mail-Adresse. Die Demo legt nichts an: keine Reise, kein Beleg bleibt gespeichert. Ausgelesen wird in der EU: Ein eigener Dienst auf einem Server in Frankfurt schwärzt zuerst die personenbezogenen Daten, danach liest die Mistral-API die Angaben aus."
     },
     "ninety_days": {
       "eyebrow": "Mein Einstieg — Diskussionsgrundlage",
@@ -198,7 +198,7 @@
     },
     "rules_extra": [
       "Die LM-Referenz und Dennis eigene Reisekosten-Anwendung sind unterschiedliche Implementierungen. Die Demo verwendet keine LM-Kundendaten.",
-      "Die Demo unter reisekosten.structifai.de/demo ist live: ohne Anmeldung bis zu drei eigene Belege hochladen, erkannte Angaben prüfen, Reise ergänzen und die Abrechnung als PDF herunterladen. Es gibt dort keinen Rollenwechsel, keinen E-Mail-Versand und keine vorbereiteten Beispielbelege — behaupte das nicht. Die Demo speichert nichts.",
+      "Die Demo unter reisekosten.structifai.de/demo ist live: ohne Anmeldung bis zu drei eigene Belege (JPG, PNG oder PDF, je bis 3,5 MB, kein HEIC) hochladen, erkannte Angaben prüfen, vorbelegte Reiseangaben anpassen und die Abrechnung als PDF herunterladen. Grenzen: 9 Belege je Besucher und Tag, 60 Belege pro Tag insgesamt. Es gibt dort keinen Rollenwechsel, keinen E-Mail-Versand und keine vorbereiteten Beispielbelege — behaupte das nicht. Die Demo speichert nichts.",
       "Für Führung, Budget, Microsoft-Erfahrung, Motivation und Verfügbarkeit gelten ausschließlich die bestätigten Antworten in faq (Stand 18.09.2026). Gehaltswünsche sind nicht hinterlegt: nicht erfinden, auf das persönliche Gespräch verweisen.",
       "Beantworte Fragen zu anderen Bewerbungen nicht. Triff keine Vertragszusagen und gib keine vertraulichen Angaben früherer Arbeitgeber weiter.",
       "Bei Widerspruch zwischen allgemeinen und stellenbezogenen Angaben gilt die stellenbezogene Antwort aus faq."
@@ -215,22 +215,25 @@
         "type": "Öffentliche Demo ohne Anmeldung in Dennis Reisekosten-Anwendung",
         "status": "live",
         "optional_fields": {
-          "per_diem": "Unabhängige Ja-/Nein-Auswahl. Bei Ja aus Reisezeiten, Übernachtung und gestellten Mahlzeiten berechnen. Bei Nein keine Pauschale in Summen, PDF oder Mailanhang.",
+          "per_diem": "Unabhängige Ja-/Nein-Auswahl. Bei Ja aus Reisezeiten und Übernachtung berechnet; gestellte Mahlzeiten erfasst die Demo nicht. Bei Nein keine Pauschale in Summen und PDF.",
           "cost_center": "Bei Ja beliebiger Freitext, keine Stammdatenprüfung. Bei Nein vollständig weglassen.",
-          "employee_number": "Bei Ja beliebiger Freitext, führende Nullen erhalten. Bei Nein vollständig weglassen.",
+          "employee_number": "Personalnummer. Bei Ja beliebiger Freitext, führende Nullen erhalten. Bei Nein vollständig weglassen.",
           "preview_status": "Die Auswahl wird beim Öffnen an die Demo übergeben, ist dort änderbar und wirkt auf die PDF-Abrechnung."
         },
         "flow": [
           "Bis zu drei eigene Fotos/PDFs hochladen",
           "Erkannte Angaben prüfen und korrigieren",
-          "Zweck und Reisezeiten ergänzen",
+          "Vorbelegten Zweck und Reisezeiten prüfen und anpassen",
           "Abrechnung als PDF herunterladen (mit DEMO-Wasserzeichen und Funktionsübersicht)"
         ],
         "limits": {
           "receipts_per_demo": 3,
-          "demos_per_day_per_visitor": 20
+          "receipts_per_visitor_per_day": 9,
+          "receipts_per_day_total": 60,
+          "max_file_mb": 3.5,
+          "formats": "JPG, PNG, PDF (kein HEIC)"
         },
-        "isolation": "Kein Konto, keine Datenbank: Reise und Belege bleiben im Browser des Besuchers. Zum Auslesen gehen die Belege einmal an die Texterkennung.",
+        "isolation": "Kein Konto, keine Datenbank: Reise und Belege bleiben im Browser des Besuchers. Ausgelesen wird in der EU: Ein eigener Dienst auf einem Server in Frankfurt schwärzt zuerst die personenbezogenen Daten, danach liest die Mistral-API die Angaben aus.",
         "voice_privacy": "Belegbilder, Belegtext, E-Mail-Adresse und Abrechnungen bleiben außerhalb des Voice-Kontexts.",
         "provenance": "LMs SharePoint-Kundenreferenz ist der Anlass. Die Demo zeigt Dennis eigenes Produkt und keine Umsetzung für den LM-Referenzkunden.",
         "url": "https://reisekosten.structifai.de/demo"
@@ -276,6 +279,10 @@
       {
         "q": "Was erwartet Dennis an Gehalt?",
         "a": "Dazu liegen mir keine Angaben vor. Das klärt Dennis im persönlichen Gespräch."
+      },
+      {
+        "q": "Wo werden die Belege der Demo verarbeitet?",
+        "a": "Ausgelesen wird in der EU: Ein eigener Dienst auf einem Server in Frankfurt schwärzt zuerst die personenbezogenen Daten, danach liest die Mistral-API die Angaben aus. Gespeichert wird nichts: Reise und Belege bleiben im Browser, das PDF entsteht dort."
       }
     ]
   }
