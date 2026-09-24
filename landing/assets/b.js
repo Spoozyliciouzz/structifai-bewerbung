@@ -351,7 +351,7 @@
         if (!host.querySelector("iframe")) return;
         mounted = true;
         btn.hidden = true;
-        note.textContent = "Zum Sprechen unten auf „Stimme“ und dann „Anruf starten“ tippen, das Mikrofon freigeben und losreden. Schreiben geht auch.";
+        note.textContent = "Im Fenster auf „Anruf starten“ tippen, das Mikrofon freigeben und einfach losreden.";
         obs.disconnect();
       });
       obs.observe(host, { childList: true, subtree: true });
