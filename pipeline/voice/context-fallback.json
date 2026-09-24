@@ -20,7 +20,7 @@
     },
     {
       "name": "QMN Mediapartner-Dashboard",
-      "one": "Selbstbedienungs-Dashboard für die monatliche Abrechnung zwischen dem Vermarkter QMN und seinen Mediapartnern: Partner reichen Impressionen ein, prüfen ihre Abrechnung und geben sie frei oder schicken sie in die Klärung; das QMN-Team verwaltet Werbeplätze und Tausenderpreise, gleicht Excel-Abrechnungen ab und legt Gutschriften und Dokumente ab. Ziel: jeder Monatszyklus läuft vollständig im Werkzeug, ohne E-Mail-Pingpong und mit klarem Status, wer gerade dran ist.",
+      "one": "Live im Einsatz: Selbstbedienungs-Dashboard für die monatliche Abrechnung zwischen dem Vermarkter QMN und seinen Mediapartnern. Partner reichen Impressionen ein, prüfen ihre Abrechnung und geben sie frei oder schicken sie in die Klärung; das QMN-Team verwaltet Werbeplätze und Tausenderpreise, gleicht Excel-Abrechnungen ab und legt Gutschriften und Dokumente ab. Jeder Monatszyklus läuft im Werkzeug, ohne E-Mail-Pingpong und mit klarem Status, wer gerade dran ist.",
       "stack": "React, TypeScript, Supabase mit Row-Level-Security, zwei Rollenbereiche für Admins und Partner"
     },
     {
@@ -42,7 +42,7 @@
   "faq": [
     {
       "q": "Was kann Dennis konkret?",
-      "a": "Unternehmen führen und gleichzeitig selbst bauen: Er hat mehrere Gesellschaften als Co-Geschäftsführer gesteuert und bringt eigene KI-Anwendungen in den Betrieb – zuletzt ein Reisekosten-Tool, das live läuft, und eine Dokumentations-Anwendung für Elektrobetriebe im Pilotbetrieb."
+      "a": "Unternehmen führen und gleichzeitig selbst bauen: Er hat mehrere Gesellschaften als Co-Geschäftsführer gesteuert und bringt eigene KI-Anwendungen in den Betrieb – zuletzt ein Reisekosten-Tool und ein Abrechnungs-Dashboard für Mediapartner, die beide live laufen, und eine Dokumentations-Anwendung für Elektrobetriebe im Pilotbetrieb."
     },
     {
       "q": "Warum dieser Sprachassistent?",
