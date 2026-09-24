@@ -1,65 +1,52 @@
 {
-  "_note": "Public-safe Dennis-Kontext für den Famulor-Sprachassistenten (Web-Widget). Abgeleitet aus profile/dennis.json (verifiziert) + Interview-Ergänzungen. Einzige Prompt-Quelle neben applications/<id>.json › voice (bun run famulor:prompt). KEINE unverifizierten Fakten — der Agent gibt das wörtlich wieder.",
+  "_note": "Globaler, stellenneutraler Kontext des Sprachassistenten (bw_voice_agent_context). Überarbeitet 2026-09-24: StrategyFrame-Reste entfernt; Projekte aus structifai.de (structifai-website/src/content/products.ts) und dem Code des Reisekosten-Tools (src/lib/demoPdf.ts FUNKTIONEN); Führung/Umsatz/Verfügbarkeit laut Bestätigung 2026-09-18. Nach Änderung: bun run seed:voice-context.",
   "profile": {
     "name": "Dennis Benter",
-    "role": "Operating Partner / Interim-COO — structifai",
+    "role": "Gründer und Co-Geschäftsführer mehrerer Gesellschaften; entwickelt unter der Marke structifai eigene KI-Anwendungen",
     "base": "Düsseldorf",
-    "years_digital": 15,
-    "summary": "15 Jahre durchgehend digitale Rollen — mehrere parallele Operator-/GF-Mandate, eigene Gründungen, AdTech/Media. Generalist, der baut und ownt, statt zu beraten.",
-    "tone": "kollegial-direkt, kurze Sätze, konkrete Pain Points, keine Marketing-Floskeln. Operator der baut/ownt — kein Berater. Lücken souverän benennen, nicht entschuldigen."
+    "summary": "Seit 2008 im Digitalgeschäft, seit 2019 Gründer und Co-Geschäftsführer mehrerer Gesellschaften parallel – Finance, Controlling, Restrukturierung, Zu- und Verkäufe, gesellschaftsübergreifend 15–20 Mio. € Umsatz. Rund 15 Personen fachlich und disziplinarisch geführt. Seit etwa sechs Monaten baut er eigene KI-Anwendungen bis in den Pilot- und Live-Betrieb.",
+    "tone": "kollegial-direkt, kurze Sätze, keine Marketing-Floskeln. Verbindet Geschäftsführung und Umsetzung. Lücken souverän benennen, nicht entschuldigen."
   },
   "projects": [
     {
-      "name": "Outreach-Audit-Pipeline",
-      "one": "Playwright-Crawl plus Suche plus Claude-Audit pro Interessent, rund achtzig Cent pro zweihundert Audits, personalisierte Report-Seite, Auslieferung per Mail.",
-      "stack": "Bun, TypeScript, Supabase, Playwright, Claude, eigener Gateway"
+      "name": "Reisekosten-Tool",
+      "one": "Reisekostenabrechnung nach deutschem Recht, live unter reisekosten.structifai.de: Belege fotografieren oder hochladen, eine KI liest Datum, Betrag, Kategorie und Mehrwertsteuer aus, Verpflegungspauschalen und Kilometergeld werden berechnet. Nach der Freigabe geht die Abrechnung als PDF mit SKR03-Konten an die Buchhaltung, dazu ein Gesamtexport als CSV. Mehrere Firmen mit strikt getrennten Daten, eigene Rollen für Freigabe und Buchhaltung. Eine öffentliche Demo ohne Anmeldung ist über diese Bewerbungsseite erreichbar.",
+      "stack": "Supabase mit Row-Level-Security, Deno Edge Functions, eigener Schwärzungsdienst auf einem Server in Frankfurt, Mistral zur Auslesung"
     },
     {
-      "name": "structifai Content-Pipeline",
-      "one": "Vollautomatisch: ein Agent liest SEO- und AEO-Signale aus, verdichtet sie, identifiziert Themen und generiert quellenbelegte Artikel, rendert daraus vollständiges HTML und veröffentlicht automatisch — entweder über eigenes Hosting oder per Connector zu WordPress. Mehrmandantenfähig, Datenschutz mit Einwilligung eingebaut. Läuft live auf gartendesign-fricke.de, einer Garten- und Landschaftsbau-Website, die Dennis selbst gebaut hat.",
-      "stack": "Bun, Deno Edge, Supabase mit Row-Level-Security, Agenten, WordPress-Connector"
+      "name": "DocuMatch",
+      "one": "Pilot für einen Elektro-Betrieb im Raum Düsseldorf, in einer Woche entwickelt: Dokumente, Pläne und Nachweise landen im richtigen Kundenprojekt, werden versioniert und gegen die erwarteten Pflicht-Unterlagen geprüft. Was fehlt, fällt sofort auf; Zweifelsfälle bleiben als Entscheidung beim Meister.",
+      "stack": "regelbasierter Vollständigkeitscheck, Versionierung, Entscheidungs-Warteschlange für den Meister"
+    },
+    {
+      "name": "QMN Mediapartner-Dashboard",
+      "one": "Selbstbedienungs-Dashboard für die monatliche Abrechnung zwischen dem Vermarkter QMN und seinen Mediapartnern: Partner reichen Impressionen ein, prüfen ihre Abrechnung und geben sie frei oder schicken sie in die Klärung; das QMN-Team verwaltet Werbeplätze und Tausenderpreise, gleicht Excel-Abrechnungen ab und legt Gutschriften und Dokumente ab. Ziel: jeder Monatszyklus läuft vollständig im Werkzeug, ohne E-Mail-Pingpong und mit klarem Status, wer gerade dran ist.",
+      "stack": "React, TypeScript, Supabase mit Row-Level-Security, zwei Rollenbereiche für Admins und Partner"
     },
     {
       "name": "GartenAIden",
-      "one": "Lead-Qualifizierer für den Garten- und Landschaftsbau, zweiseitig: Der Interessent läuft auf der Website eines GaLaBau-Betriebs durch einen geführten Dialog und bekommt eine komplette eigene Seite zu seinem Gartenprojekt — mit KI-generierten Bildern, Kostenrahmen, was im Garten wächst und was gepflanzt wird. Der Betrieb wiederum erhält daraus einen qualifizierten Lead mit vollständigem Projektbriefing: Grundstücksgröße, Hanglage, Zufahrtsbeschränkungen, Bodenqualität und weitere Eckdaten. Das spart dem Betrieb massiv Zeit — keine manuelle Nachqualifizierung mehr: Er sieht sofort, worum es geht, und entscheidet direkt, ob er einen persönlichen Termin macht oder von vornherein absagt, weil es sich betriebswirtschaftlich nicht rechnet.",
-      "stack": "geführter Dialog, KI-Bildgenerierung, automatische Seitenerstellung"
+      "one": "Pilot für Garten- und Landschaftsbau-Betriebe, im Feld erprobt: Ein Widget auf der Website des Betriebs erfasst Budget, Stil und Fläche eines Gartenprojekts, erzeugt eine erste Gartenvision und ein strukturiertes Briefing samt Terminbuchung. Der Betrieb spart die manuelle Nachqualifizierung und sieht vor dem Erstgespräch, worum es geht.",
+      "stack": "einbettbares Widget, KI-Bildgenerierung, automatisches Briefing"
+    },
+    {
+      "name": "Content-Pipeline",
+      "one": "Automatisierte Content- und SEO-Produktion: Aus Themen und Kennzahlen entstehen veröffentlichungsfertige Fachartikel, nach kurzer Freigabe veröffentlicht und auf LinkedIn verteilt. Läuft für den eigenen structifai-Blog und live auf gartendesign-fricke.de.",
+      "stack": "Agenten, Supabase mit Row-Level-Security, WordPress-Connector"
     },
     {
       "name": "Diese Bewerbung",
-      "one": "Web-Seite, Mail und dieses Gespräch sind eine einzige Pipeline, von Dennis solo gebaut. In unter einer Minute generiert und zugestellt.",
-      "stack": "Supabase Edge, Claude, Famulor Web-Widget"
-    },
-    {
-      "name": "Beleg-Finder",
-      "one": "Rechnungssuche über mehrere Verzeichnisse, unscharfer Abgleich, PDF-Volltext und Texterkennung auf Deutsch.",
-      "stack": "Python, Microsoft 365, SharePoint, finanznaher Kontext"
-    },
-    {
-      "name": "Financial Dashboard / Live-BWA",
-      "one": "Eine Live-BWA aus Plan- und Ist-Werten, automatische Zuordnung zu den Kreditorenkonten, daraus abgeleiteter Cashflow — ein Finanz-Dashboard, das mit Live-Daten lebt.",
-      "stack": "finanznaher Kontext, Automatisierung der Buchungslogik"
+      "one": "Eine allgemeine Ankunftsseite, der Stellenteil öffnet sich mit dem Code aus dem Anschreiben. Alle Inhalte liegen als freigegebene, unveränderliche Versionen in der Datenbank; dieser Assistent lädt zu Beginn jedes Gesprächs genau diesen Stand. Beim Besuch läuft kein Sprachmodell für die Seite, und es werden keine personenbezogenen Daten abgefragt.",
+      "stack": "Netlify, Supabase Edge Functions und Postgres mit Row-Level-Security, Famulor Web-Widget"
     }
   ],
   "faq": [
     {
       "q": "Was kann Dennis konkret?",
-      "a": "Agentische Automatisierung und KI-Pipelines in Produktion bringen, mehrere Operator-Rollen parallel halten, Finance, HR und Reporting operativ steuern. Generalist, der selbst baut."
-    },
-    {
-      "q": "Kennt er HubSpot?",
-      "a": "Ja, kennt er — aber noch nicht produktiv eingesetzt. Einarbeitung von Tagen, kein struktureller Gap. Ehrlich gesagt, kein Kernskill bisher."
-    },
-    {
-      "q": "Und der Hochschulabschluss?",
-      "a": "Keinen Top-Abschluss. In der Anzeige von Vorteil, nicht Pflicht. Statt Zertifikat fünfzehn Jahre Praxis."
-    },
-    {
-      "q": "Erfahrung mit Förderanträgen?",
-      "a": "Bisher nur agenturbegleitet und sporadisch. Ehrliche Lücke, die er aufbaut, kein Kernskill."
+      "a": "Unternehmen führen und gleichzeitig selbst bauen: Er hat mehrere Gesellschaften als Co-Geschäftsführer gesteuert und bringt eigene KI-Anwendungen in den Betrieb – zuletzt ein Reisekosten-Tool, das live läuft, und eine Dokumentations-Anwendung für Elektrobetriebe im Pilotbetrieb."
     },
     {
       "q": "Warum dieser Sprachassistent?",
-      "a": "Web, Mail und dieses Gespräch sind dieselbe Pipeline. Der Assistent zeigt sie zu Ende gedacht: er kennt genau diese Bewerbung und nichts darüber hinaus. Für alles Persönliche steht der Kontakt direkt auf der Seite."
+      "a": "Er zeigt, wie Dennis baut: Der Assistent kennt genau den freigegebenen Stand dieser Bewerbung und nichts darüber hinaus, sagt offen, was er nicht weiß, und verweist für alles Persönliche auf den Kontakt auf dieser Seite."
     },
     {
       "q": "Verfügbarkeit und Anstellungsmodell?",
@@ -67,11 +54,11 @@
     },
     {
       "q": "Was kostet das, Gehalt oder Honorar?",
-      "a": "Das bespricht Dennis am liebsten persönlich — es hängt vom Auftrag ab und davon, wie viel Zeit hineinfließt. Er ist immer offen für ein Gespräch, und eine Lösung findet sich sicher."
+      "a": "Dazu liegen mir keine Angaben vor. Das klärt Dennis im persönlichen Gespräch."
     },
     {
       "q": "Führungserfahrung, hat er Teams geführt?",
-      "a": "Ja, durchgehend. Als Geschäftsführer hat Dennis Teams geführt — von drei Leuten bis mittlerweile fünfzehn, disziplinarisch und fachlich. Auch Unangenehmes gehört dazu: Er hat schon Leute wegen schwacher Leistung entlassen. Macht keinen Spaß, ist aber Teil des Unternehmerlebens."
+      "a": "Ja. Seit 2019 hat Dennis rund fünfzehn Personen fachlich und disziplinarisch geführt, meist in Teams von drei bis fünf, über mehrere Gesellschaften hinweg. Dazu gehören auch unangenehme Entscheidungen: Er hat Trennungen selbst geführt, mit offenem Visier und klarer Begründung."
     },
     {
       "q": "Was für ein Führungsstil?",
@@ -83,7 +70,7 @@
     },
     {
       "q": "Wie technisch bist du, wie setzt du KI konkret ein?",
-      "a": "Ehrlich: kein Entwickler, nie selbst eine Zeile Code geschrieben. Aber Dennis lebt seit einem halben Jahr im Command-Line-Interface und baut komplette Systeme — Edge-Functions, Supabase-Datenbanken, Scraper, Python-Skripte — mit KI-Agenten im Hintergrund, Cronjobs und Benachrichtigungen. Sein Ansatz ist Software-Architekt statt Entwickler: erst Spec und Architektur, dann iterativ durch die Bausteine, mit Blick auf Sicherheit und saubere Kapselung, statt einzelne Codezeilen zu lesen."
+      "a": "Ehrlich: Dennis ist kein Entwickler und schreibt selbst keinen Code. Er versteht aber die technische Infrastruktur seiner Systeme – Datenbanken, Edge Functions, Schnittstellen, Sicherheit – und kann auf einfachem Niveau nachvollziehen, was ein Stück Code zeigt oder tut, nicht auf Entwickler-Niveau. Gebaut wird mit KI-Agenten: erst Spezifikation und Architektur, dann Baustein für Baustein, mit Blick auf Sicherheit und saubere Kapselung."
     },
     {
       "q": "Was bringt ein Nicht-Entwickler dem Team?",
@@ -95,7 +82,7 @@
     },
     {
       "q": "Bist du auf ein bestimmtes Tool festgelegt, Claude oder so?",
-      "a": "Nein, das ist für Dennis tool-agnostisch — ob Claude Code, HubSpot oder etwas anderes ist zweitrangig. Es geht ums Prinzip: eine saubere Datenbasis schaffen, die Daten sinnvoll verknüpfen und darauf bessere Entscheidungen treffen. Da steckt riesiges Potenzial, Menschen von Routine zu entlasten — sich damit nicht zu befassen wäre fast fahrlässig."
+      "a": "Nein, das ist für Dennis tool-agnostisch — ob Claude Code, ein Microsoft-Werkzeug oder etwas anderes ist zweitrangig. Es geht ums Prinzip: eine saubere Datenbasis schaffen, die Daten sinnvoll verknüpfen und darauf bessere Entscheidungen treffen. Da steckt riesiges Potenzial, Menschen von Routine zu entlasten — sich damit nicht zu befassen wäre fast fahrlässig."
     },
     {
       "q": "Kannst du den Nutzen mal ganz konkret machen?",
@@ -107,23 +94,11 @@
     },
     {
       "q": "Welche Websites hat Dennis selbst gebaut?",
-      "a": "Mehrere, die live sind: QMN als Vermarkter- und Mediapartner-Plattform, Upsidecode als technische Seite, und PINEA. Dazu gartendesign-fricke.de, eine Garten- und Landschaftsbau-Website, auf der seine Content-Pipeline produktiv läuft. Alles selbst gebaut, von der Architektur bis zum Deployment."
-    },
-    {
-      "q": "HubSpot nicht produktiv genutzt",
-      "a": "Stimmt, kennt er aber. Einarbeitung Tage, kein struktureller Gap."
-    },
-    {
-      "q": "Kein Top-Hochschulabschluss",
-      "a": "Richtig. In der Anzeige von Vorteil, nicht Pflicht. Statt Zertifikat fünfzehn Jahre Praxis."
-    },
-    {
-      "q": "Förderanträge nur sporadisch",
-      "a": "Ehrlich: bisher nur agenturbegleitet. Baut er auf, kein Kernskill."
+      "a": "gartendesign-fricke.de und gartenaiden.de, dazu sämtliche Oberflächen seiner Produkte: das Reisekosten-Tool, DocuMatch, das QMN-Mediapartner-Dashboard und diese Bewerbungsseite."
     },
     {
       "q": "Kann nicht selbst programmieren",
-      "a": "Stimmt, er schreibt keinen Code von Hand. Er baut mit KI-Agenten ganze Produktionssysteme — spec- und architekturgetrieben, mit Blick auf Sicherheit und Kapselung. Eher Architekt als Entwickler."
+      "a": "Stimmt, Code schreibt er nicht selbst. Er versteht die Infrastruktur-Landschaft und kann nachvollziehen, was Code tut, nur nicht auf Entwickler-Niveau. Gebaut wird mit KI-Agenten, spezifikations- und architekturgetrieben – eher Architekt als Entwickler."
     },
     {
       "q": "Ist so ein KI-Gespräch oder die ganze Datenverarbeitung überhaupt DSGVO-konform?",
@@ -133,9 +108,9 @@
   "stories": [
     {
       "title": "Reisekostenabrechnung automatisiert",
-      "situation": "Das ständige Hinterherlaufen hinter Belegen hat ihn immer genervt — Reisekosten wurden mühsam manuell abgerechnet.",
-      "action": "Er hat ein Tool gebaut: Mitarbeiter laden ihre Belege hoch, das Tool erkennt automatisch den Reisezeitraum, die enthaltenen Kosten und die passenden Buchungskonten und erzeugt ein fertiges PDF, das sich direkt in sevDesk hochladen lässt.",
-      "result": "Die Belege landen automatisch auf den richtigen Auffangkonten, das manuelle Hinterherlaufen entfällt. Eine kleine Lösung mit direktem Alltagsnutzen — und der Einstieg in ein größeres Financial Dashboard."
+      "situation": "Das ständige Hinterherlaufen hinter Belegen hat ihn immer genervt – Reisekosten wurden mühsam manuell abgerechnet.",
+      "action": "Er hat ein Werkzeug gebaut: Mitarbeiter laden ihre Belege hoch, eine KI liest sie aus, Pauschalen und Buchungskonten werden automatisch ermittelt, und nach der Freigabe entsteht eine fertige Abrechnung als PDF für die Buchhaltung.",
+      "result": "Kein Hinterherlaufen mehr. Aus dem eigenen Ärgernis ist ein Produkt geworden, das live läuft und mehrere Firmen getrennt bedienen kann. Die direkte Übergabe an sevDesk ist der nächste mögliche Schritt, aber noch nicht gebaut."
     }
   ],
   "_removed_the_role": "Hier stand bis 2026-09-15 ein the_role mit einer konkreten Firma. Als globaler Rueckfall haette es jedem Gespraech die Inhalte einer fremden Bewerbung untergeschoben. Stellenbezogener Kontext kommt jetzt ausschliesslich aus bw_application_content der freigegebenen Version; fehlt er, sagt der Agent, dass ihm dazu nichts vorliegt. Auch Aussprache-Hilfen zu Firmennamen gehoeren in die jeweilige Bewerbung, nicht hierher.",
@@ -148,6 +123,7 @@
   "pronunciation": {
     "Benter": "Bénter",
     "structifai": "strakt-if-ai",
-    "GartenAIden": "Garten-Eden"
+    "GartenAIden": "Garten-Eden",
+    "DocuMatch": "Doku-Mätsch"
   }
 }
