@@ -16,10 +16,14 @@ kein Consent-Gate (UWG §7 greift nicht — sie initiiert). Encore, nicht im 60s
   ausgeliefert wird, weil sie vor dem ersten Tool-Aufruf gesprochen wird.
 - **IDs stehen in `applications/<id>.json › voice.famulor`** und in `bw_applications`
   (`famulor_assistant_id`, `famulor_widget_key`). Widget-Key ist public; Assistant-ID unkritisch.
-- **Widget nur auf `/b/*`.** Site-JSON trägt `voice.widget_key`; `build.html › buildVoiceSlide`
-  mountet lazy per `OurAiCallingWidget.boot(key, host)`. Allowed Origins in Famulor pflegen.
-  CSP an zwei Stellen (Meta in build.html, netlify.toml `/b/*`) — `app.famulor.io` in
-  `script-src`, `connect-src`, `frame-src`.
+- **Widget nur auf `/b/*`.** `bw-page` liefert `voice.widget_key`; `landing/assets/b.js › voice()`
+  mountet lazy per `OurAiCallingWidget.boot(key, host)`. Der Host ist LEER und hat per CSS feste
+  Maße (`.voice-host`, 9:16) — Famulors `mountInline` setzt Höhe nur bei einem Host ohne eigene
+  Höhe; mit Inhalt im Host fällt das Widget auf 0 px (2026-09-24). Allowed Origins in Famulor pflegen.
+  CSP nur noch in `netlify.toml` (`/b/*`) — `app.famulor.io` in `script-src`, `connect-src`, `frame-src`.
+- **Widget-Einstellungen** (Chat aus, Stimme an, KI-Hinweis an, Farbe `#c8964f`) liegen in Famulor,
+  nicht im Repo und nicht per MCP änderbar; prüfen über die öffentliche Konfiguration
+  `GET app.famulor.io/api/widget/<widget_key>/config` (Origin bewerbung.structifai.de).
 - **Bot-Disclosure im ersten Satz** (`voice.intro`). Ehrlich, Lücken benennen, kein Verkauf,
   keine Preise/Zusagen. Closing = Kontakt auf dieser Seite (`voice.closing`).
 - **Transkript:** Post-Call-Webhook (unsigniert) → `bw-famulor-webhook/<FAMULOR_WEBHOOK_TOKEN>` →

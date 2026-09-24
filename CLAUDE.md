@@ -1,8 +1,13 @@
 # CLAUDE.md — Bewerbung als Maschine
 
-Die Bewerbung **ist** das Produkt: Email rein → Agent baut live → personalisierte Seite
-per Mail in <60s → Sprachassistent im Browser. Profil-Wahrheit:
-`profile/dennis.json` (verifiziert, einzige Quelle für match+generate — nicht raten/aufblähen).
+Die Bewerbung **ist** das Produkt (seit 2026-09-23): allgemeine **Ankunftsseite**
+(`landing/index.html`, indexierbar) → Code aus dem Anschreiben → `bw-open` → **Stellenteil**
+`/b/<page_slug>` (`landing/b.html` + `assets/b.js`, noindex), Daten live aus der freigegebenen
+Version über `bw-page` → Sprachassistent (Famulor-Widget) im Stellenteil. Beim Besuch: kein LLM,
+keine Mail, keine PII. Der alte Live-Build (`build`-Function, `build.html`, E-Mail-Formular) ist
+nicht mehr im Besucherpfad; Aufräumen steht noch aus.
+Wahrheit für Inhalte: freigegebene `bw_application_content` (Stellenteil + stellenbezogene Voice)
+und `pipeline/voice/context-fallback.json` → `bw_voice_agent_context` (globaler Voice-Kontext).
 
 ## Stack
 - Runtime/Build: **Bun** (nie npm/yarn). TypeScript **strict**, kein `any`.
@@ -18,7 +23,10 @@ per Mail in <60s → Sprachassistent im Browser. Profil-Wahrheit:
 - `bun run scrape:auth` (headful Login) · `bun run scrape:job 4428605958`
 - `bun run enrich strategyframe.ai` · `echo "<text>" | bun run extract`
 - `bun run famulor:prompt applications/<id>.json` → Prompt für MCP `update_assistant`
-- `supabase functions deploy build --no-verify-jwt --use-api --workdir pipeline` (gleiche Flags für `bw-famulor-webhook`) · Migrationen: Supabase-MCP `apply_migration` (Name `bw_<thema>`), NICHT `db push` — s. Lessons
+- `supabase functions deploy build --no-verify-jwt --use-api --workdir pipeline` (gleiche Flags für `bw-famulor-webhook`, `bw-famulor-context`, `bw-open`, `bw-page`) · Migrationen: Supabase-MCP `apply_migration` (Name `bw_<thema>`), NICHT `db push` — s. Lessons
+- `bun scripts/gen-access.ts <PRÄFIX>` → Zugangscode + `page_slug` für eine neue Bewerbung (per SQL in `bw_applications` setzen)
+- Freigabe einer neuen Inhaltsversion: solange `.env` auf das gelöschte Altprojekt zeigt, per SQL
+  (`insert … bw_application_content` + `update bw_applications set released_version`), nicht per Seed-Script
 
 ## Harte Regeln (Sicherheit/DSGVO — siehe `.claude/rules/` + `SECURITY.md`)
 - Service-Role-Key nur in Function-Secrets. Nie Client, nie Repo. Bypasst RLS.
