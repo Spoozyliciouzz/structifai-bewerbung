@@ -40,3 +40,6 @@ BRIEFING.md
 tasks/
 docs/
 preview-site.ts
+
+# Playwright-MCP Konsolen-/Screenshot-Logs
+.playwright-mcp/
