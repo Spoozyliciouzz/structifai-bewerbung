@@ -25,7 +25,7 @@
     },
     {
       "name": "GartenAIden",
-      "one": "Pilot für Garten- und Landschaftsbau-Betriebe, im Feld erprobt: Ein Widget auf der Website des Betriebs erfasst Budget, Stil und Fläche eines Gartenprojekts, erzeugt eine erste Gartenvision und ein strukturiertes Briefing samt Terminbuchung. Der Betrieb spart die manuelle Nachqualifizierung und sieht vor dem Erstgespräch, worum es geht.",
+      "one": "Live unter gartenaiden.de, im Feld erprobt: Für Garten- und Landschaftsbau-Betriebe erfasst ein Widget auf der Website des Betriebs Budget, Stil und Fläche eines Gartenprojekts, erzeugt eine erste Gartenvision und ein strukturiertes Briefing samt Terminbuchung. Der Betrieb spart die manuelle Nachqualifizierung und sieht vor dem Erstgespräch, worum es geht.",
       "stack": "einbettbares Widget, KI-Bildgenerierung, automatisches Briefing"
     },
     {
@@ -42,7 +42,7 @@
   "faq": [
     {
       "q": "Was kann Dennis konkret?",
-      "a": "Unternehmen führen und gleichzeitig selbst bauen: Er hat mehrere Gesellschaften als Co-Geschäftsführer gesteuert und bringt eigene KI-Anwendungen in den Betrieb – zuletzt ein Reisekosten-Tool und ein Abrechnungs-Dashboard für Mediapartner, die beide live laufen, und eine Dokumentations-Anwendung für Elektrobetriebe im Pilotbetrieb."
+      "a": "Unternehmen führen und gleichzeitig selbst bauen: Er hat mehrere Gesellschaften als Co-Geschäftsführer gesteuert und bringt eigene KI-Anwendungen in den Betrieb – live laufen ein Reisekosten-Tool, ein Abrechnungs-Dashboard für Mediapartner und GartenAIden für Gartenbaubetriebe, dazu eine Dokumentations-Anwendung für Elektrobetriebe im Pilotbetrieb."
     },
     {
       "q": "Warum dieser Sprachassistent?",
