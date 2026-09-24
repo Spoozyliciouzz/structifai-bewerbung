@@ -59,7 +59,7 @@ label:not(.check){font-size:13px}
 .b-solide{background:var(--paper2);color:var(--ink);border:1px solid var(--line)}
 .b-luecke{background:transparent;color:var(--muted);border:1px dashed #1c1b1566}
 /* ── Widget ─────────────────────────────────────────────────── */
-.voice-host{margin-top:22px}
+.voice-host{margin-top:22px;width:100%;max-width:360px;aspect-ratio:9/16;border-radius:20px;overflow:hidden;background:var(--dark)}
 .voice-start{min-height:48px;border-radius:999px;border:0;padding:0 22px;background:var(--dark);color:#f3efe4;font-weight:600;cursor:pointer}
 .voice-start:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
 .voice-note{font-size:13px;color:var(--muted);margin:10px 0 18px}

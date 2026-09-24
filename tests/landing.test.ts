@@ -35,3 +35,14 @@ test("b.html steht auf noindex; b.js nutzt die IDs von expense-case.js", async (
   expect(js).toContain('"wrap-" + freeId');
   expect(ec).toContain('"wrap-" + pair[0]');
 });
+
+test("Widget-Host hat eigene Maße und enthält den Button nicht", async () => {
+  // Live gefunden: Famulors mountInline setzt Höhe/Seitenverhältnis nur, wenn der Host beim
+  // Start keine eigene Höhe hat. Lag der Button im Host (48 px), blieb der Host danach bei
+  // 0 px — das Widget war geladen, aber unsichtbar, und kein Mikrofon-Dialog erschien.
+  const css = await Bun.file("landing/assets/site.css").text();
+  const rule = css.match(/\.voice-host\{[^}]*\}/)?.[0] ?? "";
+  expect(rule).toContain("aspect-ratio:9/16");
+  const js = await Bun.file("landing/assets/b.js").text();
+  expect(js).not.toContain("host.appendChild(btn)");
+});

@@ -327,9 +327,13 @@
 
   function voice(key) {
     var box = el("div");
-    var host = el("div", "voice-host");
     var btn = el("button", "voice-start", "Mit meinem KI-Assistenten sprechen");
     btn.type = "button";
+    // Der Host bleibt leer und hat per CSS eigene Maße (9:16). Famulors mountInline setzt
+    // Höhe nur bei einem Host ohne eigene Höhe — läge der Button darin, fiele der Host nach
+    // dem Mount auf 0 px zusammen und das Widget wäre unsichtbar.
+    var host = el("div", "voice-host");
+    host.hidden = true;
     var note = el("p", "voice-note", "Im Browser, kein Telefon nötig. Der Assistent sagt zu Beginn, dass er eine KI ist.");
     note.setAttribute("role", "status");
     var FAIL = "Der Assistent ist gerade nicht erreichbar – schreiben Sie mir gern direkt.";
@@ -337,6 +341,7 @@
       if (host.dataset.mounting === "1") return;
       host.dataset.mounting = "1";
       btn.disabled = true;
+      host.hidden = false;
       note.textContent = "Assistent wird geladen …";
       // mountInline übernimmt Maße nur, wenn die Inline-Styles des Hosts vorab gesetzt sind.
       host.style.maxWidth = "360px";
@@ -345,15 +350,22 @@
       var obs = new MutationObserver(function () {
         if (!host.querySelector("iframe")) return;
         mounted = true;
-        note.textContent = "Mikrofon freigeben, dann einfach losreden. Chat geht auch.";
+        btn.hidden = true;
+        note.textContent = "Im Fenster auf Start tippen und das Mikrofon freigeben – dann einfach losreden. Chat geht auch.";
         obs.disconnect();
       });
       obs.observe(host, { childList: true, subtree: true });
-      function fail() { if (mounted) return; note.textContent = FAIL; btn.disabled = false; host.dataset.mounting = ""; }
+      function fail() {
+        if (mounted) return;
+        note.textContent = FAIL;
+        btn.disabled = false;
+        host.hidden = true;
+        host.dataset.mounting = "";
+      }
       loadWidget().then(function (api) { api.boot(key, host); }).catch(fail);
       setTimeout(fail, 8000);
     });
-    host.appendChild(btn);
+    box.appendChild(btn);
     box.appendChild(host);
     box.appendChild(note);
     return box;
