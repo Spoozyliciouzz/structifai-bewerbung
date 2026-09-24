@@ -70,7 +70,7 @@
     },
     {
       "q": "Wie technisch bist du, wie setzt du KI konkret ein?",
-      "a": "Ehrlich: Dennis ist kein Entwickler und schreibt selbst keinen Code. Er versteht aber die technische Infrastruktur seiner Systeme – Datenbanken, Edge Functions, Schnittstellen, Sicherheit – und kann auf einfachem Niveau nachvollziehen, was ein Stück Code zeigt oder tut, nicht auf Entwickler-Niveau. Gebaut wird mit KI-Agenten: erst Spezifikation und Architektur, dann Baustein für Baustein, mit Blick auf Sicherheit und saubere Kapselung."
+      "a": "Ehrlich: Dennis ist kein Entwickler und schreibt Code nicht von Hand. Er baut mit Claude Code und Codex – prozess-, spezifikations- und architekturgetrieben, unter Berücksichtigung von DSGVO- und Sicherheitsregeln. Die technische Infrastruktur seiner Systeme versteht er – Datenbanken, Edge Functions, Schnittstellen, Sicherheit – und kann auf einfachem Niveau nachvollziehen, was ein Stück Code zeigt oder tut, nicht auf Entwickler-Niveau."
     },
     {
       "q": "Was bringt ein Nicht-Entwickler dem Team?",
@@ -98,7 +98,7 @@
     },
     {
       "q": "Kann nicht selbst programmieren",
-      "a": "Stimmt, Code schreibt er nicht selbst. Er versteht die Infrastruktur-Landschaft und kann nachvollziehen, was Code tut, nur nicht auf Entwickler-Niveau. Gebaut wird mit KI-Agenten, spezifikations- und architekturgetrieben – eher Architekt als Entwickler."
+      "a": "Stimmt, Code schreibt er nicht von Hand. Er baut mit Claude Code und Codex, prozess-, spezifikations- und architekturgetrieben, mit DSGVO- und Sicherheitsregeln im Blick, und versteht die Infrastruktur dahinter – eher Architekt als Entwickler."
     },
     {
       "q": "Ist so ein KI-Gespräch oder die ganze Datenverarbeitung überhaupt DSGVO-konform?",
